@@ -64,6 +64,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.guru.pa.MainActivity" />
         </activity>
+        <activity android:name=".Bill"
+            android:label="账单"
+            android:parentActivityName=".MoneyManage">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.guru.pa.MoneyManage" />
+        </activity>
     </application>
 
 </manifest>
