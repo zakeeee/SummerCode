@@ -1,10 +1,7 @@
 package com.example.guru.pa;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,16 +11,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
-import com.oguzdev.circularfloatingactionmenu.library.animation.DefaultAnimationHandler;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -47,19 +40,19 @@ public class MainActivity extends AppCompatActivity
         ImageView itemIcon1 = new ImageView(this);
         itemIcon1.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_travel));
         SubActionButton button1 = itemBuilder.setContentView(itemIcon1)
-                .setLayoutParams(new FloatingActionButton.LayoutParams(64,64))
+                .setLayoutParams(new FloatingActionButton.LayoutParams(128,128))
                 .build();
 
         ImageView itemIcon2 = new ImageView(this);
         itemIcon2.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_money));
         SubActionButton button2 = itemBuilder.setContentView(itemIcon2)
-                .setLayoutParams(new FloatingActionButton.LayoutParams(64,64))
+                .setLayoutParams(new FloatingActionButton.LayoutParams(128,128))
                 .build();
 
         ImageView itemIcon3 = new ImageView(this);
         itemIcon3.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_password));
         SubActionButton button3 = itemBuilder.setContentView(itemIcon3)
-                .setLayoutParams(new FloatingActionButton.LayoutParams(64,64))
+                .setLayoutParams(new FloatingActionButton.LayoutParams(128,128))
                 .build();
 
         FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this)
@@ -150,8 +143,11 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, MoneyManage.class);
             startActivity(intent);
         } else if (id == R.id.nav_password) {
-
+            Intent intent = new Intent(this, Password.class);
+            startActivity(intent);
         } else if (id == R.id.nav_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
 
         }
 
