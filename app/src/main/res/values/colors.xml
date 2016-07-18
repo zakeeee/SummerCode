@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#ff4081</color>
+    <color name="White">#fcfcfc</color>
+    <color name="Green">#00AA13</color>
+
+    <!-- CREATE A COLOR ARRAY IN COLORS XML -->
+    <color name="custom_theme_darker">#ad843d</color>
+    <color name="custom_theme_dark">#d4a14a</color>
+    <color name="custom_theme_primary">#fbbf58</color>
+    <color name="custom_theme_light">#fae8c8</color>
+
+    <integer-array name="custom_theme">
+        <item>@color/custom_theme_darker</item>
+        <item>@color/custom_theme_dark</item>
+        <item>@color/custom_theme_primary</item>
+        <item>@color/custom_theme_light</item>
+    </integer-array>
+</resources>
