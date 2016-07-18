@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 public class MoneyManage extends AppCompatActivity {
 
@@ -17,5 +18,7 @@ public class MoneyManage extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
     }
-
+    public void writeDown(View view){
+        
+    }
 }
