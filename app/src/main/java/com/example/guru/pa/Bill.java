@@ -12,17 +12,17 @@ import android.view.MenuInflater;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.baoyz.swipemenulistview.SwipeMenu;
+/*import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
-import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.baoyz.swipemenulistview.SwipeMenuListView;*/
 
 import java.util.List;
 
 public class Bill extends AppCompatActivity {
 
     private List<ApplicationInfo> mAppList;
-    private SwipeMenuListView mListView;
+    //private SwipeMenuListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
