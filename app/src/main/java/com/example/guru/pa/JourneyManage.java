@@ -40,7 +40,6 @@ public class JourneyManage extends AppCompatActivity {
     }
 
     public void openJourneyAdd(){
-
         Intent intent = new Intent(JourneyManage.this, Activity_add_journey.class);
         startActivity(intent);
     }

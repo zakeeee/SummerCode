@@ -10,15 +10,21 @@ public class Schedule {
     private int day;
     private int month;
     private int year;
+    private String content;
 
-    public Schedule(int year, int month, int day, int hour, int minute, int second){
+    public Schedule(int year, int month, int day, int hour, int minute, int second, String content){
         this.year = year;
         this.month = month;
         this.day = day;
         this.hour = hour;
         this.minute = minute;
         this.second = second;
+        this.content = content;
     }
+
+    public Schedule() {}
+
+    public String getContent() {return content;}
 
     public int getSecond() {
         return second;
@@ -43,6 +49,8 @@ public class Schedule {
     public int getYear() {
         return year;
     }
+
+    public void setContent(String content) {this.content = content;}
 
     public void setSecond(int second) {
         this.second = second;
