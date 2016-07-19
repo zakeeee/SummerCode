@@ -14,10 +14,10 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.baoyz.swipemenulistview.SwipeMenu;
+/*import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
-import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.baoyz.swipemenulistview.SwipeMenuListView;*/
 
 import java.util.List;
 
@@ -98,7 +98,7 @@ public class Bill extends AppCompatActivity {
         int id = item.getItemId();
 
         if(id == R.id.bill_plus){
-            Intent intent = new Intent(this, AddBill.class);
+            Intent intent = new Intent(Bill.this, AddBill.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
