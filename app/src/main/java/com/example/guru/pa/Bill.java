@@ -9,11 +9,14 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,11 +29,17 @@ import com.baoyz.swipemenulistview.SwipeMenuListView;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.io.IOException;
 import java.util.List;
 import java.util.ListIterator;
 
 public class Bill extends AppCompatActivity {
 
+    private List<ApplicationInfo> mAppList;
+    private RelativeLayout layout = null;
+    private String fileContent = null;
+    private String[] lineContent;
+    private TextView[] textView;
     /* 必备的三个量：一个List（也可以为数组）,一个Adapter,一个ListView */
     private ArrayList<String> strs;
     private ArrayAdapter<String> arrayAdapter;
@@ -58,7 +67,25 @@ public class Bill extends AppCompatActivity {
 
         /* 实例化SwipeMenuListView */
         mListView = (SwipeMenuListView) findViewById(R.id.bill_list);
+        FileOperate fileOperate = new FileOperate(this);
+        try {
+            fileContent = fileOperate.read(MainActivity.FILENAME);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        layout = new RelativeLayout(this);
+        RelativeLayout.LayoutParams relLayoutParams =
+                new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        //按行拆分
+        lineContent = fileContent.split("\n");
+        int index = 0;
+        textView = new TextView[lineContent.length];
+        for (String s : lineContent){
+            textView[index] = new TextView(this);
+            displayContent(s,index,textView[index++]);
+        }
+        setContentView(layout);
         /* 设置mListView的View最小高度 */
         mListView.setMinimumHeight(180);
 
@@ -131,5 +158,24 @@ public class Bill extends AppCompatActivity {
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void displayContent(String s,int index, TextView textView){
+
+       // Log.e("TestSlipt",i + "  " + s);
+
+        textView.setId(index);
+        textView.setTextColor(Color.BLACK);
+        textView.setBackgroundColor(Color.WHITE);
+        textView.setHeight(120);
+        textView.setText(s);
+        RelativeLayout.LayoutParams param =
+                new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        if (index > 1){
+            param.addRule(RelativeLayout.BELOW, index - 1);//此控件在id为1的控件的下边
+           // layout.addView(textView,param);
+        }
+      //  else
+        layout.addView(textView,param);
     }
 }
