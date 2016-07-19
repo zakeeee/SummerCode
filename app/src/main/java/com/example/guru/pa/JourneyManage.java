@@ -1,5 +1,6 @@
 package com.example.guru.pa;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -40,6 +41,8 @@ public class JourneyManage extends AppCompatActivity {
 
     public void openJourneyAdd(){
 
+        Intent intent = new Intent(JourneyManage.this, Activity_add_journey.class);
+        startActivity(intent);
     }
 
     public void openJourneySearch(){
