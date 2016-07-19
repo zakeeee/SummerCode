@@ -10,6 +10,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class MoneyManage extends AppCompatActivity {
 
@@ -17,8 +20,21 @@ public class MoneyManage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_money_manage);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);*/
+
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearlayout_buttons);
+
+        Button button = (Button) linearLayout.findViewById(R.id.jiyibi);
+        if(button != null) {
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MoneyManage.this, AddBill.class);
+                    startActivity(intent);
+                }
+            });
+        }
 
     }
 
@@ -42,5 +58,8 @@ public class MoneyManage extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+    public void writeDown(View view){
+
     }
 }

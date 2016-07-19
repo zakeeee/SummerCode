@@ -23,12 +23,31 @@ public class JourneyManage extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id=item.getItemId();
-        if(id==R.id.journey_plus){
-            Intent intent=new Intent(this,Activity_add_journey.class);
-            startActivity(intent);
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()) {
+            case R.id.journey_plus:
+                openJourneyAdd();
+                return true;
+            case R.id.journey_search:
+                openJourneySearch();
+                return true;
+            case R.id.journey_sort:
+                openJourneySort();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+    }
+
+    public void openJourneyAdd(){
+
+    }
+
+    public void openJourneySearch(){
+
+    }
+
+    public void openJourneySort(){
+
     }
 }

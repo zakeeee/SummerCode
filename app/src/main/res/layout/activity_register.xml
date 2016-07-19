@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:flatui="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:flatui="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    android:weightSum="1"
-    tools:context=".LogIn">
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.guru.pa.Register">
 
     <LinearLayout
         android:orientation="horizontal"
-        android:id="@+id/username"
+        android:id="@+id/reg_username"
         android:layout_marginTop="99dp"
         android:background="@color/White"
         android:layout_width="match_parent"
@@ -37,7 +39,7 @@
             android:layout_weight="9"
             android:background="@color/White"
             android:maxLength="32"
-            android:id="@+id/editText"
+            android:id="@+id/reg_username_edit"
             android:hint="用户名" />
 
     </LinearLayout>
@@ -45,10 +47,10 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:id="@+id/password"
-        android:layout_below="@+id/username"
-        android:layout_alignLeft="@+id/username"
-        android:layout_alignStart="@+id/username"
+        android:id="@+id/reg_password1"
+        android:layout_below="@+id/reg_username"
+        android:layout_alignLeft="@+id/reg_username"
+        android:layout_alignStart="@+id/reg_username"
         android:background="@color/White"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="29dp"
@@ -73,8 +75,44 @@
             android:maxLength="32"
             android:inputType="textPassword"
             android:ems="10"
-            android:id="@+id/editText2"
-            android:hint="***********"
+            android:id="@+id/reg_password1_edit"
+            android:hint="请输入密码"
+            />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/reg_password2"
+        android:layout_below="@+id/reg_password1"
+        android:layout_alignLeft="@+id/reg_password1"
+        android:layout_alignStart="@+id/reg_password1"
+        android:background="@color/White"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="29dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:padding="10dp">
+
+        <ImageView
+            android:src="@drawable/lock"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:padding="3dp"
+            android:layout_height="match_parent" />
+
+        <EditText
+            android:paddingLeft="15px"
+            android:background="@color/White"
+            android:layout_width="0dp"
+            android:layout_weight="9"
+            android:layout_height="match_parent"
+            android:maxLength="32"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/reg_password2_edit"
+            android:hint="再次输入密码"
             />
     </LinearLayout>
 
@@ -98,42 +136,17 @@
         android:layout_height="wrap_content"
         android:textColor="@color/White"
         android:textSize="20dp"
-        android:text="登陆"
-        android:id="@+id/login"
+        android:text="注册"
+        android:id="@+id/button"
         android:layout_marginTop="25dp"
-        android:layout_below="@+id/password"
-        android:layout_alignLeft="@+id/password"
-        android:layout_alignStart="@+id/password"
-        android:layout_alignRight="@+id/password"
-        android:layout_alignEnd="@+id/password"
+        android:layout_below="@+id/reg_password2"
+        android:layout_alignLeft="@+id/reg_password2"
+        android:layout_alignStart="@+id/reg_password2"
+        android:layout_alignRight="@+id/reg_password2"
+        android:layout_alignEnd="@+id/reg_password2"
         flatui:fl_theme="@array/custom_theme"
         flatui:fl_touchEffect="fl_ripple"
         flatui:fl_blockButtonEffectHeight="3dp"/>
-
-    <TextView
-        android:layout_width="120dp"
-        android:layout_height="30dp"
-        android:gravity="center"
-        android:id="@+id/regist"
-        android:text="没有账号？"
-        android:layout_marginTop="38dp"
-        android:layout_below="@+id/login"
-        android:layout_alignLeft="@+id/login"
-        android:layout_alignStart="@+id/login"
-        android:layout_marginLeft="50dp"
-        android:layout_marginStart="50dp" />
-
-    <TextView
-        android:layout_width="120dp"
-        android:layout_height="30dp"
-        android:gravity="center"
-        android:id="@+id/forgetaccount"
-        android:text="忘记密码"
-        android:layout_alignTop="@+id/regist"
-        android:layout_alignRight="@+id/login"
-        android:layout_alignEnd="@+id/login"
-        android:layout_marginRight="50dp"
-        android:layout_marginEnd="50dp" />
 
 
 </RelativeLayout>

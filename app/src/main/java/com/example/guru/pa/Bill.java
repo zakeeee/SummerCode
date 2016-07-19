@@ -1,5 +1,6 @@
 package com.example.guru.pa;
 
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,7 +24,7 @@ import java.util.List;
 public class Bill extends AppCompatActivity {
 
     private List<ApplicationInfo> mAppList;
-    //private SwipeMenuListView mListView;
+//    private SwipeMenuListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,4 +93,14 @@ public class Bill extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.bill_plus){
+            Intent intent = new Intent(this, AddBill.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

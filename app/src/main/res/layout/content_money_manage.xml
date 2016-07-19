@@ -29,6 +29,7 @@
         <TextView
             android:text="￥ 0"
             android:textSize="22dp"
+            android:id="@+id/accumulateProfit"
             android:gravity="center"
             android:textColor="#FFD965"
             android:layout_width="match_parent"
@@ -61,6 +62,7 @@
             <TextView
                 android:text="￥ 0"
                 android:textSize="16dp"
+                android:id="@+id/expend_this_month"
                 android:gravity="center"
                 android:textColor="#FFD965"
                 android:layout_width="match_parent"
@@ -87,6 +89,7 @@
             <TextView
                 android:text="￥ 0"
                 android:textSize="16dp"
+                android:id="@+id/income_this_month"
                 android:gravity="center"
                 android:textColor="#FFD965"
                 android:layout_width="match_parent"
@@ -126,6 +129,7 @@
             android:background="#FFD965"
             android:layout_weight="1"
             android:layout_width="0dp"
+            android:onClick="moneyAssistant"
             android:layout_height="match_parent" />
 
         <Button
@@ -133,6 +137,7 @@
             android:background="#A8D08D"
             android:layout_weight="1"
             android:layout_width="0dp"
+            android:onClick="writeDown"
             android:layout_height="match_parent" />
 
     </LinearLayout>

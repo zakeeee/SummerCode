@@ -31,7 +31,7 @@
             android:name=".MoneyManage"
             android:label="@string/title_activity_money_manage"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.guru.pa.MainActivity" />
@@ -82,6 +82,31 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.guru.pa.MoneyManage" />
+        </activity>
+        <activity
+            android:name=".AddBill"
+            android:label="记一笔"
+            android:parentActivityName=".Bill">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.guru.pa.MoneyManage" />
+        </activity>
+        <activity
+            android:name=".Register"
+            android:label="注册"
+            android:parentActivityName=".LogIn">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.guru.pa.LogIn" />
+        </activity>
+        <activity android:name=".AddPassword"
+            android:label="添加用户密码"
+            android:parentActivityName=".Password">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.guru.pa.Password" />
+
         </activity>
     </application>
 
