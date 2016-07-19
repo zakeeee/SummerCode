@@ -35,7 +35,7 @@ import java.util.ListIterator;
 
 public class Bill extends AppCompatActivity {
 
-    /* 必备的三个量：一个List,一个Adapter,一个ListView */
+    /* 必备的三个量：一个List（也可以为数组）,一个Adapter,一个ListView */
     private ArrayList<String> strs;
     private ArrayAdapter<String> arrayAdapter;
     private SwipeMenuListView mListView;
@@ -45,6 +45,11 @@ public class Bill extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bill);
 
+        /*
+        * 强烈不建议在onCreate里面进行以下操作
+        * 数据量大时会让人感觉界面卡顿
+        * 建议在另一个线程里加载，然后更新UI
+        */
 
         /* 此处是示例 */
         strs = new ArrayList<String>();
