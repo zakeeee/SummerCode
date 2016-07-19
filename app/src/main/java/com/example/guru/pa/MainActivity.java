@@ -21,6 +21,7 @@ import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static final String FILENAME = "testFile";
     public static SubActionButton button1;
     public static SubActionButton button2;
     public static SubActionButton button3;
