@@ -49,13 +49,15 @@
                 android:name="android.support.UI_OPTIONS"
                 android:value="splitActionBarWhenNarrow" />
         </activity>
-        <activity android:name=".Password"
+        <activity
+            android:name=".Password"
             android:label="密码"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.guru.pa.MainActivity" />
-            ></activity>
+            >
+        </activity>
         <activity
             android:name=".SettingsActivity"
             android:label="设置"
@@ -64,9 +66,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.guru.pa.MainActivity" />
         </activity>
-        <activity android:name=".Bill"
+        <activity
+            android:name=".Bill"
             android:label="账单"
             android:parentActivityName=".MoneyManage">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.guru.pa.MoneyManage" />
+        </activity>
+        <activity android:name=".AddBill"
+            android:label="记一笔"
+            android:parentActivityName=".Bill">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.guru.pa.MoneyManage" />
