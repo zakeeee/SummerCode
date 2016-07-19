@@ -31,7 +31,7 @@ public class Bill extends AppCompatActivity {
     private RelativeLayout layout = null;
     private String fileContent = null;
     private String[] lineContent;
-    private TextView[] textView;
+    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,15 +45,11 @@ public class Bill extends AppCompatActivity {
         }
 
         layout = new RelativeLayout(this);
-        RelativeLayout.LayoutParams relLayoutParams =
-                new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         //按行拆分
         lineContent = fileContent.split("\n");
         int index = 0;
-        textView = new TextView[lineContent.length];
         for (String s : lineContent){
-            textView[index] = new TextView(this);
-            displayContent(s,index,textView[index++]);
+            displayContent(s,index++);
         }
         setContentView(layout);
     }
@@ -76,10 +72,10 @@ public class Bill extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void displayContent(String s,int index, TextView textView){
+    public void displayContent(String s,int index){
 
        // Log.e("TestSlipt",i + "  " + s);
-
+        textView = new TextView(this);
         textView.setId(index);
         textView.setTextColor(Color.BLACK);
         textView.setBackgroundColor(Color.WHITE);
@@ -88,10 +84,8 @@ public class Bill extends AppCompatActivity {
         RelativeLayout.LayoutParams param =
                 new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         if (index > 1){
-            param.addRule(RelativeLayout.BELOW, index - 1);//此控件在id为1的控件的下边
-           // layout.addView(textView,param);
+            param.addRule(RelativeLayout.BELOW, index - 1);
         }
-      //  else
         layout.addView(textView,param);
     }
 }

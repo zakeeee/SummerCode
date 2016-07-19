@@ -30,7 +30,7 @@ public class AddBill extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_bill);
         // 获得当前日历选中的日期
-        dateFormat = new SimpleDateFormat("yy-mm-dd");
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         calendarView = (CalendarView)findViewById(R.id.calendarView);
         calendarDate = "Time: " + dateFormat.format(calendarView.getDate());
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
