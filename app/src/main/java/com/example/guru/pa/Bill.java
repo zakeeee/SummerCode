@@ -26,6 +26,7 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -35,11 +36,10 @@ import java.util.ListIterator;
 
 public class Bill extends AppCompatActivity {
 
-    private List<ApplicationInfo> mAppList;
-    private RelativeLayout layout = null;
+    private FileOperate fileOperate;
     private String fileContent = null;
     private String[] lineContent;
-    private TextView[] textView;
+
     /* 必备的三个量：一个List（也可以为数组）,一个Adapter,一个ListView */
     private ArrayList<String> strs;
     private ArrayAdapter<String> arrayAdapter;
@@ -57,35 +57,59 @@ public class Bill extends AppCompatActivity {
         */
 
         /* 此处是示例 */
-        strs = new ArrayList<String>();
+/*        strs = new ArrayList<String>();
         strs.add(0,"000");
         strs.add(1,"111");
-        strs.add(2,"222");
+        strs.add(2,"222");*/
+
+        fileOperate = new FileOperate(this);
+        try {
+            fileContent = fileOperate.read(MainActivity.FILENAME);
+        } catch (IOException e) {
+            try {
+                fileOperate.save(MainActivity.FILENAME, "Bill\n");
+                fileContent = fileOperate.read(MainActivity.FILENAME);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+            //e.printStackTrace();
+        }
+
+        strs = new ArrayList<String>();
+
+        if(fileContent == null){
+            Toast.makeText(Bill.this, "打开文件失败", Toast.LENGTH_SHORT).show();
+            strs.add("木有内容");
+        }
+        else {
+            lineContent = fileContent.split("\n");
+
+            int index = 0;
+            for (String s : lineContent){
+                strs.add(index, s);
+                index++;
+            }
+        }
 
         /* 实例化ArrayAdapter */
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strs);
 
         /* 实例化SwipeMenuListView */
         mListView = (SwipeMenuListView) findViewById(R.id.bill_list);
-        FileOperate fileOperate = new FileOperate(this);
-        try {
-            fileContent = fileOperate.read(MainActivity.FILENAME);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        layout = new RelativeLayout(this);
+
+/*        layout = new RelativeLayout(this);
         RelativeLayout.LayoutParams relLayoutParams =
                 new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        //按行拆分
-        lineContent = fileContent.split("\n");
-        int index = 0;
-        textView = new TextView[lineContent.length];
+        //按行拆分*/
+
+        //int index = 0;
+/*        textView = new TextView[lineContent.length];
         for (String s : lineContent){
             textView[index] = new TextView(this);
             displayContent(s,index,textView[index++]);
         }
-        setContentView(layout);
+        setContentView(layout);*/
         /* 设置mListView的View最小高度 */
         mListView.setMinimumHeight(180);
 
@@ -160,7 +184,7 @@ public class Bill extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void displayContent(String s,int index, TextView textView){
+ /*   public void displayContent(String s,int index, TextView textView){
 
        // Log.e("TestSlipt",i + "  " + s);
 
@@ -177,5 +201,5 @@ public class Bill extends AppCompatActivity {
         }
       //  else
         layout.addView(textView,param);
-    }
+    }*/
 }
