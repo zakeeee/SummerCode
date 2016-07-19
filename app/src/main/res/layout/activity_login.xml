@@ -38,6 +38,7 @@
             android:background="@color/White"
             android:maxLength="32"
             android:id="@+id/editText"
+            android:singleLine="true"
             android:hint="用户名" />
 
     </LinearLayout>
