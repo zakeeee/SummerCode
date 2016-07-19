@@ -21,6 +21,10 @@ import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static SubActionButton button1;
+    public static SubActionButton button2;
+    public static SubActionButton button3;
+
     //public final  static  String EXSTRA_MESSAGE = "com.example.guru.pa.MESSAGE";
     public void openPersonalCenter(View view){
         Intent intent = new Intent(this, LogIn.class);
@@ -39,19 +43,19 @@ public class MainActivity extends AppCompatActivity
         // repeat many times:
         ImageView itemIcon1 = new ImageView(this);
         itemIcon1.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_travel));
-        SubActionButton button1 = itemBuilder.setContentView(itemIcon1)
+        button1 = itemBuilder.setContentView(itemIcon1)
                 .setLayoutParams(new FloatingActionButton.LayoutParams(128,128))
                 .build();
 
         ImageView itemIcon2 = new ImageView(this);
         itemIcon2.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_money));
-        SubActionButton button2 = itemBuilder.setContentView(itemIcon2)
+        button2 = itemBuilder.setContentView(itemIcon2)
                 .setLayoutParams(new FloatingActionButton.LayoutParams(128,128))
                 .build();
 
         ImageView itemIcon3 = new ImageView(this);
         itemIcon3.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_password));
-        SubActionButton button3 = itemBuilder.setContentView(itemIcon3)
+        button3 = itemBuilder.setContentView(itemIcon3)
                 .setLayoutParams(new FloatingActionButton.LayoutParams(128,128))
                 .build();
 
@@ -65,25 +69,24 @@ public class MainActivity extends AppCompatActivity
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //add travel here
-
+                Intent intent1 = new Intent(MainActivity.this, Activity_add_journey.class);
+                startActivity(intent1);
             }
         });
 
-        button1.setOnClickListener(new View.OnClickListener() {
+        button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddBill.class);
-                startActivity(intent);
-
+                Intent intent2 = new Intent(MainActivity.this, AddBill.class);
+                startActivity(intent2);
             }
         });
 
-        button1.setOnClickListener(new View.OnClickListener() {
+        button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //add password here
-
+                Intent intent3 = new Intent(MainActivity.this, AddPassword.class);
+                startActivity(intent3);
             }
         });
     }
