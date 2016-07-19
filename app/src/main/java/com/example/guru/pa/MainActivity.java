@@ -61,6 +61,31 @@ public class MainActivity extends AppCompatActivity
                 .addSubActionView(button3)
                 .attachTo(actionButton)
                 .build();
+
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //add travel here
+
+            }
+        });
+
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddBill.class);
+                startActivity(intent);
+
+            }
+        });
+
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //add password here
+
+            }
+        });
     }
 
     @Override
