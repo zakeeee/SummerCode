@@ -1,6 +1,8 @@
 package com.example.guru.pa;
 
 import android.content.Context;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,7 +29,20 @@ public class FileOperate{
     /*
     * 这里定义的是一个文件保存的方法，写入到文件中，所以是输出流
     * */
+
+    public void ifFileExist(String filename){
+        File file = new File("/data/data/com.example.guru.pa/files/" + filename);
+        if (!file.exists()){
+           try{
+               file.createNewFile();
+           }catch (IOException e) {
+               e.printStackTrace();
+           }
+        }
+    }
+
     public void save(String filename, String fileContent) throws Exception {
+        ifFileExist(filename);
         String oldContent = read(filename) + "\n";
         fileContent = oldContent + fileContent;
         FileOutputStream output = mContext.openFileOutput(filename, Context.MODE_PRIVATE);

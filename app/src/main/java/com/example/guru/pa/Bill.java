@@ -38,6 +38,7 @@ public class Bill extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bill);
         FileOperate fileOperate = new FileOperate(this);
+        fileOperate.ifFileExist(MainActivity.FILENAME);
         try {
             fileContent = fileOperate.read(MainActivity.FILENAME);
         } catch (IOException e) {

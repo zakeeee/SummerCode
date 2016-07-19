@@ -21,7 +21,7 @@ import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String FILENAME = "testFile";
+    public static final String FILENAME = "testFile.txt";
     public static SubActionButton button1;
     public static SubActionButton button2;
     public static SubActionButton button3;
@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         createCircula();
 
@@ -184,4 +185,5 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }
