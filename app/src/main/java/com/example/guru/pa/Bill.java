@@ -98,7 +98,7 @@ public class Bill extends AppCompatActivity {
         int id = item.getItemId();
 
         if(id == R.id.bill_plus){
-            Intent intent = new Intent(this, AddBill.class);
+            Intent intent = new Intent(Bill.this, AddBill.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

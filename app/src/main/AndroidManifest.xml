@@ -89,7 +89,7 @@
             android:parentActivityName=".Bill">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.guru.pa.MoneyManage" />
+                android:value="com.example.guru.pa.Bill" />
         </activity>
         <activity
             android:name=".Register"
