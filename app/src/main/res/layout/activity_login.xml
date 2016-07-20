@@ -37,8 +37,8 @@
             android:layout_weight="9"
             android:background="@color/White"
             android:maxLength="32"
-            android:id="@+id/editText"
             android:singleLine="true"
+            android:id="@+id/editText"
             android:hint="用户名" />
 
     </LinearLayout>
@@ -72,6 +72,7 @@
             android:layout_weight="9"
             android:layout_height="match_parent"
             android:maxLength="32"
+            android:singleLine="true"
             android:inputType="textPassword"
             android:ems="10"
             android:id="@+id/editText2"

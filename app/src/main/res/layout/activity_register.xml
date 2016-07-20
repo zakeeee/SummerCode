@@ -39,9 +39,11 @@
             android:layout_weight="9"
             android:background="@color/White"
             android:maxLength="32"
-            android:id="@+id/reg_username_edit"
+            android:inputType="text"
+            android:digits="0123456789qwertyuiopasdfghjklzxcvbnm_QWERTYUIOPASDFGHJKLZXCVBNM"
             android:singleLine="true"
-            android:hint="用户名" />
+            android:id="@+id/reg_username_edit"
+            android:hint="用户名(数字、字母、下划线)" />
 
     </LinearLayout>
 

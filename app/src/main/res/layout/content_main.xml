@@ -8,5 +8,12 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/app_bar_main">
 
+    <TextView
+        android:text="这是主页"
+        android:gravity="center"
+        android:textSize="45dp"
+        android:background="@color/White"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

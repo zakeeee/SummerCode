@@ -105,6 +105,7 @@
                     android:id="@+id/addbill_save"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:onClick="saveBill"
                     android:layout_height="40dp" />
 
                 <Button
@@ -114,6 +115,7 @@
                     android:id="@+id/addbill_cancel"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:onClick="cancelBill"
                     android:layout_height="40dp" />
 
             </LinearLayout>

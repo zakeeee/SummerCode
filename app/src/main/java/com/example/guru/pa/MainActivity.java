@@ -2,6 +2,7 @@ package com.example.guru.pa;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,82 +13,66 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
+import com.special.ResideMenu.ResideMenu;
+import com.special.ResideMenu.ResideMenuItem;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static final String FILENAME = "testFile.txt";
     public static SubActionButton button1;
     public static SubActionButton button2;
     public static SubActionButton button3;
-    public static boolean mLoggedIn=false;
+    private static ResideMenu mResideMenu;
+    public static Boolean LOGGEDIN = false;
+    public static String USERNAME;
+    private ResideMenuItem item[];
 
-    //public final  static  String EXSTRA_MESSAGE = "com.example.guru.pa.MESSAGE";
-    public void openPersonalCenter(View view){
-        Intent intent = new Intent(this, LogIn.class);
-        startActivity(intent);
-    }
+    private void createResideMenu() {
+        // attach to current activity;
+        mResideMenu = new ResideMenu(this);
+        mResideMenu.setBackground(R.drawable.menu_background);
+        mResideMenu.attachToActivity(this);
+        mResideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_LEFT);
+        mResideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
 
-    public void createCircula() {
-        // in Activity Context
-        ImageView icon = new ImageView(this); // Create an icon
-        icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_plus));
+        // create menu items;
+        String titles[] = { "添加行程", "添加账单", "添加密码" };
+        int icon[] = { R.drawable.ic_menu_travel, R.drawable.ic_menu_money, R.drawable.ic_menu_password };
+        item = new ResideMenuItem[titles.length];
 
-        FloatingActionButton actionButton = new FloatingActionButton.Builder(this).setContentView(icon).build();
+        for (int i = 0; i < titles.length; i++){
+            item[i] = new ResideMenuItem(this, icon[i], titles[i]);
+            mResideMenu.addMenuItem(item[i],  ResideMenu.DIRECTION_RIGHT); // or  ResideMenu.DIRECTION_RIGHT
+        }
 
-        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
-
-        // repeat many times:
-        ImageView itemIcon1 = new ImageView(this);
-        itemIcon1.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_travel));
-        button1 = itemBuilder.setContentView(itemIcon1)
-                .setLayoutParams(new FloatingActionButton.LayoutParams(128,128))
-                .build();
-
-        ImageView itemIcon2 = new ImageView(this);
-        itemIcon2.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_money));
-        button2 = itemBuilder.setContentView(itemIcon2)
-                .setLayoutParams(new FloatingActionButton.LayoutParams(128,128))
-                .build();
-
-        ImageView itemIcon3 = new ImageView(this);
-        itemIcon3.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_password));
-        button3 = itemBuilder.setContentView(itemIcon3)
-                .setLayoutParams(new FloatingActionButton.LayoutParams(128,128))
-                .build();
-
-        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this)
-                .addSubActionView(button1)
-                .addSubActionView(button2)
-                .addSubActionView(button3)
-                .attachTo(actionButton)
-                .build();
-
-        button1.setOnClickListener(new View.OnClickListener() {
+        item[0].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(MainActivity.this, Activity_add_journey.class);
-                startActivity(intent1);
+                Intent intent = new Intent(MainActivity.this, Activity_add_journey.class);
+                startActivity(intent);
             }
         });
 
-        button2.setOnClickListener(new View.OnClickListener() {
+        item[1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent2 = new Intent(MainActivity.this, AddBill.class);
-                startActivity(intent2);
+                Intent intent = new Intent(MainActivity.this, AddBill.class);
+                startActivity(intent);
             }
         });
 
-        button3.setOnClickListener(new View.OnClickListener() {
+        item[2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent3 = new Intent(MainActivity.this, AddPassword.class);
-                startActivity(intent3);
+                Intent intent = new Intent(MainActivity.this, AddPassword.class);
+                startActivity(intent);
             }
         });
     }
@@ -99,7 +84,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        createCircula();
+        createResideMenu();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -115,16 +100,15 @@ public class MainActivity extends AppCompatActivity
             cir.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v){
-                    if (!mLoggedIn) {
-                        Intent intent = new Intent(MainActivity.this, LogIn.class);
-                        startActivity(intent);
-                    }
-                    else {
-                        Intent intent=new Intent(MainActivity.this,Accountcenter.class);
-                        startActivity(intent);
-                    }
+                    Intent intent = new Intent(MainActivity.this, LogIn.class);
+                    startActivity(intent);
                 }
             } );
+        }
+
+        if(MainActivity.LOGGEDIN){
+            TextView tv = (TextView) cir.findViewById(R.id.logged_username);
+            tv.setText(USERNAME);
         }
 
     }
@@ -144,6 +128,21 @@ public class MainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
 
+        /* 设置菜单项的搜索项 */
+        MenuItem searchItem = menu.findItem(R.id.menu_search);
+
+        /* 给搜索项添加展开和缩起监听器 */
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                return true;
+            }
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                return true;
+            }
+        });
+
         return true;
     }
 
@@ -155,7 +154,12 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.nav_settings) {
+        if (id == R.id.menu_plus) {
+            if(mResideMenu.isOpened()) {
+                mResideMenu.closeMenu();
+            } else {
+                mResideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
+            }
             return true;
         } else if (id == R.id.menu_search) {
             Toast.makeText(MainActivity.this, "search clicked", Toast.LENGTH_SHORT).show();
