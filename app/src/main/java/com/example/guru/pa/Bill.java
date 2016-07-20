@@ -1,18 +1,28 @@
 package com.example.guru.pa;
 
+import android.app.Dialog;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -50,7 +60,11 @@ public class Bill extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bill);
 
-        /*
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+
+        /**
         * 强烈不建议在onCreate里面进行以下操作
         * 数据量大时会让人感觉界面卡顿
         * 建议在另一个线程里加载，然后更新UI
@@ -137,24 +151,54 @@ public class Bill extends AppCompatActivity {
                 return false;
             }
         });
-/*
-*/
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_bill,menu);
+
+       /* SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        ComponentName cn = new ComponentName(this, SearchableActivity.class);
+        SearchableInfo info = searchManager.getSearchableInfo(cn);
+
+        searchView.setSearchableInfo(info);*/
+
+        /* 设置菜单项的搜索项 */
+        MenuItem searchItem = menu.findItem(R.id.bill_search);
+
+        /* 给搜索项添加展开和缩起监听器 */
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                return true;
+            }
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                return true;
+            }
+        });
+
         return super.onCreateOptionsMenu(menu);
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.bill_plus){
-            Intent intent = new Intent(Bill.this, AddBill.class);
-            startActivity(intent);
+        switch (id) {
+            case R.id.bill_plus:
+                Intent intent = new Intent(Bill.this, AddBill.class);
+                startActivity(intent);
+                break;
+            case android.R.id.home:
+                this.finish();
+                break;
+            default:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -30,13 +30,14 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="45dp">
                 <TextView
                     android:text="提醒周期"
                     android:layout_width="0dp"
                     android:layout_weight="0.2"
                     android:layout_height="wrap_content" />
                 <Spinner
+                    android:spinnerMode="dialog"
                     android:id="@+id/journey_T"
                     android:layout_width="0dp"
                     android:layout_weight="0.8"
@@ -48,17 +49,19 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="45dp">
                 <TextView
                     android:text="提醒方式"
                     android:layout_width="0dp"
                     android:layout_weight="0.2"
                     android:layout_height="wrap_content" />
                 <Spinner
+                    android:spinnerMode="dialog"
                     android:id="@+id/journey_Way"
                     android:layout_width="0dp"
                     android:layout_weight="0.8"
-                    android:layout_height="wrap_content"></Spinner>
+                    android:layout_height="wrap_content">
+                </Spinner>
             </LinearLayout>
 
 
@@ -78,6 +81,7 @@
                     android:layout_height="wrap_content">
                     <RadioButton
                         android:text="本地"
+                        android:checked="true"
                         android:id="@+id/journey_local"
                         android:layout_width="0dp"
                         android:layout_weight="1"
@@ -107,16 +111,18 @@
                     android:text="保存"
                     android:gravity="center"
                     android:id="@+id/journey_save"
+                    android:textColor="@color/White"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="40dp"
-                    android:background="#FF0000"
+                    android:background="#00FF00"
                     />
                 <TextView
                     android:text="取消"
                     android:gravity="center"
                     android:id="@+id/journey_cancel"
-                    android:background="#00FF00"
+                    android:background="#FF0000"
+                    android:textColor="@color/White"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="40dp"
