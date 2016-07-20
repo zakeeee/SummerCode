@@ -2,6 +2,7 @@ package com.example.guru.pa;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
+import com.special.ResideMenu.ResideMenu;
+import com.special.ResideMenu.ResideMenuItem;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -25,11 +28,58 @@ public class MainActivity extends AppCompatActivity
     public static SubActionButton button1;
     public static SubActionButton button2;
     public static SubActionButton button3;
+    private static ResideMenu resideMenu;
+    private ResideMenuItem item[];
 
     //public final  static  String EXSTRA_MESSAGE = "com.example.guru.pa.MESSAGE";
     public void openPersonalCenter(View view){
         Intent intent = new Intent(this, LogIn.class);
         startActivity(intent);
+    }
+
+    private void createResideMenu() {
+        // attach to current activity;
+        resideMenu = new ResideMenu(this);
+        resideMenu.setBackground(R.drawable.menu_background);
+        resideMenu.attachToActivity(this);
+        resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_LEFT);
+        resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
+
+        // create menu items;
+        String titles[] = { "添加行程", "添加账单", "添加密码" };
+        int icon[] = { R.drawable.ic_menu_travel, R.drawable.ic_menu_money, R.drawable.ic_menu_password };
+        item = new ResideMenuItem[titles.length];
+
+        for (int i = 0; i < titles.length; i++){
+            item[i] = new ResideMenuItem(this, icon[i], titles[i]);
+            resideMenu.addMenuItem(item[i],  ResideMenu.DIRECTION_RIGHT); // or  ResideMenu.DIRECTION_RIGHT
+        }
+
+        item[0].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Activity_add_journey.class);
+                startActivity(intent);
+            }
+        });
+
+        item[1].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddBill.class);
+                startActivity(intent);
+            }
+        });
+
+        item[2].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddPassword.class);
+                startActivity(intent);
+            }
+        });
+
+
     }
 
     public void createCircula() {
@@ -100,7 +150,8 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-        createCircula();
+        //createCircula();
+        createResideMenu();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -139,6 +190,21 @@ public class MainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
 
+        /* 设置菜单项的搜索项 */
+        MenuItem searchItem = menu.findItem(R.id.menu_search);
+
+        /* 给搜索项添加展开和缩起监听器 */
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                return true;
+            }
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                return true;
+            }
+        });
+
         return true;
     }
 
@@ -150,7 +216,12 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.nav_settings) {
+        if (id == R.id.menu_plus) {
+            if(resideMenu.isOpened()) {
+                resideMenu.closeMenu();
+            } else {
+                resideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
+            }
             return true;
         } else if (id == R.id.menu_search) {
             Toast.makeText(MainActivity.this, "search clicked", Toast.LENGTH_SHORT).show();

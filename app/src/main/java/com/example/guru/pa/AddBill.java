@@ -2,9 +2,11 @@ package com.example.guru.pa;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CalendarView;
 import android.widget.EditText;
@@ -29,6 +31,11 @@ public class AddBill extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_bill);
+
+        /* ActionBar添加返回按钮 */
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         // 获得当前日历选中的日期
         dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         calendarView = (CalendarView)findViewById(R.id.calendarView);
@@ -41,6 +48,16 @@ public class AddBill extends AppCompatActivity {
                         + String.valueOf(month + 1) + "-" + String.valueOf(dayOfMonth);
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == android.R.id.home) {
+            this.finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void saveBill(View view) throws Exception {
