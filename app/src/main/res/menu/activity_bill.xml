@@ -5,11 +5,17 @@
     <item android:id="@+id/bill_search"
         android:icon="@drawable/ic_search_white"
         android:title="Search"
-        yourapp:showAsAction="ifRoom" />
+        yourapp:actionViewClass="android.support.v7.widget.SearchView"
+        yourapp:showAsAction="ifRoom|collapseActionView" />
 
     <item android:id="@+id/bill_plus"
         android:icon="@drawable/ic_plus_white"
         android:title="Plus"
+        yourapp:showAsAction="ifRoom" />
+
+    <item android:id="@+id/bill_delete"
+        android:title="delete"
+        android:icon="@drawable/ic_delete"
         yourapp:showAsAction="ifRoom" />
 
     <item android:id="@+id/bill_sort"

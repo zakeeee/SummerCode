@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PA</string>
+    <string name="app_name">私人助理</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -67,4 +67,19 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+
+    <string-array name="spinner_T">
+        <item>15分钟</item>
+        <item>30分钟 </item>
+        <item>45分钟</item>
+        <item>1小时</item>
+        <item>3小时</item>
+        <item>1天</item>
+    </string-array>
+
+    <string-array name="spinner_Way">
+        <item>通知栏提醒</item>
+        <item>缙哥哥</item>
+        <item>还有什么提醒啊</item>
+    </string-array>
 </resources>

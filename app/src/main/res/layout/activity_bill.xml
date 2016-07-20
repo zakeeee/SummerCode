@@ -5,9 +5,11 @@
     android:layout_height="match_parent"
     tools:context="com.example.guru.pa.Bill">
 
+
     <com.baoyz.swipemenulistview.SwipeMenuListView
         android:id="@+id/bill_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 
 </RelativeLayout>
