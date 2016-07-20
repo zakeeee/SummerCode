@@ -44,7 +44,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ListIterator;
 
-public class Bill extends AppCompatActivity {
+public class Bill extends AppCompatActivity implements View.OnClickListener{
 
     private FileOperate fileOperate;
     private String fileContent = null;
@@ -134,7 +134,7 @@ public class Bill extends AppCompatActivity {
         mListView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
 
         /* 给mListView添加按钮点击监听 */
-        mListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+        mListView.setOnMenuItemClickListener(   new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
                 switch (index) {
@@ -196,11 +196,15 @@ public class Bill extends AppCompatActivity {
                 break;
             case android.R.id.home:
                 this.finish();
-                break;
+                return true;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onClick(View v) {
+
+    }
 }

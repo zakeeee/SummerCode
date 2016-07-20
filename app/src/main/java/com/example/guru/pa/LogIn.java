@@ -42,6 +42,7 @@ public class LogIn extends AppCompatActivity {
 
         if(id == android.R.id.home) {
             this.finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
