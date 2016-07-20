@@ -49,10 +49,10 @@ public class AddBill extends AppCompatActivity {
         expendText = (EditText)findViewById(R.id.addbill_expend);
         expendDesText = (EditText)findViewById(R.id.addbill_expendpurpose);
 
-        incomeStr = "收入(元)：" + incomeText.getText().toString();
-        incomeSourceStr = "来源：" + incomeSourceText.getText().toString();
-        expendStr = "支出（元）：" + expendText.getText().toString();
-        expendDesStr = "目的：" + expendDesText.getText().toString();
+        incomeStr = " 收入(元): " + incomeText.getText().toString();
+        incomeSourceStr = " 来源:" + incomeSourceText.getText().toString(); // 两者之间没有空格
+        expendStr = " 支出(元): " + expendText.getText().toString();
+        expendDesStr = " 目的:" + expendDesText.getText().toString();     // 两者之间没有空格
 
 
         FileOperate fileOperate = new FileOperate(this);
