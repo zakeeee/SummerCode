@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:flatui="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:id="@+id/drawer_layout_journey"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".JourneyManage">
+
+    <TextView
+        android:text="目前还木有行程哦"
+        android:padding="12dp"
+        android:gravity="center"
+        android:textSize="22dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+<!--    <com.cengalabs.flatui.views.FlatButton
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:textColor="@color/White"
+        android:textSize="20dp"
+        android:text="我要添加一个行程"
+        android:id="@+id/button"
+        flatui:fl_theme="@array/custom_theme"
+        flatui:fl_touchEffect="fl_ripple"
+        flatui:fl_blockButtonEffectHeight="3dp"/>-->
+
+</LinearLayout>

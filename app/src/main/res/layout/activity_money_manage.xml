@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <!--<android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>-->
+
+    <!--<include layout="@layout/content_money_manage" />-->
+
+    <LinearLayout
+        android:background="#9CC3E5"
+        android:layout_width="match_parent"
+        android:layout_weight="0.3"
+        android:orientation="vertical"
+        android:layout_height="0dp">
+
+        <TextView
+            android:text="累计收益"
+            android:textSize="32dp"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.6" />
+
+        <TextView
+            android:text="￥ 0"
+            android:textSize="22dp"
+            android:id="@+id/accumulateProfit"
+            android:gravity="center"
+            android:textColor="#FFD965"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.4" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_weight="0.12"
+        android:layout_height="0dp">
+
+        <LinearLayout
+            android:background="#2E75B5"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:text="本月支出"
+                android:textSize="22dp"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:layout_width="match_parent"
+                android:layout_weight="0.6"
+                android:layout_height="0dp" />
+
+            <TextView
+                android:text="￥ 0"
+                android:textSize="16dp"
+                android:id="@+id/expend_this_month"
+                android:gravity="center"
+                android:textColor="#FFD965"
+                android:layout_width="match_parent"
+                android:layout_weight="0.4"
+                android:layout_height="0dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:background="#2E75B5"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:text="本月收入"
+                android:textSize="22dp"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:layout_width="match_parent"
+                android:layout_weight="0.6"
+                android:layout_height="0dp" />
+
+            <TextView
+                android:text="￥ 0"
+                android:textSize="16dp"
+                android:id="@+id/income_this_month"
+                android:gravity="center"
+                android:textColor="#FFD965"
+                android:layout_width="match_parent"
+                android:layout_weight="0.4"
+                android:layout_height="0dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:text="今日收入：     "
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_weight="0.09"
+        android:layout_height="0dp" />
+
+    <TextView
+        android:text="今日支出：     "
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_weight="0.09"
+        android:layout_height="0dp" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_weight="0.25"
+        android:layout_height="0dp" />
+
+    <LinearLayout
+        android:id="@+id/linearlayout_buttons"
+        android:layout_width="match_parent"
+        android:layout_weight="0.1"
+        android:layout_height="0dp">
+
+        <Button
+            android:text="理财助手"
+            android:background="#FFD965"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:id="@+id/jiyibi"
+            android:text="记一笔"
+            android:background="#A8D08D"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

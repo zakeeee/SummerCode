@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.guru.pa">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".LogIn"
+            android:label="@string/title_activity_log_in"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.guru.pa.MainActivity" />
+        </activity>
+        <activity
+            android:name=".MoneyManage"
+            android:label="@string/title_activity_money_manage"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.guru.pa.MainActivity" />
+        </activity>
+        <activity
+            android:name=".JourneyManage"
+            android:label="行程管理"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme"
+            android:uiOptions="splitActionBarWhenNarrow">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.guru.pa.MainActivity" />
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+        <activity
+            android:name=".Password"
+            android:label="密码"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.guru.pa.MainActivity" />
+            >
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="设置"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.guru.pa.MainActivity" />
+        </activity>
+        <activity
+            android:name=".Bill"
+            android:label="账单"
+            android:parentActivityName=".MoneyManage">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.guru.pa.MoneyManage" />
+        </activity>
+        <activity
+            android:label="添加行程"
+            android:name=".Activity_add_journey"
+            android:parentActivityName=".MoneyManage">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.guru.pa.MoneyManage" />
+        </activity>
+        <activity
+            android:name=".AddBill"
+            android:label="记一笔"
+            android:parentActivityName=".Bill">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.guru.pa.Bill" />
+        </activity>
+        <activity
+            android:name=".Register"
+            android:label="注册"
+            android:parentActivityName=".LogIn">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.guru.pa.LogIn" />
+        </activity>
+        <activity android:name=".AddPassword"
+            android:label="添加用户密码"
+            android:parentActivityName=".Password">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.guru.pa.Password" />
+
+        </activity>
+    </application>
+
+</manifest>
