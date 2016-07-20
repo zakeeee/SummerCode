@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
@@ -25,10 +26,12 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String FILENAME = "testFile.txt";
-    public SubActionButton button1;
-    public SubActionButton button2;
-    public SubActionButton button3;
-    private ResideMenu mResideMenu;
+    public static SubActionButton button1;
+    public static SubActionButton button2;
+    public static SubActionButton button3;
+    private static ResideMenu resideMenu;
+    public static Boolean LOGGEDIN = false;
+    public static String USERNAME;
     private ResideMenuItem item[];
 
     private void createResideMenu() {
@@ -82,7 +85,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        
+
         createResideMenu();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -103,6 +106,11 @@ public class MainActivity extends AppCompatActivity
                     startActivity(intent);
                 }
             } );
+        }
+
+        if(MainActivity.LOGGEDIN){
+            TextView tv = (TextView) cir.findViewById(R.id.logged_username);
+            tv.setText(USERNAME);
         }
 
     }
