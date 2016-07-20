@@ -102,7 +102,7 @@ public class MoneyManage extends AppCompatActivity {
                 break;
             case android.R.id.home:
                 this.finish();
-                break;
+                return true;
             default:
                 break;
         }
