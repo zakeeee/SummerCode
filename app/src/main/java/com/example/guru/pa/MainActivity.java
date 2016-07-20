@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity
     public static SubActionButton button1;
     public static SubActionButton button2;
     public static SubActionButton button3;
+    public static boolean mLoggedIn=false;
 
     //public final  static  String EXSTRA_MESSAGE = "com.example.guru.pa.MESSAGE";
     public void openPersonalCenter(View view){
@@ -114,8 +115,14 @@ public class MainActivity extends AppCompatActivity
             cir.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v){
-                    Intent intent = new Intent(MainActivity.this, LogIn.class);
-                    startActivity(intent);
+                    if (!mLoggedIn) {
+                        Intent intent = new Intent(MainActivity.this, LogIn.class);
+                        startActivity(intent);
+                    }
+                    else {
+                        Intent intent=new Intent(MainActivity.this,Accountcenter.class);
+                        startActivity(intent);
+                    }
                 }
             } );
         }

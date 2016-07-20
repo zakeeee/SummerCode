@@ -75,10 +75,9 @@
                 android:value="com.example.guru.pa.MoneyManage" />
         </activity>
         <activity
-            android:label="添加行程"
             android:name=".Activity_add_journey"
+            android:label="添加行程"
             android:parentActivityName=".MoneyManage">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.guru.pa.MoneyManage" />
@@ -99,15 +98,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.guru.pa.LogIn" />
         </activity>
-        <activity android:name=".AddPassword"
+        <activity
+            android:name=".AddPassword"
             android:label="添加用户密码"
             android:parentActivityName=".Password">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.guru.pa.Password" />
-
         </activity>
+        <activity android:name=".Accountcenter"></activity>
     </application>
 
 </manifest>
