@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity
     public static SubActionButton button1;
     public static SubActionButton button2;
     public static SubActionButton button3;
-    private static ResideMenu resideMenu;
+    private static ResideMenu mResideMenu;
     public static Boolean LOGGEDIN = false;
     public static String USERNAME;
     private ResideMenuItem item[];

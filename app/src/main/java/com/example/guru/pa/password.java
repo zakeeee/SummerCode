@@ -1,5 +1,6 @@
 package com.example.guru.pa;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +16,6 @@ public class Password extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password);
 
-        /* ActionBar添加返回按钮 */
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
@@ -33,16 +33,20 @@ public class Password extends AppCompatActivity {
 
         switch (id) {
             case R.id.password_plus:
-                Intent intent = new Intent(Password.this, AddPassword.class);
-                startActivity(intent);
+                jumpToAnotherActivity(AddPassword.class);
                 break;
             case android.R.id.home:
-                this.finish();
+                finish();
                 return true;
             default:
                 break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void jumpToAnotherActivity(Class<?> cls) {
+        Intent intent = new Intent(Password.this, cls);
+        startActivity(intent);
     }
 }
