@@ -9,15 +9,23 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DataBaseHelper extends SQLiteOpenHelper{
 
+    public static final String TABLE_NORMAL = "schedule";
+    public static final String TABLE_TAG = "tagSchedule";
+
     private static int VERSION = 1;
-    private static String SQL_NORMAL_ONE = "CREATE TABLE if not exists schedule(" +
-            "id integer primary key autoincrement," +
-            "year integer, month integer, day integer," +
-            "hour integer, minute integer, second integer," +
-            "assignment varchar(200)" +
+    private static String SQL_NORMAL_ONE = "CREATE TABLE if not exists " + TABLE_NORMAL +
+            "(" +
+            "scheduleId integer primary key autoincrement," +
+            "date text," +
+            "time text," +
+            "content text" +
             ")";
-    private static String SQL_TAG_ONE = "CREATE TABLE if not exists tagSchedule(" +
-            "tagId integer primary key autoincrement" +
+    private static String SQL_TAG_ONE = "CREATE TABLE if not exists " + TABLE_TAG +
+            "(" +
+            "tagId integer primary key autoincrement," +
+            "scheduleId integer," +
+            "remindId integer," +
+            "year integer, month integer, day integer" +
             ")";
 
     private static String SQL_NORMAL_TWO = "DROP TABLE if exists schedule";

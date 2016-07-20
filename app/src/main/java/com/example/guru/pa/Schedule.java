@@ -4,85 +4,48 @@ package com.example.guru.pa;
  * Created by Haoyu on 2016/7/19.
  */
 public class Schedule {
-    private int second;
-    private int minute;
-    private int hour;
-    private int day;
-    private int month;
-    private int year;
+    private String date;
+    private String time;
     private String content;
-    private int id;
+    private int scheduleId;
 
-    public Schedule(int year, int month, int day, int hour, int minute, int second, String content, int id){
-        this.year = year;
-        this.month = month;
-        this.day = day;
-        this.hour = hour;
-        this.minute = minute;
-        this.second = second;
+    public Schedule(int scheduleId, String date, String time, String content){
         this.content = content;
-        this.id = id;
+        this.scheduleId = scheduleId;
+        this.date =date;
+        this.time = time;
     }
 
     public Schedule() {}
 
-    public int getId() {
-        return id;
-    }
 
     public String getContent() {return content;}
 
-    public int getSecond() {
-        return second;
+    public String getDate() {
+        return date;
     }
 
-    public int getMinute() {
-        return minute;
+    public String getTime() {
+        return time;
     }
 
-    public int getHour() {
-        return  hour;
+    public int getScheduleId() {
+        return scheduleId;
     }
 
-    public int getDay() {
-        return day;
+    public void setDate(String date){
+        this.date = date;
     }
 
-    public int getMonth() {
-        return month;
+    public void setTime(String time) {
+        this.time = time;
     }
 
-    public int getYear() {
-        return year;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public void setScheduleId(int scheduleId) {
+        this.scheduleId = scheduleId;
     }
 
     public void setContent(String content) {this.content = content;}
 
-    public void setSecond(int second) {
-        this.second = second;
-    }
 
-    public void setMinute(int minute) {
-        this.minute = minute;
-    }
-
-    public void setHour(int hour) {
-        this.hour = hour;
-    }
-
-    public void setDay(int day) {
-        this.day = day;
-    }
-
-    public void setMonth(int month) {
-        this.month = month;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
 }
