@@ -11,8 +11,9 @@ public class Schedule {
     private int month;
     private int year;
     private String content;
+    private int id;
 
-    public Schedule(int year, int month, int day, int hour, int minute, int second, String content){
+    public Schedule(int year, int month, int day, int hour, int minute, int second, String content, int id){
         this.year = year;
         this.month = month;
         this.day = day;
@@ -20,9 +21,14 @@ public class Schedule {
         this.minute = minute;
         this.second = second;
         this.content = content;
+        this.id = id;
     }
 
     public Schedule() {}
+
+    public int getId() {
+        return id;
+    }
 
     public String getContent() {return content;}
 
@@ -48,6 +54,10 @@ public class Schedule {
 
     public int getYear() {
         return year;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setContent(String content) {this.content = content;}
