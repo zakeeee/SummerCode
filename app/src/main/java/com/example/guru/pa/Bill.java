@@ -193,6 +193,7 @@ public class Bill extends AppCompatActivity implements View.OnClickListener{
         switch (id) {
             case R.id.bill_plus:
                 Intent intent = new Intent(Bill.this, AddBill.class);
+                this.finish();
                 startActivity(intent);
                 break;
             case android.R.id.home:

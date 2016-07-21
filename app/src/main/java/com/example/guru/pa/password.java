@@ -18,7 +18,7 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
 
 public class Password extends AppCompatActivity {
@@ -47,12 +47,6 @@ public class Password extends AppCompatActivity {
          * 建议在另一个线程里加载，然后更新UI
          */
 
-        fileOperate = new FileOperate(this);
-        try {
-            fileContent = fileOperate.read(MainActivity.FILENAME);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         strs = new ArrayList<String>();
 
@@ -61,13 +55,7 @@ public class Password extends AppCompatActivity {
             strs.add("木有内容");
         }
         else {
-            lineContent = fileContent.split("\n");
 
-            int index = 0;
-            for (String s : lineContent){
-                strs.add(index, s);
-                index++;
-            }
         }
 
         /* 实例化ArrayAdapter */
@@ -120,7 +108,7 @@ public class Password extends AppCompatActivity {
                         break;
                     case 1:
                         strs.remove(position);
-                        deleteContent(position);
+
                         arrayAdapter.notifyDataSetChanged();
                         // delete
                         break;
@@ -134,19 +122,7 @@ public class Password extends AppCompatActivity {
     }
 
     public void deleteContent(int index){
-        String newContent = "";
-        for (int i = 0; i < lineContent.length; ++ i) {
-            if (i != index){
-                newContent += lineContent + "\n";
-            }
-        }
-        fileOperate = new FileOperate(this);
-        fileOperate.ifFileExist(MainActivity.FILENAME);
-        try {
-            fileOperate.rewrite(MainActivity.FILENAME, newContent);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+
     }
 
     @Override

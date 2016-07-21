@@ -7,10 +7,12 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -30,7 +32,9 @@ public class JourneyManage extends AppCompatActivity {
     private ArrayList<String> strs;
     private ArrayAdapter<String> arrayAdapter;
     private SwipeMenuListView mListView;
-
+    private ArrayList<Schedule> mScheduleArrayList;
+    private ArrayList<TagSchedule> mTagScheduleArrayList;
+    private DataBaseOperator mDBOperator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,26 +52,26 @@ public class JourneyManage extends AppCompatActivity {
          * 建议在另一个线程里加载，然后更新UI
          */
 
-        fileOperate = new FileOperate(this);
-        try {
-            fileContent = fileOperate.read(MainActivity.FILENAME);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         strs = new ArrayList<String>();
-
-        if(fileContent == null){
-            Toast.makeText(JourneyManage.this, "打开文件失败", Toast.LENGTH_SHORT).show();
+        mScheduleArrayList = new ArrayList<Schedule>();
+        mTagScheduleArrayList = new ArrayList<TagSchedule>();
+        mDBOperator = new DataBaseOperator(this);
+        mScheduleArrayList = mDBOperator.getAllSchedule();
+        if(mScheduleArrayList == null){
+            Toast.makeText(JourneyManage.this, "无内容", Toast.LENGTH_SHORT).show();
             strs.add("木有内容");
         }
         else {
-            lineContent = fileContent.split("\n");
-
-            int index = 0;
-            for (String s : lineContent){
-                strs.add(index, s);
-                index++;
+            String tempStr = "";
+            Schedule tempSch = null;
+            for (int i = 0; i < mScheduleArrayList.size(); ++ i) {
+                tempSch = mScheduleArrayList.get(i);
+                tempStr = "ID: " + tempSch.getScheduleId() + " " +
+                             "Date: " + tempSch.getDate() + " " +
+                                "Time: " + tempSch.getTime() + "\n"+
+                                    "Content :" + tempSch.getContent();
+                strs.add(tempStr);
             }
         }
 
@@ -133,21 +137,7 @@ public class JourneyManage extends AppCompatActivity {
 
     }
 
-    public void deleteContent(int index){
-        String newContent = "";
-        for (int i = 0; i < lineContent.length; ++ i) {
-            if (i != index){
-                newContent += lineContent + "\n";
-            }
-        }
-        fileOperate = new FileOperate(this);
-        fileOperate.ifFileExist(MainActivity.FILENAME);
-        try {
-            fileOperate.rewrite(MainActivity.FILENAME, newContent);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -192,8 +182,18 @@ public class JourneyManage extends AppCompatActivity {
         }
     }
 
+    public void deleteContent(int position) {
+        String gottenStr = (String)mListView.getItemAtPosition(position);
+        String[] element = gottenStr.split(" ");
+        int deleteId = Integer.parseInt(element[1]);
+       // Log.e("TestS",gottenStr);
+      //  Log.e("TestDelete",deleteId + "  " + position);
+        mDBOperator.deleteScheduleById(deleteId);
+    }
+
     public void openJourneyAdd(){
         Intent intent = new Intent(JourneyManage.this, Activity_add_journey.class);
+        this.finish();
         startActivity(intent);
     }
 

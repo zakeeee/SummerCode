@@ -2,9 +2,11 @@ package com.example.guru.pa;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.app.Activity;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -131,6 +134,12 @@ public class Activity_add_journey extends AppCompatActivity {
         mDBOperator = new DataBaseOperator(this);
         mBackUp = (EditText)findViewById(R.id.journey_backup);
         mScheduleContent = mBackUp.getText().toString();
+
+        if (mScheduleContent.equals("")){
+            Toast.makeText(Activity_add_journey.this,"备注不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         schedule.setContent(mScheduleContent);
         schedule.setDate(mGottenDate);
         schedule.setTime(mGottenTime);
@@ -141,9 +150,8 @@ public class Activity_add_journey extends AppCompatActivity {
             tagId = saveTagSchedule(scheduleId);
         }
 
-        //test for database
+        //test database
        // deBug(scheduleId,tagId);
-
 
 
         //销毁当前activity
@@ -160,6 +168,7 @@ public class Activity_add_journey extends AppCompatActivity {
     }
 
     public void onBackPressed(){
+
         if (mDBOperator != null){
             mDBOperator.closeDB();
         }
@@ -177,6 +186,8 @@ public class Activity_add_journey extends AppCompatActivity {
         return tagId;
     }
 
+
+    //debug
     public void deBug(int scheduleId, int tagId) {
         /*
         Schedule testSchedule = mDBOperator.getScheduleById(scheduleId);
