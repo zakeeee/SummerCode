@@ -80,10 +80,8 @@ public class LogIn extends AppCompatActivity {
                         // 跳转到主界面
                         MainActivity.LOGGEDIN = true;
                         MainActivity.USERNAME = name;
-                        Intent in = new Intent();
-                        in.setClass(LogIn.this, MainActivity.class);
-                        startActivity(in);
-                        LogIn.this.finish();
+                        Intent intent = new Intent(LogIn.this, MainActivity.class);
+                        startActivity(intent);
                     }
                 }catch(SQLiteException e){
                     createDb();
@@ -100,7 +98,6 @@ public class LogIn extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent intent = new Intent(LogIn.this, Register.class);
                     startActivity(intent);
-                    LogIn.this.finish();
                 }
             });
         }
@@ -115,9 +112,13 @@ public class LogIn extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == android.R.id.home) {
-            this.finish();
-            return true;
+        switch (id){
+            case android.R.id.home:
+                Intent intent = new Intent(LogIn.this, MainActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

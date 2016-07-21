@@ -1,5 +1,6 @@
 package com.example.guru.pa;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.database.sqlite.SQLiteDatabase;
@@ -24,6 +25,9 @@ public class Register extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        ActionBar actionBar=getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         reg_username_edit = (EditText)findViewById(R.id.reg_username_edit);
         reg_password1_edit = (EditText)findViewById(R.id.reg_password1_edit);
