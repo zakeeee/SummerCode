@@ -19,7 +19,6 @@ public class FileOperate{
 
     public FileOperate() {
         bufferSchedule = new ArrayList<Schedule>();
-
     }
 
     public FileOperate(Context mContext) {
