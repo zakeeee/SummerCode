@@ -196,22 +196,27 @@ public class Activity_add_journey extends AppCompatActivity {
                     + " " + tt.getDay());
         }
         */
-
+       // Log.e("scheduleId",scheduleId + "");
         ArrayList<Schedule> s1 = mDBOperator.getAllSchedule();
        // mDBOperator.deleteScheduleById(3);
-        Schedule s3 = new Schedule();
-        s3.setScheduleId(7);
-        s3.setContent("Hello World");
-        mDBOperator.updateSchedule(s3);
-        ArrayList<Schedule> s2 = mDBOperator.getAllSchedule();
+        //Schedule s3 = new Schedule();
+        //s3.setScheduleId(7);
+       // s3.setContent("Hello World");
+       // mDBOperator.updateSchedule(s3);
+      //  mDBOperator.deleteAll();
+     //   ArrayList<Schedule> s2 = mDBOperator.getAllSchedule();
         for (int i = 0; i < s1.size(); ++ i){
             Schedule ss = s1.get(i);
             Log.e("S1",ss.getScheduleId() + " " + ss.getContent() + " " + ss.getTime());
         }
-        for (int i = 0; i < s2.size(); ++ i) {
+        /*
+        for (int i = 0; (s2 != null) && (i < s2.size()); ++ i) {
             Schedule ss = s2.get(i);
             Log.e("S2", ss.getScheduleId() + " " + ss.getContent() + " " + ss.getTime());
         }
-
+        if (s2 == null) {
+            Log.e("deleteAll", "successful");
+        }
+        */
     }
 }

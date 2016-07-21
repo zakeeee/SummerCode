@@ -13,7 +13,7 @@ import java.util.StringTokenizer;
  */
 public class DataBaseOperator {
     private DataBaseHelper mDBOpenHelper = null;
-    private static String DBNAME = "schedule.db";
+    private static String DBNAME = "mySchedule.db";
     public DataBaseOperator(Context context){
         mDBOpenHelper = new DataBaseHelper(context, DBNAME);
     }
@@ -205,6 +205,10 @@ public class DataBaseOperator {
             return retList;
         }
         return null;
+    }
+
+    public void deleteAll(){
+        mDBOpenHelper.onUpgrade(mDBOpenHelper.getWritableDatabase(),1, 1);
     }
 
 
