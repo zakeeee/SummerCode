@@ -181,9 +181,6 @@ public class JourneyManage extends AppCompatActivity {
             case R.id.journey_plus:
                 openJourneyAdd();
                 return true;
-            case R.id.journey_search:
-                openJourneySearch();
-                return true;
             case R.id.journey_sort:
                 openJourneySort();
                 return true;

@@ -74,6 +74,9 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    /**
+     * 创建右边划出菜单
+     * */
     private void createResideMenu() {
         // attach to current activity;
         mResideMenu = new ResideMenu(this);

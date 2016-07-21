@@ -29,7 +29,7 @@ public class AccountCenter extends AppCompatActivity {
             logout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(Accountcenter.this, LogIn.class);
+                    Intent intent = new Intent(AccountCenter.this, LogIn.class);
                     startActivity(intent);
                 }
             });
