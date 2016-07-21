@@ -17,6 +17,14 @@ import android.app.AlertDialog;
 import android.database.sqlite.SQLiteException;
 import android.database.Cursor;
 import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.URL;
+import java.net.URLConnection;
+
 public class LogIn extends AppCompatActivity {
 
     private EditText edname;
@@ -121,4 +129,7 @@ public class LogIn extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
 }

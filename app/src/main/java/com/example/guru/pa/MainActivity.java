@@ -25,7 +25,7 @@ import com.special.ResideMenu.ResideMenuItem;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String FILENAME = "testFile2.txt";
+    public static final String FILENAME = "testFile.txt";
     public static SubActionButton button1;
     public static SubActionButton button2;
     public static SubActionButton button3;
