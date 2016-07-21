@@ -21,7 +21,7 @@ import android.widget.TimePicker;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class Activity_add_journey extends AppCompatActivity {
+public class AddJourney extends AppCompatActivity {
 
     private Spinner spinner_T;
     private Spinner spinner_Way;

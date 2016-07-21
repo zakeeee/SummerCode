@@ -181,9 +181,6 @@ public class JourneyManage extends AppCompatActivity {
             case R.id.journey_plus:
                 openJourneyAdd();
                 return true;
-            case R.id.journey_search:
-                openJourneySearch();
-                return true;
             case R.id.journey_sort:
                 openJourneySort();
                 return true;
@@ -193,7 +190,7 @@ public class JourneyManage extends AppCompatActivity {
     }
 
     public void openJourneyAdd(){
-        Intent intent = new Intent(JourneyManage.this, Activity_add_journey.class);
+        Intent intent = new Intent(JourneyManage.this, AddJourney.class);
         startActivity(intent);
     }
 

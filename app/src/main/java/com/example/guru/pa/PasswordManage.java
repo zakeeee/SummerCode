@@ -21,7 +21,7 @@ import com.baoyz.swipemenulistview.SwipeMenuListView;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Password extends AppCompatActivity {
+public class PasswordManage extends AppCompatActivity {
 
     private FileOperate fileOperate;
     private String fileContent = null;
@@ -57,7 +57,7 @@ public class Password extends AppCompatActivity {
         strs = new ArrayList<String>();
 
         if(fileContent == null){
-            Toast.makeText(Password.this, "打开文件失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(PasswordManage.this, "打开文件失败", Toast.LENGTH_SHORT).show();
             strs.add("木有内容");
         }
         else {
@@ -179,7 +179,7 @@ public class Password extends AppCompatActivity {
 
         switch (id) {
             case R.id.password_plus:
-                Intent intent = new Intent(Password.this, AddPassword.class);
+                Intent intent = new Intent(PasswordManage.this, AddPassword.class);
                 startActivity(intent);
                 return true;
             case android.R.id.home:

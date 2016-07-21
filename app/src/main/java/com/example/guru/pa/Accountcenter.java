@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
-public class Accountcenter extends AppCompatActivity {
+public class AccountCenter extends AppCompatActivity {
 
     private Spinner spinner_account;
     private ArrayAdapter<String> adapter_account;
@@ -29,7 +29,7 @@ public class Accountcenter extends AppCompatActivity {
             logout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(Accountcenter.this, LogIn.class);
+                    Intent intent = new Intent(AccountCenter.this, LogIn.class);
                     startActivity(intent);
                 }
             });

@@ -44,7 +44,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ListIterator;
 
-public class Bill extends AppCompatActivity implements View.OnClickListener{
+public class Bill extends AppCompatActivity {
 
     private FileOperate fileOperate;
     private String fileContent = null;
@@ -218,10 +218,5 @@ public class Bill extends AppCompatActivity implements View.OnClickListener{
         } catch (Exception e){
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onClick(View v) {
-
     }
 }
