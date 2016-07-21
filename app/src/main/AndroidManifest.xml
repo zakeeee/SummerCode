@@ -50,7 +50,8 @@
         </activity>
         <activity
             android:name=".Bill"
-            android:label="账单"></activity>
+            android:label="账单">
+        </activity>
         <activity
             android:name=".AddJourney"
             android:label="添加行程" >
@@ -65,7 +66,7 @@
         </activity>
         <activity
             android:name=".AddPassword"
-            android:label="添加用户密码" >
+            android:label="添加用户密码">
         </activity>
         <activity android:name=".SearchableActivity">
             <intent-filter>
