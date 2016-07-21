@@ -7,7 +7,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-public class Accountcenter extends AppCompatActivity {
+public class AccountCenter extends AppCompatActivity {
 
     private Spinner spinner_account;
     private ArrayAdapter<String> adapter_account;

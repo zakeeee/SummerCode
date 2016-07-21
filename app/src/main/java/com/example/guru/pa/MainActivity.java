@@ -1,5 +1,7 @@
 package com.example.guru.pa;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -10,14 +12,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.special.ResideMenu.ResideMenu;
 import com.special.ResideMenu.ResideMenuItem;
@@ -33,49 +32,6 @@ public class MainActivity extends AppCompatActivity
     public static Boolean LOGGEDIN = false;
     public static String USERNAME;
     private ResideMenuItem item[];
-
-    private void createResideMenu() {
-        // attach to current activity;
-        mResideMenu = new ResideMenu(this);
-        mResideMenu.setBackground(R.drawable.menu_background);
-        mResideMenu.attachToActivity(this);
-        mResideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_LEFT);
-        mResideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
-
-        // create menu items;
-        String titles[] = { "添加行程", "添加账单", "添加密码" };
-        int icon[] = { R.drawable.ic_menu_travel, R.drawable.ic_menu_money, R.drawable.ic_menu_password };
-        item = new ResideMenuItem[titles.length];
-
-        for (int i = 0; i < titles.length; i++){
-            item[i] = new ResideMenuItem(this, icon[i], titles[i]);
-            mResideMenu.addMenuItem(item[i],  ResideMenu.DIRECTION_RIGHT); // or  ResideMenu.DIRECTION_RIGHT
-        }
-
-        item[0].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, Activity_add_journey.class);
-                startActivity(intent);
-            }
-        });
-
-        item[1].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddBill.class);
-                startActivity(intent);
-            }
-        });
-
-        item[2].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddPassword.class);
-                startActivity(intent);
-            }
-        });
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +57,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v){
                     if(MainActivity.LOGGEDIN) {
-                        Intent intent = new Intent(MainActivity.this, Accountcenter.class);
+                        Intent intent = new Intent(MainActivity.this, AccountCenter.class);
                         startActivity(intent);
                     } else {
                         Intent intent = new Intent(MainActivity.this, LogIn.class);
@@ -116,6 +72,49 @@ public class MainActivity extends AppCompatActivity
             tv.setText(USERNAME);
         }
 
+    }
+
+    private void createResideMenu() {
+        // attach to current activity;
+        mResideMenu = new ResideMenu(this);
+        mResideMenu.setBackground(R.drawable.menu_background);
+        mResideMenu.attachToActivity(this);
+        mResideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_LEFT);
+        mResideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
+
+        // create menu items;
+        String titles[] = { "添加行程", "添加账单", "添加密码" };
+        int icon[] = { R.drawable.ic_menu_travel, R.drawable.ic_menu_money, R.drawable.ic_menu_password };
+        item = new ResideMenuItem[titles.length];
+
+        for (int i = 0; i < titles.length; i++){
+            item[i] = new ResideMenuItem(this, icon[i], titles[i]);
+            mResideMenu.addMenuItem(item[i],  ResideMenu.DIRECTION_RIGHT); // or  ResideMenu.DIRECTION_RIGHT
+        }
+
+        item[0].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddJourney.class);
+                startActivity(intent);
+            }
+        });
+
+        item[1].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddBill.class);
+                startActivity(intent);
+            }
+        });
+
+        item[2].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddPassword.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -148,26 +147,27 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.menu_plus) {
-            if(mResideMenu.isOpened()) {
-                mResideMenu.closeMenu();
-            } else {
-                mResideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
-            }
-            return true;
-        } else if (id == R.id.menu_search) {
-            Toast.makeText(MainActivity.this, "search clicked", Toast.LENGTH_SHORT).show();
+        switch (id) {
+            case R.id.menu_plus:
+                if(mResideMenu.isOpened()) {
+                    mResideMenu.closeMenu();
+                } else {
+                    mResideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
+                }
+                return true;
+            default:
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -179,24 +179,25 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_travel) {
-            Intent intent = new Intent(this, JourneyManage.class);
-            startActivity(intent);
-            // Handle the camera action
-        } else if (id == R.id.nav_money) {
-            Intent intent = new Intent(this, MoneyManage.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_password) {
-            Intent intent = new Intent(this, Password.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-
+        switch (id) {
+            case R.id.nav_travel:
+                ActivityController.jumpToAnotherActivity(MainActivity.this, JourneyManage.class);
+                return true;
+            case R.id.nav_money:
+                ActivityController.jumpToAnotherActivity(MainActivity.this, MoneyManage.class);
+                return true;
+            case R.id.nav_password:
+                ActivityController.jumpToAnotherActivity(MainActivity.this, PasswordManage.class);
+                return true;
+            case R.id.nav_settings:
+                ActivityController.jumpToAnotherActivity(MainActivity.this, SettingsActivity.class);
+                return true;
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }

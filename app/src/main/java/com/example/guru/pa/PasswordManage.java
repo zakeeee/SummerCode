@@ -21,7 +21,7 @@ import com.baoyz.swipemenulistview.SwipeMenuListView;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class JourneyManage extends AppCompatActivity {
+public class PasswordManage extends AppCompatActivity {
 
     private FileOperate fileOperate;
     private String fileContent = null;
@@ -35,12 +35,11 @@ public class JourneyManage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_journey_manage);
+        setContentView(R.layout.activity_password);
 
         /* ActionBar添加返回按钮 */
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
 
         /**
          * 强烈不建议在onCreate里面进行以下操作
@@ -58,7 +57,7 @@ public class JourneyManage extends AppCompatActivity {
         strs = new ArrayList<String>();
 
         if(fileContent == null){
-            Toast.makeText(JourneyManage.this, "打开文件失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(PasswordManage.this, "打开文件失败", Toast.LENGTH_SHORT).show();
             strs.add("木有内容");
         }
         else {
@@ -75,7 +74,7 @@ public class JourneyManage extends AppCompatActivity {
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strs);
 
         /* 实例化SwipeMenuListView */
-        mListView = (SwipeMenuListView) findViewById(R.id.journey_list);
+        mListView = (SwipeMenuListView) findViewById(R.id.password_list);
 
         /* 设置mListView的View最小高度 */
         mListView.setMinimumHeight(180);
@@ -131,6 +130,7 @@ public class JourneyManage extends AppCompatActivity {
             }
         });
 
+
     }
 
     public void deleteContent(int index){
@@ -152,10 +152,10 @@ public class JourneyManage extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.activity_journey, menu);
+        inflater.inflate(R.menu.activity_password, menu);
 
          /* 设置菜单项的搜索项 */
-        MenuItem searchItem = menu.findItem(R.id.journey_search);
+        MenuItem searchItem = menu.findItem(R.id.password_search);
 
         /* 给搜索项添加展开和缩起监听器 */
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
@@ -173,35 +173,22 @@ public class JourneyManage extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()) {
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.password_plus:
+                Intent intent = new Intent(PasswordManage.this, AddPassword.class);
+                startActivity(intent);
+                return true;
             case android.R.id.home:
-                this.finish();
-                return true;
-            case R.id.journey_plus:
-                openJourneyAdd();
-                return true;
-            case R.id.journey_search:
-                openJourneySearch();
-                return true;
-            case R.id.journey_sort:
-                openJourneySort();
+                finish();
                 return true;
             default:
-                return super.onOptionsItemSelected(item);
+                break;
         }
-    }
 
-    public void openJourneyAdd(){
-        Intent intent = new Intent(JourneyManage.this, AddJourney.class);
-        startActivity(intent);
-    }
-
-    public void openJourneySearch(){
-
-    }
-
-    public void openJourneySort(){
-
+        return super.onOptionsItemSelected(item);
     }
 }

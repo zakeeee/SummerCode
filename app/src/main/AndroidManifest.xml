@@ -17,9 +17,10 @@
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -39,7 +40,7 @@
             android:theme="@style/AppTheme">
         </activity>
         <activity
-            android:name=".Password"
+            android:name=".PasswordManage"
             android:label="密码" >
             >
         </activity>
@@ -51,7 +52,7 @@
             android:name=".Bill"
             android:label="账单"></activity>
         <activity
-            android:name=".Activity_add_journey"
+            android:name=".AddJourney"
             android:label="添加行程" >
         </activity>
         <activity
@@ -74,7 +75,7 @@
                 android:resource="@xml/searchable"/>
         </activity>
         <activity
-            android:name=".Accountcenter"
+            android:name=".AccountCenter"
             android:label="个人中心" >
         </activity>
     </application>
