@@ -36,11 +36,7 @@
         <activity
             android:name=".JourneyManage"
             android:label="行程管理"
-            android:theme="@style/AppTheme"
-            android:uiOptions="splitActionBarWhenNarrow">
-            <meta-data
-                android:name="android.support.UI_OPTIONS"
-                android:value="splitActionBarWhenNarrow" />
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".Password"
@@ -76,6 +72,10 @@
             </intent-filter>
             <meta-data android:name="android.app.searchable"
                 android:resource="@xml/searchable"/>
+        </activity>
+        <activity
+            android:name=".Accountcenter"
+            android:label="个人中心" >
         </activity>
     </application>
 
