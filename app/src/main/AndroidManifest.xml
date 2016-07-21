@@ -39,7 +39,7 @@
             android:theme="@style/AppTheme">
         </activity>
         <activity
-            android:name=".Password"
+            android:name=".PasswordManage"
             android:label="密码" >
             >
         </activity>
