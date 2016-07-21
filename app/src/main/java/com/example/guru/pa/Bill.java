@@ -143,6 +143,7 @@ public class Bill extends AppCompatActivity implements View.OnClickListener{
                         break;
                     case 1:
                         strs.remove(position);
+                        deleteContent(position);
                         arrayAdapter.notifyDataSetChanged();
                         // delete
                         break;
@@ -201,6 +202,22 @@ public class Bill extends AppCompatActivity implements View.OnClickListener{
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void deleteContent(int index){
+        String newContent = "";
+        for (int i = 0; i < lineContent.length; ++ i) {
+            if (i != index){
+                newContent += lineContent + "\n";
+            }
+        }
+        fileOperate = new FileOperate(this);
+        fileOperate.ifFileExist(MainActivity.FILENAME);
+        try {
+            fileOperate.rewrite(MainActivity.FILENAME, newContent);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

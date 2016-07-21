@@ -46,7 +46,15 @@ public class FileOperate{
         String oldContent = read(filename) + "\n";
         fileContent = oldContent + fileContent;
         FileOutputStream output = mContext.openFileOutput(filename, Context.MODE_PRIVATE);
-       // Log.e("FileTest", fileContent);
+        // Log.e("FileTest", fileContent);
+        output.write(fileContent.getBytes());  //将String字符串以字节流的形式写入到输出流中
+        output.close();
+    }
+
+    public void rewrite(String filename, String fileContent) throws Exception {
+        ifFileExist(filename);
+        FileOutputStream output = mContext.openFileOutput(filename, Context.MODE_PRIVATE);
+        // Log.e("FileTest", fileContent);
         output.write(fileContent.getBytes());  //将String字符串以字节流的形式写入到输出流中
         output.close();
     }

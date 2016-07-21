@@ -1,8 +1,6 @@
 package com.example.guru.pa;
 
-import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,9 +13,6 @@ public class Password extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -29,24 +24,14 @@ public class Password extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         int id = item.getItemId();
 
-        switch (id) {
-            case R.id.password_plus:
-                jumpToAnotherActivity(AddPassword.class);
-                break;
-            case android.R.id.home:
-                finish();
-                return true;
-            default:
-                break;
+        if(id == R.id.password_plus) {
+            Intent intent = new Intent(Password.this, AddPassword.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void jumpToAnotherActivity(Class<?> cls) {
-        Intent intent = new Intent(Password.this, cls);
-        startActivity(intent);
     }
 }
