@@ -82,4 +82,10 @@
         <item>缙哥哥</item>
         <item>还有什么提醒啊</item>
     </string-array>
+
+    <string-array name="spinner_account">
+        <item>男</item>
+        <item>女</item>
+        <item>其他</item>
+    </string-array>
 </resources>

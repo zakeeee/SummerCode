@@ -13,11 +13,6 @@
         android:title="Plus"
         yourapp:showAsAction="ifRoom" />
 
-    <item android:id="@+id/bill_delete"
-        android:title="delete"
-        android:icon="@drawable/ic_delete"
-        yourapp:showAsAction="ifRoom" />
-
     <item android:id="@+id/bill_sort"
         android:title="Sort"
         yourapp:showAsAction="ifRoom" />
