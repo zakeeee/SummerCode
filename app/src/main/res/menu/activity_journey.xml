@@ -12,11 +12,6 @@
         android:title="Plus"
         yourapp:showAsAction="ifRoom" />
 
-    <item android:id="@+id/journey_delete"
-        android:title="delete"
-        android:icon="@drawable/ic_delete"
-        yourapp:showAsAction="ifRoom" />
-
     <item android:id="@+id/journey_sort"
         android:title="Sort"
         android:icon="@drawable/ic_sort"

@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity
     public static SubActionButton button1;
     public static SubActionButton button2;
     public static SubActionButton button3;
-    private static ResideMenu mResideMenu;
+    private  ResideMenu mResideMenu;
     public static Boolean LOGGEDIN = false;
     public static String USERNAME;
     private ResideMenuItem item[];
@@ -75,8 +75,6 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
-
-
     }
 
     @Override
@@ -102,8 +100,14 @@ public class MainActivity extends AppCompatActivity
             cir.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v){
-                    Intent intent = new Intent(MainActivity.this, LogIn.class);
-                    startActivity(intent);
+                    if(MainActivity.LOGGEDIN) {
+                        Intent intent = new Intent(MainActivity.this, Accountcenter.class);
+                        startActivity(intent);
+                    }
+                    else{
+                        Intent intent = new Intent(MainActivity.this, LogIn.class);
+                        startActivity(intent);
+                    }
                 }
             } );
         }
@@ -196,5 +200,4 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 }
