@@ -85,6 +85,9 @@
         <item>女</item>
         <item>其他</item>
     </string-array>
-    
-    <string name="app_search_hint">搜索...</string>
+
+    <string name="plus">添加</string>
+    <string name="search">搜索</string>
+    <string name="sort">排序</string>
+    <string name="bill">账单</string>
 </resources>

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -25,13 +26,17 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String FILENAME = "testFile.txt";
-    public static SubActionButton button1;
-    public static SubActionButton button2;
-    public static SubActionButton button3;
+
     private ResideMenu mResideMenu;
     public static Boolean LOGGEDIN = false;
     public static String USERNAME;
-    private ResideMenuItem item[];
+    private ResideMenuItem mItem[];
+
+    /**/
+    private DrawerLayout mDrawer;
+    private ActionBarDrawerToggle mToggle;
+    private NavigationView mNavigationView;
+    private View mNavHeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,36 +47,34 @@ public class MainActivity extends AppCompatActivity
 
         createResideMenu();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mToggle = new ActionBarDrawerToggle(
+                this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawer.setDrawerListener(mToggle);
+        mToggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
-        View cir = navigationView.getHeaderView(0);
-        if (cir != null) {
-            cir.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v){
-                    if(MainActivity.LOGGEDIN) {
-                        Intent intent = new Intent(MainActivity.this, AccountCenter.class);
-                        startActivity(intent);
-                    } else {
-                        Intent intent = new Intent(MainActivity.this, LogIn.class);
-                        startActivity(intent);
-                    }
-                }
-            } );
-        }
+        mNavHeader = mNavigationView.getHeaderView(0);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mNavHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onNavHeaderClick();
+            }
+        });
 
         if(MainActivity.LOGGEDIN){
-            TextView tv = (TextView) cir.findViewById(R.id.logged_username);
+            TextView tv = (TextView) mNavHeader.findViewById(R.id.logged_username);
             tv.setText(USERNAME);
         }
-
     }
 
     /**
@@ -88,34 +91,31 @@ public class MainActivity extends AppCompatActivity
         // create menu items;
         String titles[] = { "添加行程", "添加账单", "添加密码" };
         int icon[] = { R.drawable.ic_menu_travel, R.drawable.ic_menu_money, R.drawable.ic_menu_password };
-        item = new ResideMenuItem[titles.length];
+        mItem = new ResideMenuItem[titles.length];
 
         for (int i = 0; i < titles.length; i++){
-            item[i] = new ResideMenuItem(this, icon[i], titles[i]);
-            mResideMenu.addMenuItem(item[i],  ResideMenu.DIRECTION_RIGHT); // or  ResideMenu.DIRECTION_RIGHT
+            mItem[i] = new ResideMenuItem(this, icon[i], titles[i]);
+            mResideMenu.addMenuItem(mItem[i],  ResideMenu.DIRECTION_RIGHT); // or  ResideMenu.DIRECTION_RIGHT
         }
 
-        item[0].setOnClickListener(new View.OnClickListener() {
+        mItem[0].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddJourney.class);
-                startActivity(intent);
+                ActivityController.jumpToAnotherActivity(MainActivity.this, AddJourney.class);
             }
         });
 
-        item[1].setOnClickListener(new View.OnClickListener() {
+        mItem[1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddBill.class);
-                startActivity(intent);
+                ActivityController.jumpToAnotherActivity(MainActivity.this, AddBill.class);
             }
         });
 
-        item[2].setOnClickListener(new View.OnClickListener() {
+        mItem[2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddPassword.class);
-                startActivity(intent);
+                ActivityController.jumpToAnotherActivity(MainActivity.this, AddPassword.class);
             }
         });
     }
@@ -200,5 +200,13 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void onNavHeaderClick() {
+        if(MainActivity.LOGGEDIN) {
+            ActivityController.jumpToAnotherActivity(MainActivity.this, AccountCenter.class);
+        } else {
+            ActivityController.jumpToAnotherActivity(MainActivity.this, LogIn.class);
+        }
     }
 }

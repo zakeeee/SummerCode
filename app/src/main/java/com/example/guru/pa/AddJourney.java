@@ -44,7 +44,7 @@ public class AddJourney extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_activity_add_journey);
+        setContentView(R.layout.activity_add_journey);
 
         /* ActionBar添加返回按钮 */
         ActionBar actionBar = getSupportActionBar();
