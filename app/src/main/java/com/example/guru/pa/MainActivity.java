@@ -25,11 +25,11 @@ import com.special.ResideMenu.ResideMenuItem;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String FILENAME = "testFile.txt";
+    public static final String FILENAME = "testFile2.txt";
     public static SubActionButton button1;
     public static SubActionButton button2;
     public static SubActionButton button3;
-    private ResideMenu mResideMenu;
+    private  ResideMenu mResideMenu;
     public static Boolean LOGGEDIN = false;
     public static String USERNAME;
     private ResideMenuItem item[];
@@ -103,7 +103,8 @@ public class MainActivity extends AppCompatActivity
                     if(MainActivity.LOGGEDIN) {
                         Intent intent = new Intent(MainActivity.this, Accountcenter.class);
                         startActivity(intent);
-                    } else {
+                    }
+                    else{
                         Intent intent = new Intent(MainActivity.this, LogIn.class);
                         startActivity(intent);
                     }

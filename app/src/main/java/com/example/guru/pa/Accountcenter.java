@@ -1,16 +1,21 @@
 package com.example.guru.pa;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 public class Accountcenter extends AppCompatActivity {
 
     private Spinner spinner_account;
     private ArrayAdapter<String> adapter_account;
+    private Button logout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,6 +23,17 @@ public class Accountcenter extends AppCompatActivity {
 
         ActionBar actionBar=getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        Button logout = (Button) findViewById(R.id.account_logout);
+        if(logout != null) {
+            logout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Accountcenter.this, LogIn.class);
+                    startActivity(intent);
+                }
+            });
+        }
 
         spinner_account = (Spinner) findViewById(R.id.account_sex);
         // 建立数据源
@@ -41,4 +57,6 @@ public class Accountcenter extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

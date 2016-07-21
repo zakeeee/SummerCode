@@ -40,8 +40,8 @@ public class MoneyManage extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearlayout_buttons);
-
         Button button = (Button) linearLayout.findViewById(R.id.jiyibi);
+
         if(button != null) {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
