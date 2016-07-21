@@ -100,24 +100,21 @@ public class MainActivity extends AppCompatActivity
         mItem[0].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddJourney.class);
-                startActivity(intent);
+                ActivityController.jumpToAnotherActivity(MainActivity.this, AddJourney.class);
             }
         });
 
         mItem[1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddBill.class);
-                startActivity(intent);
+                ActivityController.jumpToAnotherActivity(MainActivity.this, AddBill.class);
             }
         });
 
         mItem[2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddPassword.class);
-                startActivity(intent);
+                ActivityController.jumpToAnotherActivity(MainActivity.this, AddPassword.class);
             }
         });
     }

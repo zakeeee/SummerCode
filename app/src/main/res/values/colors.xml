@@ -4,8 +4,8 @@
     <color name="colorPrimaryDark">#2d4052</color>
     <color name="colorAccent">#ff4081</color>
     <color name="White">#fcfcfc</color>
-    <color name="Green">#00AA13</color>
-    <color name="red">#ff0000</color>
+    <color name="Green">#2ecc71</color>
+    <color name="Red">#e74c3c</color>
 
     <!-- CREATE A COLOR ARRAY IN COLORS XML -->
     <color name="custom_theme_darker">#ad843d</color>
@@ -23,7 +23,7 @@
 
     <integer-array name="account_theme">
         <item>@color/colorPrimaryDark</item>
-        <item>@color/red</item>
+        <item>@color/Red</item>
         <item>@color/colorAccent</item>
         <item>@color/White</item>
     </integer-array>

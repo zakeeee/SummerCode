@@ -101,7 +101,7 @@
                 <Button
                     android:text="保存"
                     android:textColor="@color/White"
-                    android:background="#00FF00"
+                    android:background="@color/Green"
                     android:id="@+id/addbill_save"
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -110,7 +110,7 @@
 
                 <Button
                     android:text="取消"
-                    android:background="#FF0000"
+                    android:background="@color/Red"
                     android:textColor="@color/White"
                     android:id="@+id/addbill_cancel"
                     android:layout_width="0dp"
