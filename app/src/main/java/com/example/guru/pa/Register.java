@@ -17,7 +17,7 @@ public class Register extends AppCompatActivity {
     private EditText reg_password2_edit;
     private Button button;
 
-    public static SQLiteDatabase db;//SQLiteDatabase db;
+    private static SQLiteDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,8 +60,6 @@ public class Register extends AppCompatActivity {
                             new AlertDialog.Builder(Register.this)
                                     .setTitle("注册成功").setMessage("注册成功")
                                     .setPositiveButton("确定", ss).show();
-                            //     Register.this.onDestroy();
-
                         } else {
                             Toast.makeText(Register.this,"注册失败", Toast.LENGTH_SHORT).show();
                         }
@@ -75,7 +73,6 @@ public class Register extends AppCompatActivity {
     // 添加用户
     public Boolean addUser(String name, String password) {
         String str = "insert into tb_user values(?,?) ";
-        LogIn usr = new LogIn();usr.db = db;
         try{
             db.execSQL(str, new String[]{name, password});
             return true;

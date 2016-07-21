@@ -19,7 +19,7 @@ public class LogIn extends AppCompatActivity {
     private EditText edname;
     private EditText edpassword;
     private Button login;
-    public static SQLiteDatabase db;
+    private static SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +36,7 @@ public class LogIn extends AppCompatActivity {
                 String name = edname.getText().toString();
                 String password = edpassword.getText().toString();
                 if(name.equals("") || password.equals("")){
-                    new AlertDialog.Builder(LogIn.this).setTitle("错误")
-                            .setMessage("帐号或密码不能空").setPositiveButton("确定", null)
-                            .show();
+                    Toast.makeText(LogIn.this, "帐号或密码未填完！", Toast.LENGTH_SHORT).show();
                 }else{
                     isUserinfo(name, password);
                 }
@@ -48,9 +46,7 @@ public class LogIn extends AppCompatActivity {
                     String str="select name, password from tb_user where name=? and password=?";
                     Cursor cursor = db.rawQuery(str, new String []{name,pwd});
                     if(cursor.getCount()<=0){
-                        new AlertDialog.Builder(LogIn.this).setTitle("错误")
-                                .setMessage("帐号或密码错误！").setPositiveButton("确定", null)
-                                .show();
+                        Toast.makeText(LogIn.this, "帐号或密码错误！", Toast.LENGTH_SHORT).show();
                         return false;
                     }else{
                         Toast.makeText(LogIn.this,"登录成功", Toast.LENGTH_SHORT).show();
@@ -69,7 +65,7 @@ public class LogIn extends AppCompatActivity {
             }
         });
 
-        //==============注册按钮===========================
+        /*  注册按钮  */
         TextView regist = (TextView) findViewById(R.id.regist);
         if(regist != null){
             regist.setOnClickListener(new View.OnClickListener() {
