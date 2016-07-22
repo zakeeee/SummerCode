@@ -21,13 +21,20 @@ public class AddBill extends AppCompatActivity {
     private EditText incomeSourceText = null;
     private EditText expendText = null;
     private EditText expendDesText = null;
+    private EditText mBackupText = null;
     private CalendarView calendarView = null;
     private String incomeStr = null;
     private String incomeSourceStr = null;
     private String expendStr = null;
     private String expendDesStr = null;
-    private SimpleDateFormat dateFormat = null;
+    private String mBackup = null;
     private String calendarDate = null;
+    private SimpleDateFormat dateFormat = null;
+    private int mYear;
+    private int mMonth;
+    private int mDay;
+    private BillDBOperator mDBOperator = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,16 +47,24 @@ public class AddBill extends AppCompatActivity {
         // 获得当前日历选中的日期
         dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         calendarView = (CalendarView)findViewById(R.id.calendarView);
-        calendarDate = "Time: " + dateFormat.format(calendarView.getDate());
+        calendarDate = dateFormat.format(calendarView.getDate());
+        mYear = Integer.parseInt((new SimpleDateFormat("yyyy")).format(calendarView.getDate()));
+        mMonth = Integer.parseInt((new SimpleDateFormat("MM")).format(calendarView.getDate()));
+        mDay = Integer.parseInt((new SimpleDateFormat("dd")).format(calendarView.getDate()));
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month,
                                             int dayOfMonth) {
-                calendarDate = "Time: " + String.valueOf(year) + "-"
-                        + String.valueOf(month + 1) + "-" + String.valueOf(dayOfMonth);
+                calendarDate = String.valueOf(year) + "-" +
+                                    String.valueOf(month) + "-" +
+                                            String.valueOf(dayOfMonth);
+                        mYear = year;
+                mMonth = month + 1;
+                mDay = dayOfMonth;
             }
         });
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -67,27 +82,42 @@ public class AddBill extends AppCompatActivity {
         incomeSourceText = (EditText)findViewById(R.id.addbill_incomesource);
         expendText = (EditText)findViewById(R.id.addbill_expend);
         expendDesText = (EditText)findViewById(R.id.addbill_expendpurpose);
+        mBackupText = (EditText)findViewById(R.id.addbill_extra);
 
         if (incomeText.getText().toString().equals("") || expendText.getText().toString().equals("")){
             Toast.makeText(AddBill.this,"收入或支出不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        incomeStr = " 收入(元): " + incomeText.getText().toString();
-        incomeSourceStr = " 来源:" + incomeSourceText.getText().toString(); // 两者之间没有空格
-        expendStr = " 支出(元): " + expendText.getText().toString();
-        expendDesStr = " 目的:" + expendDesText.getText().toString();     // 两者之间没有空格
+        incomeStr =// " 收入(元): " +
+                incomeText.getText().toString();
+        incomeSourceStr = //" 来源:" +
+                incomeSourceText.getText().toString(); // 两者之间没有空格
+        expendStr =// " 支出(元): " +
+                expendText.getText().toString();
+        expendDesStr = //" 目的:" +
+                expendDesText.getText().toString();     // 两者之间没有空格
+        mBackup =
+                mBackupText.getText().toString();
 
-        FileOperate fileOperate = new FileOperate(this);
-        String bufferContent = calendarDate + " "  + incomeStr + " "
-                + incomeSourceStr + " " + expendStr + " " + expendDesStr;
-        fileOperate.save(MainActivity.FILENAME, bufferContent);
 
-        /**
-         * Test Read&Write File class
-         */
-        //String bufferRead = fileOperate.read(filename);
-        //Log.e("ReadTest",bufferRead);
+        mDBOperator = new BillDBOperator(this);
+        BillVO billVO = new BillVO();
+        billVO.setIncome(Integer.parseInt(incomeStr));
+        billVO.setIncomeSource(incomeSourceStr);
+        billVO.setExpend(Integer.parseInt(expendStr));
+        billVO.setExpendDes(expendDesStr);
+       // billVO.setDate(calendarDate);
+        int billId = mDBOperator.saveBill(billVO);
+
+        BillDetail billDetail = new BillDetail();
+        billDetail.setYear(mYear);
+        billDetail.setMonth(mMonth);
+        billDetail.setDay(mDay);
+        billDetail.setBillId(billId);
+        billDetail.setBackup(mBackup);
+        int detailId = mDBOperator.saveDetail(billDetail);
+
         this.finish();
         Intent intent = new Intent(this, Bill.class);
         startActivity(intent);
