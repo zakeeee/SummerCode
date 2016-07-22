@@ -4,17 +4,17 @@
 
     <item android:id="@+id/bill_search"
         android:icon="@drawable/ic_search_white"
-        android:title="@string/search"
+        android:title="Search"
         yourapp:actionViewClass="android.support.v7.widget.SearchView"
         yourapp:showAsAction="ifRoom|collapseActionView" />
 
     <item android:id="@+id/bill_plus"
         android:icon="@drawable/ic_plus_white"
-        android:title="@string/plus"
+        android:title="Plus"
         yourapp:showAsAction="ifRoom" />
 
     <item android:id="@+id/bill_sort"
-        android:title="@string/sort"
+        android:title="Sort"
         android:icon="@drawable/ic_sort"
         yourapp:showAsAction="ifRoom" />
 </menu>

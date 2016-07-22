@@ -36,7 +36,6 @@ import java.net.URLConnection;
 import cz.msebera.android.httpclient.Header;
 
 public class LogIn extends AppCompatActivity {
-
     private EditText edname;
     private EditText edpassword;
     private Button login;

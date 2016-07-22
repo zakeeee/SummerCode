@@ -21,7 +21,6 @@ import org.json.JSONObject;
 import cz.msebera.android.httpclient.Header;
 
 public class Register extends AppCompatActivity {
-
     private EditText reg_username_edit;
     private EditText reg_password1_edit;
     private EditText reg_password2_edit;

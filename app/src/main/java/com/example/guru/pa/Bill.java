@@ -44,7 +44,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ListIterator;
 
-public class Bill extends AppCompatActivity {
+public class Bill extends AppCompatActivity implements View.OnClickListener{
 
     private FileOperate fileOperate;
     private String fileContent = null;
@@ -193,6 +193,7 @@ public class Bill extends AppCompatActivity {
         switch (id) {
             case R.id.bill_plus:
                 Intent intent = new Intent(Bill.this, AddBill.class);
+                this.finish();
                 startActivity(intent);
                 break;
             case android.R.id.home:
@@ -218,5 +219,10 @@ public class Bill extends AppCompatActivity {
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }
