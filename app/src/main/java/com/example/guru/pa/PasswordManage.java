@@ -23,9 +23,6 @@ import java.util.ArrayList;
 
 public class PasswordManage extends AppCompatActivity {
 
-    private FileOperate fileOperate;
-    private String fileContent = null;
-    private String[] lineContent;
     /* 必备的三个量：一个List（也可以为数组）,一个Adapter,一个ListView */
     private ArrayList<String> strs;
     private ArrayAdapter<String> arrayAdapter;
@@ -110,28 +107,17 @@ public class PasswordManage extends AppCompatActivity {
          * 建议在另一个线程里加载，然后更新UI
          */
 
-        fileOperate = new FileOperate(this);
-        try {
-            fileContent = fileOperate.read(MainActivity.FILENAME);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         strs = new ArrayList<String>();
 
-        if(fileContent == null){
+       // if(fileContent == null){
             Toast.makeText(PasswordManage.this, "打开文件失败", Toast.LENGTH_SHORT).show();
             strs.add("木有内容");
+        /*
         }
         else {
-            lineContent = fileContent.split("\n");
 
-            int index = 0;
-            for (String s : lineContent){
-                strs.add(index, s);
-                index++;
-            }
-        }
+        }*/
 
         /* 实例化ArrayAdapter */
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strs);
@@ -140,19 +126,7 @@ public class PasswordManage extends AppCompatActivity {
     }
 
     public void deleteContent(int index){
-        String newContent = "";
-        for (int i = 0; i < lineContent.length; ++ i) {
-            if (i != index){
-                newContent += lineContent + "\n";
-            }
-        }
-        fileOperate = new FileOperate(this);
-        fileOperate.ifFileExist(MainActivity.FILENAME);
-        try {
-            fileOperate.rewrite(MainActivity.FILENAME, newContent);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+
     }
 
     @Override
