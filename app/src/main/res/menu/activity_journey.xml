@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:yourapp="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/journey_search"
+        android:icon="@drawable/ic_search_white"
+        android:title="Search"
+        yourapp:showAsAction="ifRoom" />
+
+    <item android:id="@+id/journey_plus"
+        android:icon="@drawable/ic_plus_white"
+        android:title="Plus"
+        yourapp:showAsAction="ifRoom" />
+
+    <item android:id="@+id/journey_sort"
+        android:title="Sort"
+        android:icon="@drawable/ic_sort"
+        yourapp:showAsAction="ifRoom" />
+
+</menu>
