@@ -18,7 +18,7 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 
-
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class PasswordManage extends AppCompatActivity {
@@ -40,26 +40,6 @@ public class PasswordManage extends AppCompatActivity {
         /* ActionBar添加返回按钮 */
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
-        /**
-         * 强烈不建议在onCreate里面进行以下操作
-         * 数据量大时会让人感觉界面卡顿
-         * 建议在另一个线程里加载，然后更新UI
-         */
-
-
-        strs = new ArrayList<String>();
-
-        if(fileContent == null){
-            Toast.makeText(PasswordManage.this, "打开文件失败", Toast.LENGTH_SHORT).show();
-            strs.add("木有内容");
-        }
-        else {
-
-        }
-
-        /* 实例化ArrayAdapter */
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strs);
 
         /* 实例化SwipeMenuListView */
         mListView = (SwipeMenuListView) findViewById(R.id.password_list);
@@ -94,7 +74,7 @@ public class PasswordManage extends AppCompatActivity {
         };
 
         /* 给mListView设置Adapter,MenuCreator,设置滑动方向 */
-        mListView.setAdapter(arrayAdapter);
+
         mListView.setMenuCreator(creator);
         mListView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
 
@@ -108,7 +88,7 @@ public class PasswordManage extends AppCompatActivity {
                         break;
                     case 1:
                         strs.remove(position);
-
+                        deleteContent(position);
                         arrayAdapter.notifyDataSetChanged();
                         // delete
                         break;
@@ -121,8 +101,58 @@ public class PasswordManage extends AppCompatActivity {
 
     }
 
-    public void deleteContent(int index){
+    @Override
+    protected void onResume() {
+        super.onResume();
+        /**
+         * 强烈不建议在onCreate里面进行以下操作
+         * 数据量大时会让人感觉界面卡顿
+         * 建议在另一个线程里加载，然后更新UI
+         */
 
+        fileOperate = new FileOperate(this);
+        try {
+            fileContent = fileOperate.read(MainActivity.FILENAME);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        strs = new ArrayList<String>();
+
+        if(fileContent == null){
+            Toast.makeText(PasswordManage.this, "打开文件失败", Toast.LENGTH_SHORT).show();
+            strs.add("木有内容");
+        }
+        else {
+            lineContent = fileContent.split("\n");
+
+            int index = 0;
+            for (String s : lineContent){
+                strs.add(index, s);
+                index++;
+            }
+        }
+
+        /* 实例化ArrayAdapter */
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strs);
+
+        mListView.setAdapter(arrayAdapter);
+    }
+
+    public void deleteContent(int index){
+        String newContent = "";
+        for (int i = 0; i < lineContent.length; ++ i) {
+            if (i != index){
+                newContent += lineContent + "\n";
+            }
+        }
+        fileOperate = new FileOperate(this);
+        fileOperate.ifFileExist(MainActivity.FILENAME);
+        try {
+            fileOperate.rewrite(MainActivity.FILENAME, newContent);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

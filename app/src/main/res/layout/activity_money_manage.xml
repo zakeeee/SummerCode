@@ -23,9 +23,9 @@
     <!--<include layout="@layout/content_money_manage" />-->
 
     <LinearLayout
-        android:background="#9CC3E5"
+        android:background="#1abc9c"
         android:layout_width="match_parent"
-        android:layout_weight="0.3"
+        android:layout_weight="30"
         android:orientation="vertical"
         android:layout_height="0dp">
 
@@ -43,7 +43,7 @@
             android:textSize="22dp"
             android:id="@+id/accumulateProfit"
             android:gravity="center"
-            android:textColor="#FFD965"
+            android:textColor="#ffffff"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.4" />
@@ -52,11 +52,11 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_weight="0.12"
+        android:layout_weight="12"
         android:layout_height="0dp">
 
         <LinearLayout
-            android:background="#2E75B5"
+            android:background="#16a085"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:orientation="vertical"
@@ -76,14 +76,14 @@
                 android:textSize="16dp"
                 android:id="@+id/expend_this_month"
                 android:gravity="center"
-                android:textColor="#FFD965"
+                android:textColor="#ffffff"
                 android:layout_width="match_parent"
                 android:layout_weight="0.4"
                 android:layout_height="0dp" />
         </LinearLayout>
 
         <LinearLayout
-            android:background="#2E75B5"
+            android:background="#16a085"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:orientation="vertical"
@@ -103,7 +103,7 @@
                 android:textSize="16dp"
                 android:id="@+id/income_this_month"
                 android:gravity="center"
-                android:textColor="#FFD965"
+                android:textColor="#ffffff"
                 android:layout_width="match_parent"
                 android:layout_weight="0.4"
                 android:layout_height="0dp" />
@@ -160,18 +160,19 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_weight="0.25"
+        android:layout_weight="25"
         android:layout_height="0dp" />
 
     <LinearLayout
         android:id="@+id/linearlayout_buttons"
         android:layout_width="match_parent"
-        android:layout_weight="0.1"
+        android:layout_weight="7"
         android:layout_height="0dp">
 
         <Button
             android:text="理财助手"
-            android:background="#FFD965"
+            android:background="@color/Green"
+            android:textColor="@color/White"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent" />
@@ -179,7 +180,8 @@
         <Button
             android:id="@+id/jiyibi"
             android:text="记一笔"
-            android:background="#A8D08D"
+            android:background="@color/Red"
+            android:textColor="@color/White"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent" />
