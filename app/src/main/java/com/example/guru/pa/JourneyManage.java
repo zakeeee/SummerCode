@@ -46,7 +46,37 @@ public class JourneyManage extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
 
+        /**
+         * 强烈不建议在onCreate里面进行以下操作
+         * 数据量大时会让人感觉界面卡顿
+         * 建议在另一个线程里加载，然后更新UI
+         */
 
+
+        strs = new ArrayList<String>();
+        mScheduleArrayList = new ArrayList<Schedule>();
+        mTagScheduleArrayList = new ArrayList<TagSchedule>();
+        mDBOperator = new DataBaseOperator(this);
+        mScheduleArrayList = mDBOperator.getAllSchedule();
+        if(mScheduleArrayList == null){
+            Toast.makeText(JourneyManage.this, "无内容", Toast.LENGTH_SHORT).show();
+            strs.add("木有内容");
+        }
+        else {
+            String tempStr = "";
+            Schedule tempSch = null;
+            for (int i = 0; i < mScheduleArrayList.size(); ++ i) {
+                tempSch = mScheduleArrayList.get(i);
+                tempStr = "ID: " + tempSch.getScheduleId() + " " +
+                             "Date: " + tempSch.getDate() + " " +
+                                "Time: " + tempSch.getTime() + "\n"+
+                                    "Content :" + tempSch.getContent();
+                strs.add(tempStr);
+            }
+        }
+
+        /* 实例化ArrayAdapter */
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strs);
 
         /* 实例化SwipeMenuListView */
         mListView = (SwipeMenuListView) findViewById(R.id.journey_list);
@@ -81,7 +111,7 @@ public class JourneyManage extends AppCompatActivity {
         };
 
         /* 给mListView设置Adapter,MenuCreator,设置滑动方向 */
-
+        mListView.setAdapter(arrayAdapter);
         mListView.setMenuCreator(creator);
         mListView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
 
@@ -92,6 +122,7 @@ public class JourneyManage extends AppCompatActivity {
                 switch (index) {
                     case 0:
                         // open
+                        ActivityController.jumpToAnotherActivity(JourneyManage.this,JourneyDetail.class);
                         break;
                     case 1:
                         strs.remove(position);

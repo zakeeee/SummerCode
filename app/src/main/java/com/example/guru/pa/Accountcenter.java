@@ -40,6 +40,8 @@ public class AccountCenter extends AppCompatActivity {
         String[] Items = getResources().getStringArray(R.array.spinner_account);
         // 建立Adapter并且绑定数据源
         ArrayAdapter<String> _Adapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, Items);
+
+        _Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //绑定 Adapter到控件
         spinner_account.setAdapter(_Adapter);
     }
