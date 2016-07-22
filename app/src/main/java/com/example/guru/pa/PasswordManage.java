@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-public class Password extends AppCompatActivity {
+public class PasswordManage extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class Password extends AppCompatActivity {
         int id = item.getItemId();
 
         if(id == R.id.password_plus) {
-            Intent intent = new Intent(Password.this, AddPassword.class);
+            Intent intent = new Intent(PasswordManage.this, AddPassword.class);
             startActivity(intent);
         }
 
