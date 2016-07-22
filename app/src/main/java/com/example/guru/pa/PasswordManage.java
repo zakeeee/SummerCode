@@ -117,6 +117,7 @@ public class PasswordManage extends AppCompatActivity {
                 switch (index) {
                     case 0:
                         // open
+                        ActivityController.jumpToAnotherActivity(PasswordManage.this,PasswordDetail.class);
                         break;
                     case 1:
                         strs.remove(position);
