@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
-public class Accountcenter extends AppCompatActivity {
+public class AccountCenter extends AppCompatActivity {
 
     private Spinner spinner_account;
     private ArrayAdapter<String> adapter_account;
@@ -29,7 +29,7 @@ public class Accountcenter extends AppCompatActivity {
             logout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(Accountcenter.this, LogIn.class);
+                    Intent intent = new Intent(AccountCenter.this, LogIn.class);
                     startActivity(intent);
                 }
             });
@@ -40,6 +40,8 @@ public class Accountcenter extends AppCompatActivity {
         String[] Items = getResources().getStringArray(R.array.spinner_account);
         // 建立Adapter并且绑定数据源
         ArrayAdapter<String> _Adapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, Items);
+
+        _Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //绑定 Adapter到控件
         spinner_account.setAdapter(_Adapter);
     }

@@ -60,27 +60,24 @@
 
     <!-- Example settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>
-
     <string name="pref_title_new_message_notifications">New message notifications</string>
-
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>
-
     <string name="pref_title_vibrate">Vibrate</string>
 
     <string-array name="spinner_T">
-        <item>15分钟</item>
-        <item>30分钟 </item>
-        <item>45分钟</item>
-        <item>1小时</item>
-        <item>3小时</item>
+        <item>30分钟</item>
+        <item>2小时 </item>
+        <item>4小时</item>
         <item>1天</item>
+        <item>1周</item>
+        <item>1月</item>
     </string-array>
 
     <string-array name="spinner_Way">
-        <item>通知栏提醒</item>
-        <item>缙哥哥</item>
-        <item>还有什么提醒啊</item>
+        <item>无提醒</item>
+        <item>闹铃提醒</item>
+        <item>蛤蛤</item>
     </string-array>
 
     <string-array name="spinner_account">
@@ -88,4 +85,10 @@
         <item>女</item>
         <item>其他</item>
     </string-array>
+
+    <string name="plus">添加</string>
+    <string name="search">搜索</string>
+    <string name="sort">排序</string>
+    <string name="bill">账单</string>
+    <string name="edit">编辑</string>
 </resources>

@@ -6,30 +6,33 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
  * Created by Haoyu on 2016/7/20.
  */
 public class DataBaseOperator {
     private DataBaseHelper mDBOpenHelper = null;
-    private static String DBNAME = "schedule.db";
+    private static String DBNAME = "mySchedule.db";
     public DataBaseOperator(Context context){
         mDBOpenHelper = new DataBaseHelper(context, DBNAME);
     }
-    //保存一个schedule
+    /**
+     * @param schedule
+     * @return
+     */
     public int saveSchedule(Schedule schedule){
         SQLiteDatabase db = mDBOpenHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("date", schedule.getDate());
         values.put("time", schedule.getTime());
         values.put("content", schedule.getContent());
-        values.put("scheduleId", schedule.getScheduleId());
         db.beginTransaction();
         int scheduleId = -1;
         try {
+            String sql = "select max(scheduleId) from" + " " + DataBaseHelper.TABLE_NORMAL;
             db.insert(DataBaseHelper.TABLE_NORMAL, null, values);
-            Cursor cursor = db.rawQuery("select max(scheduleId) from"
-                    + DataBaseHelper.TABLE_NORMAL, null);
+            Cursor cursor = db.rawQuery(sql, null);
             if (cursor.moveToFirst()){
                 scheduleId = (int)cursor.getLong(0);
             }
@@ -40,11 +43,15 @@ public class DataBaseOperator {
         }
         return scheduleId;
     }
-    //通过Id获得一个schedule
+
+    /**
+     * @param scheduleId
+     * @return
+     */
     public Schedule getScheduleById(int scheduleId){
         SQLiteDatabase db = mDBOpenHelper.getWritableDatabase();
         String[] columns = {"scheduleId", "date", "time", "content"};
-        String selections = "scheduleId = ?";
+        String selections = "scheduleId=?";
         String[] selectionArgs = {String.valueOf(scheduleId)};
         Cursor cursor = db.query(DataBaseHelper.TABLE_NORMAL, columns,
                selections ,selectionArgs, null, null, null);
@@ -59,7 +66,10 @@ public class DataBaseOperator {
         cursor.close();
         return null;
     }
-    //获得全部的schedule
+
+    /**
+     * @return
+     */
     public ArrayList<Schedule> getAllSchedule() {
         ArrayList<Schedule> arrayList= new ArrayList<Schedule>();
         SQLiteDatabase db = mDBOpenHelper.getWritableDatabase();
@@ -76,15 +86,135 @@ public class DataBaseOperator {
             );
         }
         cursor.close();
-        if (arrayList != null && arrayList.size() != 0){
+        if (arrayList != null && arrayList.size() > 0){
             return arrayList;
         }
         return null;
     }
 
     /**
-     * TO Do:
-     * 删除、日程标记、更新等功能
+     * @param scheduleId
      */
+    public void deleteScheduleById(int scheduleId){
+        SQLiteDatabase db = mDBOpenHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            String whereClause = "scheduleId=?";
+            String[] whereArgs = {String.valueOf(scheduleId)};
+            db.delete(DataBaseHelper.TABLE_NORMAL, whereClause, whereArgs);
+            db.delete(DataBaseHelper.TABLE_TAG, whereClause, whereArgs);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
 
+    /**
+     * @param newSchedule
+     */
+    public void updateSchedule(Schedule newSchedule){
+        SQLiteDatabase db = mDBOpenHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("date", newSchedule.getDate());
+        values.put("time", newSchedule.getTime());
+        values.put("content", newSchedule.getContent());
+        values.put("scheduleId", newSchedule.getScheduleId());
+        db.update(DataBaseHelper.TABLE_NORMAL, values,
+                "scheduleId=?", new String[]{String.valueOf(newSchedule.getScheduleId())});
+    }
+
+    /**
+     * @param tagSchedule
+     * @return
+     */
+    public int saveTagSchedule(TagSchedule tagSchedule){
+        SQLiteDatabase db = mDBOpenHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("scheduleId",tagSchedule.getScheduleId());
+        values.put("remindId",tagSchedule.getRemindId());
+        values.put("year",tagSchedule.getYear());
+        values.put("month",tagSchedule.getMonth());
+        values.put("day",tagSchedule.getDay());
+        db.beginTransaction();
+        int tagId = -1;
+        try {
+            String sql = "select max(tagId) from" + " " + DataBaseHelper.TABLE_TAG;
+            db.insert(DataBaseHelper.TABLE_TAG, null, values);
+            Cursor cursor = db.rawQuery(sql, null);
+            if (cursor.moveToFirst()){
+                tagId = (int)cursor.getLong(0);
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+        }finally {
+            db.endTransaction();
+        }
+        return tagId;
+    }
+
+    /**
+     * @param tagScheduleArrayList
+     */
+    public void saveTagScheduleList(ArrayList<TagSchedule> tagScheduleArrayList){
+        SQLiteDatabase db = mDBOpenHelper.getWritableDatabase();
+        TagSchedule tagSchedule = new TagSchedule();
+        db.beginTransaction();
+        try {
+            for (int i = 0; i < tagScheduleArrayList.size(); ++ i){
+                tagSchedule = tagScheduleArrayList.get(i);
+                ContentValues values = new ContentValues();
+                values.put("scheduleId",tagSchedule.getScheduleId());
+                values.put("remindId",tagSchedule.getRemindId());
+                values.put("year",tagSchedule.getYear());
+                values.put("month",tagSchedule.getMonth());
+                values.put("day",tagSchedule.getDay());
+                db.insert(DataBaseHelper.TABLE_TAG, null, values);
+            }
+
+            db.setTransactionSuccessful();
+        }finally {
+            db.endTransaction();
+        }
+    }
+
+    /**
+     * 查询当前月份的标记日程
+     * @param currentYear
+     * @param currentMonth
+     * @return
+     */
+    public ArrayList<TagSchedule> getTagScheduleByMY(int currentYear, int currentMonth){
+        SQLiteDatabase db = mDBOpenHelper.getWritableDatabase();
+        ArrayList<TagSchedule> retList = new ArrayList<TagSchedule>();
+        String[] columns = {"tagId", "scheduleId", "remindId", "year", "month", "day"};
+        String selections = "year=? and month=?";
+        String[] selectionArgs = {String.valueOf(currentYear), String.valueOf(currentMonth)};
+        Cursor cursor = db.query(DataBaseHelper.TABLE_TAG, columns, selections,
+                selectionArgs, null, null, null);
+        while (cursor.moveToNext()){
+            int gTagId = cursor.getInt(cursor.getColumnIndex("tagId"));
+            int gScheduleId = cursor.getInt(cursor.getColumnIndex("scheduleId"));
+            int gRemindId = cursor.getInt(cursor.getColumnIndex("remindId"));
+            int gYear = cursor.getInt(cursor.getColumnIndex("year"));
+            int gMonth = cursor.getInt(cursor.getColumnIndex("month"));
+            int gDay = cursor.getInt(cursor.getColumnIndex("day"));
+            retList.add(new TagSchedule(gYear, gMonth, gDay, gRemindId, gTagId, gScheduleId));
+        }
+        cursor.close();
+        if (retList != null && retList.size() > 0) {
+            return retList;
+        }
+        return null;
+    }
+
+    public void deleteAll(){
+        mDBOpenHelper.onUpgrade(mDBOpenHelper.getWritableDatabase(),1, 1);
+    }
+
+
+    public void closeDB() {
+        if (mDBOpenHelper != null){
+            mDBOpenHelper.close();
+        }
+    }
 }

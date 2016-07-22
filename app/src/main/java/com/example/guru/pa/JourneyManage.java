@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
@@ -118,6 +119,7 @@ public class JourneyManage extends AppCompatActivity {
                 switch (index) {
                     case 0:
                         // open
+                        ActivityController.jumpToAnotherActivity(JourneyManage.this,JourneyDetail.class);
                         break;
                     case 1:
                         strs.remove(position);
@@ -130,6 +132,7 @@ public class JourneyManage extends AppCompatActivity {
                 return false;
             }
         });
+
 
     }
 
@@ -181,9 +184,6 @@ public class JourneyManage extends AppCompatActivity {
             case R.id.journey_plus:
                 openJourneyAdd();
                 return true;
-            case R.id.journey_search:
-                openJourneySearch();
-                return true;
             case R.id.journey_sort:
                 openJourneySort();
                 return true;
@@ -193,7 +193,7 @@ public class JourneyManage extends AppCompatActivity {
     }
 
     public void openJourneyAdd(){
-        Intent intent = new Intent(JourneyManage.this, Activity_add_journey.class);
+        Intent intent = new Intent(JourneyManage.this, AddJourney.class);
         startActivity(intent);
     }
 
