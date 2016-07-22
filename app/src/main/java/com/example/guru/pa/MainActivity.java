@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity
         item[0].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, Activity_add_journey.class);
+                Intent intent = new Intent(MainActivity.this, AddJourney.class);
                 startActivity(intent);
             }
         });
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v){
                     if(MainActivity.LOGGEDIN) {
-                        Intent intent = new Intent(MainActivity.this, Accountcenter.class);
+                        Intent intent = new Intent(MainActivity.this, AccountCenter.class);
                         startActivity(intent);
                     }
                     else{

@@ -24,7 +24,7 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class Activity_add_journey extends AppCompatActivity {
+public class AddJourney extends AppCompatActivity {
 
     private Spinner spinner_T;
     private Spinner spinner_Way;
@@ -47,7 +47,7 @@ public class Activity_add_journey extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_activity_add_journey);
+        setContentView(R.layout.activity_add_journey);
 
         /* ActionBar添加返回按钮 */
         ActionBar actionBar = getSupportActionBar();
@@ -136,7 +136,7 @@ public class Activity_add_journey extends AppCompatActivity {
         mScheduleContent = mBackUp.getText().toString();
 
         if (mScheduleContent.equals("")){
-            Toast.makeText(Activity_add_journey.this,"备注不能为空", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddJourney.this,"备注不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
 
