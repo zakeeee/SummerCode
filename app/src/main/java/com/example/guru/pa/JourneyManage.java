@@ -224,9 +224,7 @@ public class JourneyManage extends AppCompatActivity {
     }
 
     public void openJourneyAdd(){
-        Intent intent = new Intent(this, AddJourney.class);
-        this.finish();
-        startActivity(intent);
+        ActivityController.jumpToAnotherActivity(JourneyManage.this, AddJourney.class);
     }
 
     public void openJourneySearch(){

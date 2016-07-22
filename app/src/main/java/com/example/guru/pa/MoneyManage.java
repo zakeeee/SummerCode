@@ -39,6 +39,12 @@ public class MoneyManage extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearlayout_buttons);
         Button button = (Button) linearLayout.findViewById(R.id.jiyibi);
 
@@ -97,8 +103,7 @@ public class MoneyManage extends AppCompatActivity {
 
         switch (id) {
             case R.id.bill_list:
-                Intent intent = new Intent(MoneyManage.this, Bill.class);
-                startActivity(intent);
+                ActivityController.jumpToAnotherActivity(MoneyManage.this, Bill.class);
                 break;
             case android.R.id.home:
                 this.finish();

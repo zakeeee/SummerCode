@@ -192,8 +192,7 @@ public class Bill extends AppCompatActivity {
 
         switch (id) {
             case R.id.bill_plus:
-                Intent intent = new Intent(Bill.this, AddBill.class);
-                startActivity(intent);
+                ActivityController.jumpToAnotherActivity(Bill.this, AddBill.class);
                 break;
             case android.R.id.home:
                 this.finish();
