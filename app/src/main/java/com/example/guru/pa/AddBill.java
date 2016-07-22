@@ -89,8 +89,8 @@ public class AddBill extends AppCompatActivity {
         //String bufferRead = fileOperate.read(filename);
         //Log.e("ReadTest",bufferRead);
         this.finish();
-        Intent intent = new Intent(this, Bill.class);
-        startActivity(intent);
+//        Intent intent = new Intent(this, Bill.class);
+//        startActivity(intent);
     }
 
     public void cancelBill(View view) {

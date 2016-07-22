@@ -39,6 +39,12 @@ public class MoneyManage extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearlayout_buttons);
         Button button = (Button) linearLayout.findViewById(R.id.jiyibi);
 
@@ -63,11 +69,11 @@ public class MoneyManage extends AppCompatActivity {
         total[0] = total[1] = profit = 0;
 
         for (String s : lineContent){
-           // Log.e("TestNumber", s);
+            // Log.e("TestNumber", s);
             indexOftotal = 0;
             elementContent = s.split(" ");
             for (String element : elementContent){
-               // Log.e("TestNumber", element);
+                // Log.e("TestNumber", element);
                 if (isNumeric(element) && !element.equals("")){
 
                     total[indexOftotal++] += Long.parseLong(element);
@@ -81,7 +87,6 @@ public class MoneyManage extends AppCompatActivity {
         viewOfIncome.setText(total[0] + "");
         viewOfExpend.setText(total[1] + "");
         viewOfProfit.setText(profit + "");
-
     }
 
     @Override

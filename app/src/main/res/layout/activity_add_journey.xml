@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AddJourney">
 
     <ScrollView
+        android:id="@+id/addjourney_scrollview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="40dp">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <CalendarView
+            <com.example.guru.pa.CalendarViewScrollable
                 android:id="@+id/journey_cal"
                 android:layout_width="match_parent"
-                android:layout_height="300dp">
-
-            </CalendarView>
+                android:layout_height="300dp"/>
 
             <TimePicker
                 android:timePickerMode="spinner"
@@ -126,35 +127,36 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"/>
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:text="保存"
-                    android:gravity="center"
-                    android:id="@+id/journey_save"
-                    android:textColor="@color/White"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="40dp"
-                    android:background="@color/Green"
-                    android:onClick="saveJourney"
-                    />
-                <TextView
-                    android:text="取消"
-                    android:gravity="center"
-                    android:id="@+id/journey_cancel"
-                    android:background="@color/Red"
-                    android:textColor="@color/White"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="40dp"
-                    android:onClick="cancelJourney"
-                    />
-            </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:text="保存"
+            android:gravity="center"
+            android:id="@+id/journey_save"
+            android:textColor="@color/White"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:background="@color/Green"
+            android:onClick="saveJourney"
+            />
+        <Button
+            android:text="取消"
+            android:gravity="center"
+            android:id="@+id/journey_cancel"
+            android:background="@color/Red"
+            android:textColor="@color/White"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:onClick="cancelJourney"
+            />
+    </LinearLayout>
+
+</RelativeLayout>

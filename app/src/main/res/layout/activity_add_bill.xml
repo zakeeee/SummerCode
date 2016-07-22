@@ -7,8 +7,9 @@
 
 
     <ScrollView
+        android:layout_marginBottom="40dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:orientation="vertical"
@@ -93,36 +94,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <Button
-                    android:text="保存"
-                    android:textColor="@color/White"
-                    android:background="@color/Green"
-                    android:id="@+id/addbill_save"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:onClick="saveBill"
-                    android:layout_height="40dp" />
-
-                <Button
-                    android:text="取消"
-                    android:background="@color/Red"
-                    android:textColor="@color/White"
-                    android:id="@+id/addbill_cancel"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:onClick="cancelBill"
-                    android:layout_height="40dp" />
-
-            </LinearLayout>
-
         </LinearLayout>
 
-
     </ScrollView>
+
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:text="保存"
+            android:textColor="@color/White"
+            android:background="@color/Green"
+            android:id="@+id/addbill_save"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:onClick="saveBill"
+            android:layout_height="40dp" />
+
+        <Button
+            android:text="取消"
+            android:background="@color/Red"
+            android:textColor="@color/White"
+            android:id="@+id/addbill_cancel"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:onClick="cancelBill"
+            android:layout_height="40dp" />
+
+    </LinearLayout>
 
 </RelativeLayout>
