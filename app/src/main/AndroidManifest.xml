@@ -74,6 +74,10 @@
             android:name=".AccountCenter"
             android:label="个人中心">
         </activity>
+        <activity
+            android:name=".AddJourney"
+            android:label="添加行程"
+            />
     </application>
 
 </manifest>
