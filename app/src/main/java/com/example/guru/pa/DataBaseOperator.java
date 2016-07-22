@@ -12,10 +12,10 @@ import java.util.StringTokenizer;
  * Created by Haoyu on 2016/7/20.
  */
 public class DataBaseOperator {
+    public static final String DB_NAME_SCHEDULE = "mySchedule.db";
     private DataBaseHelper mDBOpenHelper = null;
-    private static String DBNAME = "mySchedule.db";
     public DataBaseOperator(Context context){
-        mDBOpenHelper = new DataBaseHelper(context, DBNAME);
+        mDBOpenHelper = new DataBaseHelper(context, DB_NAME_SCHEDULE);
     }
     /**
      * @param schedule
@@ -206,11 +206,11 @@ public class DataBaseOperator {
         }
         return null;
     }
-
+/*
     public void deleteAll(){
         mDBOpenHelper.onUpgrade(mDBOpenHelper.getWritableDatabase(),1, 1);
     }
-
+*/
 
     public void closeDB() {
         if (mDBOpenHelper != null){
