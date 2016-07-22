@@ -8,27 +8,28 @@ public class BillVO {
     private int billId;
     private int income;
     private int expend;
+    private int day;
+    private int month;
+    private int year;
+    private String backup;
     private String incomeSource;
     private String expendDes;
-  //  private String date;
 
     public BillVO() {}
-    public BillVO(int billId, int income, int expend, String incomeSource, String expendDes
-           // , String date
-    ){
+    public BillVO(int billId, int income, int expend, int year, int month, int day,
+                  String incomeSource, String expendDes, String backup){
         this.billId = billId;
         this.income = income;
         this.expend = expend;
         this.incomeSource = incomeSource;
         this.expendDes = expendDes;
-        //this.date = date;
+        this.backup = backup;
+        this.year = year;
+        this.month = month;
+        this.day = day;
+    }
 
-    }
-/*
-    public String getDate() {
-        return date;
-    }
-*/
+
     public int getBillId() {
         return billId;
     }
@@ -49,8 +50,37 @@ public class BillVO {
         return expendDes;
     }
 
-    public void setDate(String date) {
-      //  this.date = date;
+    public int getDay() {
+        return day;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public String getBackup() {
+        return backup;
+    }
+
+
+    public void setBackup(String backup) {
+        this.backup = backup;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
     }
 
     public void setBillId(int billId) {

@@ -25,9 +25,7 @@ import java.util.ArrayList;
 
 public class JourneyManage extends AppCompatActivity {
 
-    private FileOperate fileOperate;
-    private String fileContent = null;
-    private String[] lineContent;
+    private ArrayList<Integer> mHash;
     /* 必备的三个量：一个List（也可以为数组）,一个Adapter,一个ListView */
     private ArrayList<String> strs;
     private ArrayAdapter<String> arrayAdapter;
@@ -110,7 +108,7 @@ public class JourneyManage extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        mHash = new ArrayList<Integer>();
         strs = new ArrayList<String>();
         mScheduleArrayList = new ArrayList<Schedule>();
         mTagScheduleArrayList = new ArrayList<TagSchedule>();
@@ -129,6 +127,7 @@ public class JourneyManage extends AppCompatActivity {
                         "Date: " + tempSch.getDate() + " " +
                         "Time: " + tempSch.getTime() + "\n"+
                         "Content :" + tempSch.getContent();
+                mHash.add(tempSch.getScheduleId());
                 strs.add(tempStr);
             }
         }
@@ -184,11 +183,7 @@ public class JourneyManage extends AppCompatActivity {
     }
 
     public void deleteContent(int position) {
-        String gottenStr = (String)mListView.getItemAtPosition(position);
-        String[] element = gottenStr.split(" ");
-        int deleteId = Integer.parseInt(element[1]);
-       // Log.e("TestS",gottenStr);
-      //  Log.e("TestDelete",deleteId + "  " + position);
+        int deleteId = mHash.get(position);
         mDBOperator.deleteScheduleById(deleteId);
     }
 

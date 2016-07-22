@@ -112,19 +112,51 @@
 
     </LinearLayout>
 
-    <TextView
-        android:text="今日收入：     "
-        android:gravity="center_vertical"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_weight="0.09"
-        android:layout_height="0dp" />
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:text="今日支出：     "
-        android:gravity="center_vertical"
+        <TextView
+            android:text="今日收入：     "
+            android:gravity="center_vertical"
+            android:layout_width="0dp"
+            android:layout_weight="0.3"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="￥ 0     "
+            android:id="@+id/day_income"
+            android:layout_width="0dp"
+            android:layout_weight="0.7"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_weight="0.09"
-        android:layout_height="0dp" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="今日支出：     "
+            android:gravity="center_vertical"
+            android:layout_width="0dp"
+            android:layout_weight="0.3"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="￥ 0     "
+            android:id="@+id/day_expend"
+            android:layout_width="0dp"
+            android:layout_weight="0.7"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
 
     <ImageView
         android:layout_width="match_parent"

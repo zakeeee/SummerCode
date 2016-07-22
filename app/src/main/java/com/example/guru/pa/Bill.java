@@ -142,7 +142,7 @@ public class Bill extends AppCompatActivity implements View.OnClickListener{
             for (int i = 0; i <  mBillList.size(); ++ i) {
                 billVO = mBillList.get(i);
                 lineContent = "billId: " + billVO.getBillId() + " " +
-                       // "date: " + billVO.getDate() + " " +
+                        "date: " + billVO.getYear() + "-" + billVO.getMonth() + "-" + billVO.getDay() + "\n" +
                         "支出: " + billVO.getExpend() + " " + "收入: " + billVO.getIncome();
                 mHash.add(billVO.getBillId());
                 strs.add(lineContent);

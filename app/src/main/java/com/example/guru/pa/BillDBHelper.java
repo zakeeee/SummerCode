@@ -9,8 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class BillDBHelper extends SQLiteOpenHelper {
 
-    public static final String TABLE_BILL = "bill";
-    public static final String TABLE_DETAIL = "detail";
+    public static String TABLE_BILL = "bill";
     private static int VERSION = 1;
 
     private static String SQL_BILL_ONE = "CREATE TABLE if not exists " + TABLE_BILL +
@@ -19,19 +18,13 @@ public class BillDBHelper extends SQLiteOpenHelper {
             "income integer," +
             "expend integer," +
             "incomeSource text," +
-            "expendDes text"  +
-            //"," +
-            //"date text" +
-            ")";
-    private static String SQL_BILL_TWO = "CREATE TABLE if not exists " + TABLE_DETAIL +
-            "(" +
-            "Id integer primary key autoincrement," +
-            "billId integer," +
+            "expendDes text,"  +
             "backup text," +
             "year integer," +
             "month integer," +
             "day integer" +
             ")";
+
 
    // private static String SQL_BILL_TWO = "DROP TABLE if exists" + " " + TABLE_BILL;
 
@@ -49,7 +42,6 @@ public class BillDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db){
         db.execSQL(SQL_BILL_ONE);
-        db.execSQL(SQL_BILL_TWO);
     }
 
 
