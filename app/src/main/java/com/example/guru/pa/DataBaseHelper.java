@@ -28,8 +28,9 @@ public class DataBaseHelper extends SQLiteOpenHelper{
             "year integer, month integer, day integer" +
             ")";
 
-    private static String SQL_NORMAL_TWO = "DROP TABLE if exists schedule";
-    private static String SQL_TAG_TWO = "DROP TABLE if exists tagSchedule";
+
+   // private static String SQL_NORMAL_TWO = "DROP TABLE if exists" + " " + TABLE_NORMAL;
+   // private static String SQL_TAG_TWO = "DROP TABLE if exists" + " " + TABLE_TAG;
 
     public DataBaseHelper(Context context, String dataBaseName, SQLiteDatabase.CursorFactory factory, int version){
         super(context, dataBaseName, factory,version);
@@ -51,8 +52,9 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
-        db.execSQL(SQL_NORMAL_TWO);
-        db.execSQL(SQL_TAG_TWO);
-        onCreate(db);
+      //  db.execSQL(SQL_NORMAL_TWO);
+      //  db.execSQL(SQL_TAG_TWO);
+
+      //  onCreate(db);
     }
 }
