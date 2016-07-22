@@ -71,7 +71,7 @@
                 android:resource="@xml/searchable"/>
         </activity>
         <activity
-            android:name=".Accountcenter"
+            android:name=".AccountCenter"
             android:label="个人中心">
         </activity>
     </application>
