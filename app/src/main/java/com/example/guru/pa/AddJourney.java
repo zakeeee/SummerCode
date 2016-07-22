@@ -99,7 +99,7 @@ public class AddJourney extends AppCompatActivity {
 
         // 获得当前日历选中的日期
         mDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        mDate = (CalendarViewScrollable)findViewById(R.id.journey_cal);
+        mDate = (CalendarViewScrollable) findViewById(R.id.journey_cal);
         mGottenDate = mDateFormat.format(mDate.getDate()); //默认日期
         mDate.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override

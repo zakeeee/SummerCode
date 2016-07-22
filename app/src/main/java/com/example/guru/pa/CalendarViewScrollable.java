@@ -6,9 +6,6 @@ import android.view.MotionEvent;
 import android.view.ViewParent;
 import android.widget.CalendarView;
 
-/**
- * Created by Zaki on 2016/7/22.
- */
 public class CalendarViewScrollable extends CalendarView {
 
     public CalendarViewScrollable(Context context) {

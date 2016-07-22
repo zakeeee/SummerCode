@@ -32,7 +32,7 @@ public class JourneyDetail extends AppCompatActivity {
 
         switch (id) {
             case R.id.edit:
-                Intent intent = new Intent(JourneyDetail.this, Bill.class);
+                Intent intent = new Intent(JourneyDetail.this, AddJourney.class);
                 startActivity(intent);
                 break;
             case android.R.id.home:

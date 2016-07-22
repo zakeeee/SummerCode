@@ -15,11 +15,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <CalendarView
+            <com.example.guru.pa.CalendarViewScrollable
                 android:id="@+id/journey_cal"
                 android:layout_width="match_parent"
                 android:layout_height="300dp">
-            </CalendarView>
+            </com.example.guru.pa.CalendarViewScrollable>
 
             <TimePicker
                 android:timePickerMode="spinner"
