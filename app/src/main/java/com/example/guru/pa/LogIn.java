@@ -113,7 +113,7 @@ public class LogIn extends AppCompatActivity {
                     case "10000":
                         MainActivity.LOGGEDIN = true;
                         MainActivity.USERNAME = name;
-                        ActivityController.jumpToAnotherActivity(LogIn.this, MainActivity.class);
+                        LogIn.this.onBackPressed();
                         break;
                     default:
                         break;
@@ -134,8 +134,7 @@ public class LogIn extends AppCompatActivity {
         int id = item.getItemId();
 
         if(id == android.R.id.home) {
-            Intent intent = new Intent(LogIn.this, MainActivity.class);
-            startActivity(intent);
+            LogIn.this.onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);

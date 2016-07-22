@@ -27,13 +27,11 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String FILENAME = "testFile2.txt";
-    public static SubActionButton button1;
-    public static SubActionButton button2;
-    public static SubActionButton button3;
     private  ResideMenu mResideMenu;
     public static Boolean LOGGEDIN = false;
     public static String USERNAME;
     private ResideMenuItem item[];
+    private View cir;
 
     private void createResideMenu() {
         // attach to current activity;
@@ -96,7 +94,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        View cir = navigationView.getHeaderView(0);
+        cir = navigationView.getHeaderView(0);
         if (cir != null) {
             cir.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -113,11 +111,15 @@ public class MainActivity extends AppCompatActivity
             } );
         }
 
-        if(MainActivity.LOGGEDIN){
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(MainActivity.LOGGEDIN && cir!=null){
             TextView tv = (TextView) cir.findViewById(R.id.logged_username);
             tv.setText(USERNAME);
         }
-
     }
 
     @Override
@@ -205,11 +207,4 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void onNavHeaderClick() {
-        if(MainActivity.LOGGEDIN) {
-            ActivityController.jumpToAnotherActivity(MainActivity.this, AccountCenter.class);
-        } else {
-            ActivityController.jumpToAnotherActivity(MainActivity.this, LogIn.class);
-        }
-    }
 }
