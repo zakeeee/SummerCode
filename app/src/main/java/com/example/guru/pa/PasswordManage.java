@@ -41,10 +41,6 @@ public class PasswordManage extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-
-
-
-
         /* 实例化SwipeMenuListView */
         mListView = (SwipeMenuListView) findViewById(R.id.password_list);
 

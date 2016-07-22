@@ -44,12 +44,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ListIterator;
 
-public class Bill extends AppCompatActivity implements View.OnClickListener{
+public class Bill extends AppCompatActivity {
 
-    private FileOperate fileOperate;
-    private String fileContent = null;
-    private String[] lineContent;
-
+    private BillDBOperator mDBOperator = null;
+    private ArrayList<BillVO> mBillList = null;
+    private ArrayList<Integer> mHash = null;
     /* 必备的三个量：一个List（也可以为数组）,一个Adapter,一个ListView */
     private ArrayList<String> strs;
     private ArrayAdapter<String> arrayAdapter;
@@ -62,6 +61,8 @@ public class Bill extends AppCompatActivity implements View.OnClickListener{
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+
 
         /* 实例化SwipeMenuListView */
         mListView = (SwipeMenuListView) findViewById(R.id.bill_list);
@@ -126,37 +127,31 @@ public class Bill extends AppCompatActivity implements View.OnClickListener{
     protected void onResume() {
         super.onResume();
 
-        /**
-         * 强烈不建议在onCreate里面进行以下操作
-         * 数据量大时会让人感觉界面卡顿
-         * 建议在另一个线程里加载，然后更新UI
-         */
-
-        fileOperate = new FileOperate(this);
-        try {
-            fileContent = fileOperate.read(MainActivity.FILENAME);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         strs = new ArrayList<String>();
-
-        if(fileContent == null){
-            Toast.makeText(Bill.this, "打开文件失败", Toast.LENGTH_SHORT).show();
+        mHash = new ArrayList<Integer>();
+        mBillList = new ArrayList<BillVO>();
+        mDBOperator = new BillDBOperator(this);
+        mBillList = mDBOperator.getAllBill();
+        if(mBillList == null){
+            Toast.makeText(Bill.this, "无内容", Toast.LENGTH_SHORT).show();
             strs.add("木有内容");
         }
         else {
-            lineContent = fileContent.split("\n");
-
-            int index = 0;
-            for (String s : lineContent){
-                strs.add(index, s);
-                index++;
+            BillVO billVO = null;
+            String lineContent = "";
+            for (int i = 0; i <  mBillList.size(); ++ i) {
+                billVO = mBillList.get(i);
+                lineContent = "billId: " + billVO.getBillId() + " " +
+                       // "date: " + billVO.getDate() + " " +
+                        "支出: " + billVO.getExpend() + " " + "收入: " + billVO.getIncome();
+                mHash.add(billVO.getBillId());
+                strs.add(lineContent);
             }
         }
 
-         /* 实例化ArrayAdapter */
+        /* 实例化ArrayAdapter */
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strs);
+
         mListView.setAdapter(arrayAdapter);
     }
 
@@ -209,23 +204,8 @@ public class Bill extends AppCompatActivity implements View.OnClickListener{
     }
 
     public void deleteContent(int index){
-        String newContent = "";
-        for (int i = 0; i < lineContent.length; ++ i) {
-            if (i != index){
-                newContent += lineContent + "\n";
-            }
-        }
-        fileOperate = new FileOperate(this);
-        fileOperate.ifFileExist(MainActivity.FILENAME);
-        try {
-            fileOperate.rewrite(MainActivity.FILENAME, newContent);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-
+        int billId = mHash.get(index);
+        mHash.remove(index);
+        mDBOperator.deleteBillById(billId);
     }
 }

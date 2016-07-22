@@ -60,12 +60,9 @@
 
     <!-- Example settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>
-
     <string name="pref_title_new_message_notifications">New message notifications</string>
-
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>
-
     <string name="pref_title_vibrate">Vibrate</string>
 
     <string-array name="spinner_T">
@@ -88,4 +85,10 @@
         <item>女</item>
         <item>其他</item>
     </string-array>
+
+    <string name="plus">添加</string>
+    <string name="search">搜索</string>
+    <string name="sort">排序</string>
+    <string name="bill">账单</string>
+    <string name="edit">编辑</string>
 </resources>

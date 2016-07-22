@@ -4,16 +4,17 @@
 
     <item android:id="@+id/journey_search"
         android:icon="@drawable/ic_search_white"
-        android:title="Search"
-        yourapp:showAsAction="ifRoom" />
+        android:title="@string/search"
+        yourapp:actionViewClass="android.support.v7.widget.SearchView"
+        yourapp:showAsAction="ifRoom|collapseActionView" />
 
     <item android:id="@+id/journey_plus"
         android:icon="@drawable/ic_plus_white"
-        android:title="Plus"
+        android:title="@string/plus"
         yourapp:showAsAction="ifRoom" />
 
     <item android:id="@+id/journey_sort"
-        android:title="Sort"
+        android:title="@string/sort"
         android:icon="@drawable/ic_sort"
         yourapp:showAsAction="ifRoom" />
 

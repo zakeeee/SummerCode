@@ -1,8 +1,11 @@
 package com.example.guru.pa;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -10,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -146,6 +150,10 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
         return true;
     }
 
@@ -177,24 +185,31 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_travel) {
-            Intent intent = new Intent(this, JourneyManage.class);
-            startActivity(intent);
-            // Handle the camera action
-        } else if (id == R.id.nav_money) {
-            Intent intent = new Intent(this, MoneyManage.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_password) {
-            Intent intent = new Intent(this, PasswordManage.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-
+        switch (id) {
+            case R.id.nav_travel:
+                ActivityController.jumpToAnotherActivity(MainActivity.this, JourneyManage.class);
+                return true;
+            case R.id.nav_money:
+                ActivityController.jumpToAnotherActivity(MainActivity.this, MoneyManage.class);
+                return true;
+            case R.id.nav_password:
+                ActivityController.jumpToAnotherActivity(MainActivity.this, PasswordManage.class);
+                return true;
+            case R.id.nav_settings:
+                ActivityController.jumpToAnotherActivity(MainActivity.this, SettingsActivity.class);
+                return true;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void onNavHeaderClick() {
+        if(MainActivity.LOGGEDIN) {
+            ActivityController.jumpToAnotherActivity(MainActivity.this, AccountCenter.class);
+        } else {
+            ActivityController.jumpToAnotherActivity(MainActivity.this, LogIn.class);
+        }
     }
 }
