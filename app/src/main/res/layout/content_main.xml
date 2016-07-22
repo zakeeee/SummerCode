@@ -12,7 +12,6 @@
         android:text="这是主页"
         android:gravity="center"
         android:textSize="45dp"
-        android:layout_marginTop="?attr/actionBarSize"
         android:background="@color/White"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
