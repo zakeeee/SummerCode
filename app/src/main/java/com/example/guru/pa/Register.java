@@ -78,7 +78,7 @@ public class Register extends AppCompatActivity {
                     status = response.getString("status");
                     res = response.getString("response");
                 } catch (JSONException e) {
-                    Toast.makeText(Register.this, "jsonerror", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Register.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
