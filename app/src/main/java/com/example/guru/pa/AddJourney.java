@@ -132,7 +132,6 @@ public class AddJourney extends AppCompatActivity {
             this.finish();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
