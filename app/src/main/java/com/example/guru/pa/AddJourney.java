@@ -1,5 +1,6 @@
 package com.example.guru.pa;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -10,12 +11,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -31,7 +34,7 @@ public class AddJourney extends AppCompatActivity {
     private ArrayAdapter<String> adapter_T;
     private ArrayAdapter<String> adapter_Way;
     private EditText mBackUp = null;
-    private CalendarView mDate = null;
+    private CalendarViewScrollable mDate = null;
     private TimePicker mTime = null;
     private String mScheduleContent = null;
     private String mGottenDate = null;
@@ -43,6 +46,7 @@ public class AddJourney extends AppCompatActivity {
     private int mYear;
     private int mMonth;
     private int mDay;
+    private ScrollView mScrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +66,9 @@ public class AddJourney extends AppCompatActivity {
         // 建立Adapter并且绑定数据源
         ArrayAdapter<String> _Adapter1=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, Items1);
         ArrayAdapter<String> _Adapter2=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, Items2);
+
+        _Adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        _Adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //绑定 Adapter到控件
         spinner_T.setAdapter(_Adapter1);
         spinner_Way.setAdapter(_Adapter2);
@@ -92,7 +99,7 @@ public class AddJourney extends AppCompatActivity {
 
         // 获得当前日历选中的日期
         mDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        mDate = (CalendarView)findViewById(R.id.journey_cal);
+        mDate = (CalendarViewScrollable)findViewById(R.id.journey_cal);
         mGottenDate = mDateFormat.format(mDate.getDate()); //默认日期
         mDate.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -153,14 +160,15 @@ public class AddJourney extends AppCompatActivity {
         //test database
        // deBug(scheduleId,tagId);
 
+        Toast.makeText(AddJourney.this, "行程添加成功", Toast.LENGTH_SHORT).show();
 
         //销毁当前activity
         this.finish();
         if (mDBOperator != null){
             mDBOperator.closeDB();
         }
-        Intent intent = new Intent(this, JourneyManage.class);
-        startActivity(intent);
+//        Intent intent = new Intent(this, JourneyManage.class);
+//        startActivity(intent);
     }
 
     public void cancelJourney(View view){

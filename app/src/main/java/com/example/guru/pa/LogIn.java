@@ -19,8 +19,12 @@ import android.database.sqlite.SQLiteException;
 import android.database.Cursor;
 import android.widget.Toast;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -91,25 +95,36 @@ public class LogIn extends AppCompatActivity {
      * 登陆
      * */
     public void onLogIn(String url, RequestParams params) {
-        HttpClient.get(url, params, new TextHttpResponseHandler() {
+        HttpClient.get(url, params, new JsonHttpResponseHandler() {
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Toast.makeText(LogIn.this, responseString, Toast.LENGTH_SHORT).show();
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                String status = null;
+                String res = "11";
+
+                try {
+                    status = response.getString("status");
+                    res = response.getString("response");
+                } catch (JSONException e) {
+                    Toast.makeText(LogIn.this, "jsonerror", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                switch (status) {
+                    case "10000":
+                        MainActivity.LOGGEDIN = true;
+                        MainActivity.USERNAME = name;
+                        ActivityController.jumpToAnotherActivity(LogIn.this, MainActivity.class);
+                        break;
+                    default:
+                        break;
+                }
+
+                Toast.makeText(LogIn.this, status+","+res, Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                if(responseString.equals("101")) {
-                    Toast.makeText(LogIn.this, "登陆成功", Toast.LENGTH_SHORT).show();
-                    MainActivity.LOGGEDIN = true;
-                    MainActivity.USERNAME = name;
-                    Intent intent = new Intent(LogIn.this, MainActivity.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(LogIn.this, responseString, Toast.LENGTH_SHORT).show();
-                }
-
-
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
             }
         });
     }

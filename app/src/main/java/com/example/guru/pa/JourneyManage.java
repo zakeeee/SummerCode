@@ -45,6 +45,67 @@ public class JourneyManage extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+                /* 实例化SwipeMenuListView */
+        mListView = (SwipeMenuListView) findViewById(R.id.journey_list);
+
+        /* 设置mListView的View最小高度 */
+        mListView.setMinimumHeight(180);
+
+        /* 实例化SwipeMenuCreator */
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+            @Override
+            public void create(SwipeMenu menu) {
+                /* create "open" item */
+                SwipeMenuItem openItem = new SwipeMenuItem(getApplicationContext());
+                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9, 0xCE)));
+                openItem.setWidth(180);
+                openItem.setTitle("Edit");
+                openItem.setTitleSize(18);
+                openItem.setTitleColor(Color.rgb(0x00, 0x00, 0x00));
+                // 添加到SwipeMenu
+                menu.addMenuItem(openItem);
+
+                /* create "delete" item */
+                SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
+                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
+                deleteItem.setWidth(180);
+                deleteItem.setTitle("X"); /* 未来会换成icon */
+                deleteItem.setTitleSize(18);
+                deleteItem.setTitleColor(Color.WHITE);
+                // 添加到SwipeMenu
+                menu.addMenuItem(deleteItem);
+            }
+        };
+
+        mListView.setMenuCreator(creator);
+        mListView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
+
+        /* 给mListView添加按钮点击监听 */
+        mListView.setOnMenuItemClickListener(   new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                switch (index) {
+                    case 0:
+                        // edit
+                        break;
+                    case 1:
+                        strs.remove(position);
+                        deleteContent(position);
+                        arrayAdapter.notifyDataSetChanged();
+                        // delete
+                        break;
+                }
+                // false : close the menu; true : not close the menu
+                return false;
+            }
+        });
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         /**
          * 强烈不建议在onCreate里面进行以下操作
@@ -67,10 +128,10 @@ public class JourneyManage extends AppCompatActivity {
             Schedule tempSch = null;
             for (int i = 0; i < mScheduleArrayList.size(); ++ i) {
                 tempSch = mScheduleArrayList.get(i);
-                tempStr = "ID: " + tempSch.getScheduleId() + " " +
-                             "Date: " + tempSch.getDate() + " " +
-                                "Time: " + tempSch.getTime() + "\n"+
-                                    "Content :" + tempSch.getContent();
+                tempStr = "ID: " + tempSch.getScheduleId() + "\n" +
+                        "Date: " + tempSch.getDate() + "\n" +
+                        "Time: " + tempSch.getTime() + "\n"+
+                        "Content :" + tempSch.getContent();
                 strs.add(tempStr);
             }
         }
@@ -78,66 +139,10 @@ public class JourneyManage extends AppCompatActivity {
         /* 实例化ArrayAdapter */
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strs);
 
-        /* 实例化SwipeMenuListView */
-        mListView = (SwipeMenuListView) findViewById(R.id.journey_list);
-
-        /* 设置mListView的View最小高度 */
-        mListView.setMinimumHeight(180);
-
-        /* 实例化SwipeMenuCreator */
-        SwipeMenuCreator creator = new SwipeMenuCreator() {
-            @Override
-            public void create(SwipeMenu menu) {
-                /* create "open" item */
-                SwipeMenuItem openItem = new SwipeMenuItem(getApplicationContext());
-                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9, 0xCE)));
-                openItem.setWidth(180);
-                openItem.setTitle("Open");
-                openItem.setTitleSize(18);
-                openItem.setTitleColor(Color.rgb(0x00, 0x00, 0x00));
-                // 添加到SwipeMenu
-                menu.addMenuItem(openItem);
-
-                /* create "delete" item */
-                SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
-                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
-                deleteItem.setWidth(180);
-                deleteItem.setTitle("X"); /* 未来会换成icon */
-                deleteItem.setTitleSize(18);
-                deleteItem.setTitleColor(Color.WHITE);
-                // 添加到SwipeMenu
-                menu.addMenuItem(deleteItem);
-            }
-        };
-
         /* 给mListView设置Adapter,MenuCreator,设置滑动方向 */
         mListView.setAdapter(arrayAdapter);
-        mListView.setMenuCreator(creator);
-        mListView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
-
-        /* 给mListView添加按钮点击监听 */
-        mListView.setOnMenuItemClickListener(   new SwipeMenuListView.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                switch (index) {
-                    case 0:
-                        // open
-                        break;
-                    case 1:
-                        strs.remove(position);
-                        deleteContent(position);
-                        arrayAdapter.notifyDataSetChanged();
-                        // delete
-                        break;
-                }
-                // false : close the menu; true : not close the menu
-                return false;
-            }
-        });
 
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -192,9 +197,7 @@ public class JourneyManage extends AppCompatActivity {
     }
 
     public void openJourneyAdd(){
-        Intent intent = new Intent(this, AddJourney.class);
-        this.finish();
-        startActivity(intent);
+        ActivityController.jumpToAnotherActivity(JourneyManage.this, AddJourney.class);
     }
 
     public void openJourneySearch(){
