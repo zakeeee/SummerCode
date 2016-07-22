@@ -99,7 +99,7 @@ public class AddJourney extends AppCompatActivity {
 
         // 获得当前日历选中的日期
         mDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        mDate = (CalendarViewScrollable)findViewById(R.id.journey_cal);
+        mDate = (CalendarViewScrollable) findViewById(R.id.journey_cal);
         mGottenDate = mDateFormat.format(mDate.getDate()); //默认日期
         mDate.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -158,7 +158,7 @@ public class AddJourney extends AppCompatActivity {
         }
 
         //test database
-       // deBug(scheduleId,tagId);
+        // deBug(scheduleId,tagId);
 
         Toast.makeText(AddJourney.this, "行程添加成功", Toast.LENGTH_SHORT).show();
 
@@ -215,15 +215,15 @@ public class AddJourney extends AppCompatActivity {
                     + " " + tt.getDay());
         }
         */
-       // Log.e("scheduleId",scheduleId + "");
+        // Log.e("scheduleId",scheduleId + "");
         ArrayList<Schedule> s1 = mDBOperator.getAllSchedule();
-       // mDBOperator.deleteScheduleById(3);
+        // mDBOperator.deleteScheduleById(3);
         //Schedule s3 = new Schedule();
         //s3.setScheduleId(7);
-       // s3.setContent("Hello World");
-       // mDBOperator.updateSchedule(s3);
-      //  mDBOperator.deleteAll();
-     //   ArrayList<Schedule> s2 = mDBOperator.getAllSchedule();
+        // s3.setContent("Hello World");
+        // mDBOperator.updateSchedule(s3);
+        //  mDBOperator.deleteAll();
+        //   ArrayList<Schedule> s2 = mDBOperator.getAllSchedule();
         for (int i = 0; i < s1.size(); ++ i){
             Schedule ss = s1.get(i);
             Log.e("S1",ss.getScheduleId() + " " + ss.getContent() + " " + ss.getTime());

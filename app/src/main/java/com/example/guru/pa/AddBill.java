@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CalendarView;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
@@ -68,29 +67,24 @@ public class AddBill extends AppCompatActivity {
         expendText = (EditText)findViewById(R.id.addbill_expend);
         expendDesText = (EditText)findViewById(R.id.addbill_expendpurpose);
 
-        if (incomeText.getText().toString().equals("") || expendText.getText().toString().equals("")){
-            Toast.makeText(AddBill.this,"收入或支出不能为空", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         incomeStr = " 收入(元): " + incomeText.getText().toString();
         incomeSourceStr = " 来源:" + incomeSourceText.getText().toString(); // 两者之间没有空格
         expendStr = " 支出(元): " + expendText.getText().toString();
         expendDesStr = " 目的:" + expendDesText.getText().toString();     // 两者之间没有空格
 
+
         FileOperate fileOperate = new FileOperate(this);
         String bufferContent = calendarDate + " "  + incomeStr + " "
                 + incomeSourceStr + " " + expendStr + " " + expendDesStr;
         fileOperate.save(MainActivity.FILENAME, bufferContent);
-
         /**
          * Test Read&Write File class
          */
         //String bufferRead = fileOperate.read(filename);
         //Log.e("ReadTest",bufferRead);
         this.finish();
-//        Intent intent = new Intent(this, Bill.class);
-//        startActivity(intent);
+        Intent intent = new Intent(this, Bill.class);
+        startActivity(intent);
     }
 
     public void cancelBill(View view) {

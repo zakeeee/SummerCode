@@ -7,12 +7,11 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -32,9 +31,7 @@ public class JourneyManage extends AppCompatActivity {
     private ArrayList<String> strs;
     private ArrayAdapter<String> arrayAdapter;
     private SwipeMenuListView mListView;
-    private ArrayList<Schedule> mScheduleArrayList;
-    private ArrayList<TagSchedule> mTagScheduleArrayList;
-    private DataBaseOperator mDBOperator;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +42,40 @@ public class JourneyManage extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-                /* 实例化SwipeMenuListView */
+
+        /**
+         * 强烈不建议在onCreate里面进行以下操作
+         * 数据量大时会让人感觉界面卡顿
+         * 建议在另一个线程里加载，然后更新UI
+         */
+
+        fileOperate = new FileOperate(this);
+        try {
+            fileContent = fileOperate.read(MainActivity.FILENAME);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        strs = new ArrayList<String>();
+
+        if(fileContent == null){
+            Toast.makeText(JourneyManage.this, "打开文件失败", Toast.LENGTH_SHORT).show();
+            strs.add("木有内容");
+        }
+        else {
+            lineContent = fileContent.split("\n");
+
+            int index = 0;
+            for (String s : lineContent){
+                strs.add(index, s);
+                index++;
+            }
+        }
+
+        /* 实例化ArrayAdapter */
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strs);
+
+        /* 实例化SwipeMenuListView */
         mListView = (SwipeMenuListView) findViewById(R.id.journey_list);
 
         /* 设置mListView的View最小高度 */
@@ -59,7 +89,7 @@ public class JourneyManage extends AppCompatActivity {
                 SwipeMenuItem openItem = new SwipeMenuItem(getApplicationContext());
                 openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9, 0xCE)));
                 openItem.setWidth(180);
-                openItem.setTitle("Edit");
+                openItem.setTitle("Open");
                 openItem.setTitleSize(18);
                 openItem.setTitleColor(Color.rgb(0x00, 0x00, 0x00));
                 // 添加到SwipeMenu
@@ -77,6 +107,8 @@ public class JourneyManage extends AppCompatActivity {
             }
         };
 
+        /* 给mListView设置Adapter,MenuCreator,设置滑动方向 */
+        mListView.setAdapter(arrayAdapter);
         mListView.setMenuCreator(creator);
         mListView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
 
@@ -86,7 +118,8 @@ public class JourneyManage extends AppCompatActivity {
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
                 switch (index) {
                     case 0:
-                        // edit
+                        // open
+                        ActivityController.jumpToAnotherActivity(JourneyManage.this,JourneyDetail.class);
                         break;
                     case 1:
                         strs.remove(position);
@@ -100,48 +133,23 @@ public class JourneyManage extends AppCompatActivity {
             }
         });
 
+
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        /**
-         * 强烈不建议在onCreate里面进行以下操作
-         * 数据量大时会让人感觉界面卡顿
-         * 建议在另一个线程里加载，然后更新UI
-         */
-
-
-        strs = new ArrayList<String>();
-        mScheduleArrayList = new ArrayList<Schedule>();
-        mTagScheduleArrayList = new ArrayList<TagSchedule>();
-        mDBOperator = new DataBaseOperator(this);
-        mScheduleArrayList = mDBOperator.getAllSchedule();
-        if(mScheduleArrayList == null){
-            Toast.makeText(JourneyManage.this, "无内容", Toast.LENGTH_SHORT).show();
-            strs.add("木有内容");
-        }
-        else {
-            String tempStr = "";
-            Schedule tempSch = null;
-            for (int i = 0; i < mScheduleArrayList.size(); ++ i) {
-                tempSch = mScheduleArrayList.get(i);
-                tempStr = "ID: " + tempSch.getScheduleId() + "\n" +
-                        "Date: " + tempSch.getDate() + "\n" +
-                        "Time: " + tempSch.getTime() + "\n"+
-                        "Content :" + tempSch.getContent();
-                strs.add(tempStr);
+    public void deleteContent(int index){
+        String newContent = "";
+        for (int i = 0; i < lineContent.length; ++ i) {
+            if (i != index){
+                newContent += lineContent + "\n";
             }
         }
-
-        /* 实例化ArrayAdapter */
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strs);
-
-        /* 给mListView设置Adapter,MenuCreator,设置滑动方向 */
-        mListView.setAdapter(arrayAdapter);
-
+        fileOperate = new FileOperate(this);
+        fileOperate.ifFileExist(MainActivity.FILENAME);
+        try {
+            fileOperate.rewrite(MainActivity.FILENAME, newContent);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -176,9 +184,6 @@ public class JourneyManage extends AppCompatActivity {
             case R.id.journey_plus:
                 openJourneyAdd();
                 return true;
-            case R.id.journey_search:
-                openJourneySearch();
-                return true;
             case R.id.journey_sort:
                 openJourneySort();
                 return true;
@@ -187,17 +192,9 @@ public class JourneyManage extends AppCompatActivity {
         }
     }
 
-    public void deleteContent(int position) {
-        String gottenStr = (String)mListView.getItemAtPosition(position);
-        String[] element = gottenStr.split(" ");
-        int deleteId = Integer.parseInt(element[1]);
-       // Log.e("TestS",gottenStr);
-      //  Log.e("TestDelete",deleteId + "  " + position);
-        mDBOperator.deleteScheduleById(deleteId);
-    }
-
     public void openJourneyAdd(){
-        ActivityController.jumpToAnotherActivity(JourneyManage.this, AddJourney.class);
+        Intent intent = new Intent(JourneyManage.this, AddJourney.class);
+        startActivity(intent);
     }
 
     public void openJourneySearch(){
