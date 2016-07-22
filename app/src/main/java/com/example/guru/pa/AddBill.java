@@ -28,7 +28,7 @@ public class AddBill extends AppCompatActivity {
     private String expendStr = null;
     private String expendDesStr = null;
     private String mBackup = null;
-    private String calendarDate = null;
+   // private String calendarDate = null;
     private SimpleDateFormat dateFormat = null;
     private int mYear;
     private int mMonth;
@@ -45,9 +45,9 @@ public class AddBill extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         // 获得当前日历选中的日期
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        //dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         calendarView = (CalendarView)findViewById(R.id.calendarView);
-        calendarDate = dateFormat.format(calendarView.getDate());
+       // calendarDate = dateFormat.format(calendarView.getDate());
         mYear = Integer.parseInt((new SimpleDateFormat("yyyy")).format(calendarView.getDate()));
         mMonth = Integer.parseInt((new SimpleDateFormat("MM")).format(calendarView.getDate()));
         mDay = Integer.parseInt((new SimpleDateFormat("dd")).format(calendarView.getDate()));
@@ -55,15 +55,14 @@ public class AddBill extends AppCompatActivity {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month,
                                             int dayOfMonth) {
-                calendarDate = String.valueOf(year) + "-" +
-                                    String.valueOf(month) + "-" +
-                                            String.valueOf(dayOfMonth);
-                        mYear = year;
+
+                mYear = year;
                 mMonth = month + 1;
                 mDay = dayOfMonth;
             }
         });
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -106,24 +105,26 @@ public class AddBill extends AppCompatActivity {
         billVO.setIncomeSource(incomeSourceStr);
         billVO.setExpend(Integer.parseInt(expendStr));
         billVO.setExpendDes(expendDesStr);
-       // billVO.setDate(calendarDate);
+        billVO.setBackup(mBackup);
+        billVO.setDay(mDay);
+        billVO.setMonth(mMonth);
+        billVO.setYear(mYear);
+
         int billId = mDBOperator.saveBill(billVO);
 
-        BillDetail billDetail = new BillDetail();
-        billDetail.setYear(mYear);
-        billDetail.setMonth(mMonth);
-        billDetail.setDay(mDay);
-        billDetail.setBillId(billId);
-        billDetail.setBackup(mBackup);
-        int detailId = mDBOperator.saveDetail(billDetail);
+
 
         this.finish();
-        Intent intent = new Intent(this, Bill.class);
-        startActivity(intent);
+        //Intent intent = new Intent(this, Bill.class);
+        //startActivity(intent);
     }
 
     public void cancelBill(View view) {
         onBackPressed();
     }
 
+
+    public void debug(int billId) {
+
+    }
 }
