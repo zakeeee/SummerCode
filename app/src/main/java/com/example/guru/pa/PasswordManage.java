@@ -7,6 +7,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,9 +18,11 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.bigkoo.svprogresshud.SVProgressHUD;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -128,10 +131,15 @@ public class PasswordManage extends AppCompatActivity {
 
         }*/
 
+        getFromCloud(User.userDownloadPassword());
+
+
         /* 实例化ArrayAdapter */
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strs);
 
         mListView.setAdapter(arrayAdapter);
+
+
     }
 
 
@@ -202,12 +210,30 @@ public class PasswordManage extends AppCompatActivity {
                     /* 判断返回码 */
                     switch(status) {
                         case "30000":
+                            JSONObject list = response.getJSONObject("list");
+
+                            for(int i = 0; i < list.length(); i++) {
+                                JSONObject ith = new JSONObject(list.getString(String.valueOf(i)));
+
+                                String purpose = ith.getString("purpose");
+                                String uname = ith.getString("uname");
+                                String passwd = ith.getString("passwd");
+                                String extra = ith.getString("extra");
+
+                                strs.add("目的："+purpose+"\n"
+                                        +"账号："+uname+"\n"
+                                        +"密码："+passwd+"\n"
+                                        +"备注："+extra+"\n"
+                                        +"<云端存储>"
+                                );
+                            }
+                            arrayAdapter.notifyDataSetChanged();
                             break;
                         default:
                             break;
                     }
                 } catch (JSONException e) {
-                    Toast.makeText(PasswordManage.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PasswordManage.this, "exception", Toast.LENGTH_SHORT).show();
                 }
 
                 /* 提示返回信息 */
@@ -223,4 +249,66 @@ public class PasswordManage extends AppCompatActivity {
             }
         });
     }
+
+    /* 云端删除 */
+    private void deleteFromCloud(RequestParams params) {
+
+        /* 发送到的url */
+        String url = "deletepassword/";
+
+        /* POST请求 */
+        HttpClient.post(url, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                String status = null;
+                String res = "11";
+
+                try {
+                    status = response.getString("status");
+                    res = response.getString("response");
+
+                    /* 判断返回码 */
+                    switch(status) {
+                        case "30000":
+                            JSONObject list = response.getJSONObject("list");
+
+                            for(int i = 0; i < list.length(); i++) {
+                                JSONObject ith = new JSONObject(list.getString(String.valueOf(i)));
+
+                                String purpose = ith.getString("purpose");
+                                String uname = ith.getString("uname");
+                                String passwd = ith.getString("passwd");
+                                String extra = ith.getString("extra");
+
+                                strs.add("目的："+purpose+"\n"
+                                        +"账号："+uname+"\n"
+                                        +"密码："+passwd+"\n"
+                                        +"备注："+extra+"\n"
+                                        +"<云端存储>"
+                                );
+                            }
+                            arrayAdapter.notifyDataSetChanged();
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(PasswordManage.this, "exception", Toast.LENGTH_SHORT).show();
+                }
+
+                /* 提示返回信息 */
+                Toast.makeText(PasswordManage.this, res, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                /* 超时提示 */
+                Toast.makeText(PasswordManage.this, "连接超时，请检查网络连接", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
 }
