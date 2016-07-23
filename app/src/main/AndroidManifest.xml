@@ -22,78 +22,67 @@
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".LogIn"
             android:label="@string/title_activity_log_in"
-            android:theme="@style/AppTheme">
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".MoneyManage"
             android:label="@string/title_activity_money_manage"
-            android:theme="@style/AppTheme">
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".JourneyManage"
             android:label="行程管理"
-            android:theme="@style/AppTheme">
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".PasswordManage"
-            android:label="密码">
-        </activity>
+            android:label="密码" />
         <activity
             android:name=".SettingsActivity"
-            android:label="设置" >
-        </activity>
+            android:label="设置" />
         <activity
             android:name=".Bill"
-            android:label="账单">
-        </activity>
+            android:label="账单" />
         <activity
             android:name=".AddJourney"
-            android:label="添加行程">
-        </activity>
+            android:label="添加行程" />
         <activity
             android:name=".AddBill"
-            android:label="记一笔">
-        </activity>
+            android:label="记一笔" />
         <activity
             android:name=".Register"
-            android:label="注册">
-        </activity>
+            android:label="注册" />
         <activity
             android:name=".AddPassword"
-            android:label="添加用户密码">
-        </activity>
+            android:label="添加用户密码" />
         <activity android:name=".SearchableActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
         <activity
             android:name=".AccountCenter"
-            android:label="个人中心">
-        </activity>
+            android:label="个人中心" />
         <activity
             android:name=".JourneyDetail"
-            android:label="行程详情">
-        </activity>
+            android:label="行程详情" />
         <activity
             android:name=".MoneyDetail"
-            android:label="账单详情">
-        </activity>
+            android:label="账单详情" />
         <activity
             android:name=".PasswordDetail"
-            android:label="密码详情">
-        </activity>
+            android:label="密码详情" />
     </application>
 
 </manifest>
