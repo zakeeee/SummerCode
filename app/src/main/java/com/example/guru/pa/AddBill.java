@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 public class AddBill extends AppCompatActivity {
@@ -34,6 +35,7 @@ public class AddBill extends AppCompatActivity {
     private int mMonth;
     private int mDay;
     private BillDBOperator mDBOperator = null;
+    private int gottenId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,57 @@ public class AddBill extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        incomeText = (EditText)findViewById(R.id.addbill_income);
+        incomeSourceText = (EditText)findViewById(R.id.addbill_incomesource);
+        expendText = (EditText)findViewById(R.id.addbill_expend);
+        expendDesText = (EditText)findViewById(R.id.addbill_expendpurpose);
+        mBackupText = (EditText)findViewById(R.id.addbill_extra);
+        /**
+         * 初始化界面（若为编辑状态）
+         */
+        Intent intent = getIntent();
+        gottenId = -1;
+        if (intent != null) {
+            gottenId = intent.getIntExtra("billId", -1);
+
+            Log.e("BillUpdate",gottenId + "");
+
+            if (gottenId > 0) {
+                BillDBOperator initDB = new BillDBOperator(this);
+                BillVO initBill = initDB.getBillById(gottenId);
+
+                SimpleDateFormat sdfDate = new SimpleDateFormat("yy-MM-dd");
+                SimpleDateFormat sdfHour = new SimpleDateFormat("HH");
+                SimpleDateFormat sdfMinute = new SimpleDateFormat("mm");
+                long sDate = 0;
+                int sHour = 0;
+                int sMinute = 0;
+                if (initBill != null) {
+                    String date = initBill.getYear() + "-" + initBill.getMonth() + "-" + initBill.getDay();
+                    String backup = initBill.getBackup();
+                    try {
+                        sDate = sdfDate.parse(date).getTime();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    calendarView.setDate(sDate);
+                    incomeText.setText(initBill.getIncome() + "");
+                    incomeSourceText.setText(initBill.getIncomeSource());
+                    expendText.setText(initBill.getExpend() + "");
+                    expendDesText.setText(initBill.getExpendDes());
+                    mBackupText.setText(initBill.getBackup());
+                }
+
+            }
+        }
+
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -76,27 +129,16 @@ public class AddBill extends AppCompatActivity {
     }
 
     public void saveBill(View view) throws Exception {
-        incomeText = (EditText)findViewById(R.id.addbill_income);
-        incomeSourceText = (EditText)findViewById(R.id.addbill_incomesource);
-        expendText = (EditText)findViewById(R.id.addbill_expend);
-        expendDesText = (EditText)findViewById(R.id.addbill_expendpurpose);
-        mBackupText = (EditText)findViewById(R.id.addbill_extra);
-
         if (incomeText.getText().toString().equals("") || expendText.getText().toString().equals("")){
             Toast.makeText(AddBill.this,"收入或支出不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        incomeStr =// " 收入(元): " +
-                incomeText.getText().toString();
-        incomeSourceStr = //" 来源:" +
-                incomeSourceText.getText().toString(); // 两者之间没有空格
-        expendStr =// " 支出(元): " +
-                expendText.getText().toString();
-        expendDesStr = //" 目的:" +
-                expendDesText.getText().toString();     // 两者之间没有空格
-        mBackup =
-                mBackupText.getText().toString();
+        incomeStr = incomeText.getText().toString();
+        incomeSourceStr = incomeSourceText.getText().toString();
+        expendStr = expendText.getText().toString();
+        expendDesStr = expendDesText.getText().toString();
+        mBackup = mBackupText.getText().toString();
 
 
         mDBOperator = new BillDBOperator(this);
@@ -110,8 +152,13 @@ public class AddBill extends AppCompatActivity {
         billVO.setMonth(mMonth);
         billVO.setYear(mYear);
 
-        int billId = mDBOperator.saveBill(billVO);
-
+        if (gottenId > 0) {
+            billVO.setBillId(gottenId);
+            mDBOperator.updateBill(billVO);
+        }
+        else {
+            int billId = mDBOperator.saveBill(billVO);
+        }
 
 
         this.finish();

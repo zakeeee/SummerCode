@@ -83,12 +83,18 @@
         </activity>
         <activity
             android:name=".JourneyDetail"
-            android:label="编辑">
-            <intent-filter>
-                <action android:name="com.example.guru.pa.detail"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
+            android:label="行程详情">
         </activity>
+        <activity
+            android:name=".MoneyDetail"
+            android:label="账单详情" >
+        </activity>
+        <activity
+            android:name=".PasswordDetail"
+            android:label="账户详情">
+        </activity>
+
+
     </application>
 
 </manifest>

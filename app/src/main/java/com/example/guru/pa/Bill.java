@@ -53,6 +53,7 @@ public class Bill extends AppCompatActivity {
     private ArrayList<String> strs;
     private ArrayAdapter<String> arrayAdapter;
     private SwipeMenuListView mListView;
+    public static final String SEND_TAG = "sendId";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +109,8 @@ public class Bill extends AppCompatActivity {
                 switch (index) {
                     case 0:
                         // open
-                        ActivityController.jumpToAnotherActivity(Bill.this,MoneyDetail.class);
+                        sendId(position);
+                        //ActivityController.jumpToAnotherActivity(Bill.this,MoneyDetail.class);
                         break;
                     case 1:
                         strs.remove(position);
@@ -202,6 +204,13 @@ public class Bill extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void sendId(int position) {
+        int sendId = mHash.get(position);
+        Intent  intent = new Intent(this, MoneyDetail.class);
+        intent.putExtra(SEND_TAG, sendId);
+        startActivity(intent);
     }
 
     public void deleteContent(int index){

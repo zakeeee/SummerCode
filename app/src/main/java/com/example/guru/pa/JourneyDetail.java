@@ -13,6 +13,7 @@ import android.widget.TextView;
 public class JourneyDetail extends AppCompatActivity {
 
     private DataBaseOperator mDBOperator;
+    private int scheduleId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +28,7 @@ public class JourneyDetail extends AppCompatActivity {
         super.onResume();
         Intent intent = getIntent();
         if (intent != null) {
-            int scheduleId = intent.getIntExtra(JourneyManage.SEND_TAG, 0);
+            scheduleId = intent.getIntExtra(JourneyManage.SEND_TAG, 0);
 
             mDBOperator = new DataBaseOperator(this);
             Schedule schedule = mDBOperator.getScheduleById(scheduleId);
@@ -54,8 +55,7 @@ public class JourneyDetail extends AppCompatActivity {
 
         switch (id) {
             case R.id.edit:
-                Intent intent = new Intent(JourneyDetail.this, AddJourney.class);
-                startActivity(intent);
+                sendId();
                 break;
             case android.R.id.home:
                 this.finish();
@@ -65,5 +65,11 @@ public class JourneyDetail extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void sendId() {
+        Intent intent = new Intent(JourneyDetail.this, AddJourney.class);
+        intent.putExtra("scheduleId", scheduleId);
+        startActivity(intent);
     }
 }

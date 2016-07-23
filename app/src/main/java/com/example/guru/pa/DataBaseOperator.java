@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -110,6 +111,23 @@ public class DataBaseOperator {
     }
 
     /**
+     *
+     * @param scheduleId
+     */
+    public void deleteTagScheduleById(int scheduleId){
+        SQLiteDatabase db = mDBOpenHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            String whereClause = "scheduleId=?";
+            String[] whereArgs = {String.valueOf(scheduleId)};
+            db.delete(DataBaseHelper.TABLE_TAG, whereClause, whereArgs);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    /**
      * @param newSchedule
      */
     public void updateSchedule(Schedule newSchedule){
@@ -121,6 +139,22 @@ public class DataBaseOperator {
         values.put("scheduleId", newSchedule.getScheduleId());
         db.update(DataBaseHelper.TABLE_NORMAL, values,
                 "scheduleId=?", new String[]{String.valueOf(newSchedule.getScheduleId())});
+    }
+
+    /**
+     *
+     * @param tagSchedule
+     */
+    public void updateTagSchedule(TagSchedule tagSchedule){
+        SQLiteDatabase db = mDBOpenHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("scheduleId",tagSchedule.getScheduleId());
+        values.put("remindId",tagSchedule.getRemindId());
+        values.put("year",tagSchedule.getYear());
+        values.put("month",tagSchedule.getMonth());
+        values.put("day",tagSchedule.getDay());
+        db.update(DataBaseHelper.TABLE_TAG, values,
+                "scheduleId=?", new String[]{String.valueOf(tagSchedule.getScheduleId())});
     }
 
     /**
@@ -204,6 +238,32 @@ public class DataBaseOperator {
         if (retList != null && retList.size() > 0) {
             return retList;
         }
+        return null;
+    }
+
+    /**
+     *
+     * @param scheduleId
+     * @return
+     */
+    public TagSchedule getTagScheduleById(int scheduleId){
+        SQLiteDatabase db = mDBOpenHelper.getWritableDatabase();
+        String[] columns = {"tagId", "scheduleId", "remindId", "year", "month", "day"};
+        String selections = "scheduleId=?";
+        String[] selectionArgs = {String.valueOf(scheduleId)};
+        Cursor cursor = db.query(DataBaseHelper.TABLE_TAG, columns,
+                selections ,selectionArgs, null, null, null);
+        if (cursor.moveToFirst()){
+            int gTagId = cursor.getInt(cursor.getColumnIndex("tagId"));
+            int gScheduleId = cursor.getInt(cursor.getColumnIndex("scheduleId"));
+            int gRemindId = cursor.getInt(cursor.getColumnIndex("remindId"));
+            int gYear = cursor.getInt(cursor.getColumnIndex("year"));
+            int gMonth = cursor.getInt(cursor.getColumnIndex("month"));
+            int gDay = cursor.getInt(cursor.getColumnIndex("day"));
+            cursor.close();
+            return new TagSchedule(gYear, gMonth, gDay, gRemindId, gTagId, gScheduleId);
+        }
+        cursor.close();
         return null;
     }
 /*
