@@ -180,11 +180,13 @@ public class JourneyManage extends AppCompatActivity {
         }
     }
 
+
     public void deleteContent(int position) {
         int deleteId = mHash.get(position);
 
         mDBOperator.deleteScheduleById(deleteId);
     }
+
 
     public void sendId(int position) {
         int sendId = mHash.get(position);
@@ -194,14 +196,17 @@ public class JourneyManage extends AppCompatActivity {
         startActivity(intent);
     }
 
+
     public void openJourneyAdd(){
         Intent intent = new Intent(JourneyManage.this, AddJourney.class);
         startActivity(intent);
     }
 
+
     public void openJourneySearch(){
 
     }
+
 
     public void openJourneySort(){
         strs.clear();
@@ -212,6 +217,7 @@ public class JourneyManage extends AppCompatActivity {
         Collections.sort(mNewList);
         displayContent(new ArrayList<Schedule>(mNewList));
     }
+
 
     public void displayContent(ArrayList<Schedule> list) {
         if(list == null){

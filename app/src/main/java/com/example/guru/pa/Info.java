@@ -13,4 +13,8 @@ public class Info {
         mLocal = local;
         mContent = content;
     }
+
+    public String toString() {
+        return mContent;
+    }
 }

@@ -18,24 +18,23 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
-import com.bigkoo.svprogresshud.SVProgressHUD;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
 
 public class PasswordManage extends AppCompatActivity {
 
     /* 必备的三个量：一个List（也可以为数组）,一个Adapter,一个ListView */
-    private ArrayList<String> strs;
-    private ArrayAdapter<String> arrayAdapter;
+    private ArrayList<Info> mInfo;
+    private ArrayAdapter<Info> arrayAdapter;
     private SwipeMenuListView mListView;
 
 
@@ -96,9 +95,7 @@ public class PasswordManage extends AppCompatActivity {
                         startActivity(intent);
                         break;
                     case 1:
-                        strs.remove(position);
                         deleteContent(position);
-                        arrayAdapter.notifyDataSetChanged();
                         // delete
                         break;
                 }
@@ -113,37 +110,30 @@ public class PasswordManage extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        /**
-         * 强烈不建议在onCreate里面进行以下操作
-         * 数据量大时会让人感觉界面卡顿
-         * 建议在另一个线程里加载，然后更新UI
-         */
 
+        mInfo = new ArrayList<Info>();
 
-        strs = new ArrayList<String>();
+        /* 添加到本地列表中 */
 
-       // if(fileContent == null){
-            Toast.makeText(PasswordManage.this, "打开文件失败", Toast.LENGTH_SHORT).show();
-            strs.add("木有内容");
-        /*
-        }
-        else {
-
-        }*/
-
+        /* 添加到云端列表中 */
         getFromCloud(User.userDownloadPassword());
 
-
         /* 实例化ArrayAdapter */
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strs);
-
+        arrayAdapter = new ArrayAdapter<Info>(this, android.R.layout.simple_list_item_1, mInfo);
         mListView.setAdapter(arrayAdapter);
-
-
     }
 
 
-    public void deleteContent(int index){
+    private void deleteContent(int position) {
+
+        if(mInfo.get(position).mLocal) {
+            mInfo.remove(position);
+            arrayAdapter.notifyDataSetChanged();
+        } else {
+            Map<String, Integer> map = new HashMap<String, Integer>();
+            map.put("id", mInfo.get(position).mInfoID);
+            deleteFromCloud(User.userDeletePassword(map),position);
+        }
 
     }
 
@@ -215,17 +205,22 @@ public class PasswordManage extends AppCompatActivity {
                             for(int i = 0; i < list.length(); i++) {
                                 JSONObject ith = new JSONObject(list.getString(String.valueOf(i)));
 
+                                Integer id = ith.getInt("id");
                                 String purpose = ith.getString("purpose");
                                 String uname = ith.getString("uname");
                                 String passwd = ith.getString("passwd");
                                 String extra = ith.getString("extra");
 
-                                strs.add("目的："+purpose+"\n"
-                                        +"账号："+uname+"\n"
-                                        +"密码："+passwd+"\n"
-                                        +"备注："+extra+"\n"
-                                        +"<云端存储>"
-                                );
+                                String content = "目的："+purpose+"\n"
+                                            +"账号："+uname+"\n"
+                                            +"密码："+passwd+"\n"
+                                            +"备注："+extra+"\n"
+                                            +"<云端存储>";
+
+                                Info info = new Info(id, false, content);
+                                Log.e("id", String.valueOf(id));
+                                Log.e("content", content);
+
                             }
                             arrayAdapter.notifyDataSetChanged();
                             break;
@@ -251,7 +246,7 @@ public class PasswordManage extends AppCompatActivity {
     }
 
     /* 云端删除 */
-    private void deleteFromCloud(RequestParams params) {
+    private void deleteFromCloud(RequestParams params, final int position) {
 
         /* 发送到的url */
         String url = "deletepassword/";
@@ -269,24 +264,8 @@ public class PasswordManage extends AppCompatActivity {
 
                     /* 判断返回码 */
                     switch(status) {
-                        case "30000":
-                            JSONObject list = response.getJSONObject("list");
-
-                            for(int i = 0; i < list.length(); i++) {
-                                JSONObject ith = new JSONObject(list.getString(String.valueOf(i)));
-
-                                String purpose = ith.getString("purpose");
-                                String uname = ith.getString("uname");
-                                String passwd = ith.getString("passwd");
-                                String extra = ith.getString("extra");
-
-                                strs.add("目的："+purpose+"\n"
-                                        +"账号："+uname+"\n"
-                                        +"密码："+passwd+"\n"
-                                        +"备注："+extra+"\n"
-                                        +"<云端存储>"
-                                );
-                            }
+                        case "40000":
+                            mInfo.remove(position);
                             arrayAdapter.notifyDataSetChanged();
                             break;
                         default:

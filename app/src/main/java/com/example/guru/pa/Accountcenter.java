@@ -105,8 +105,8 @@ public class AccountCenter extends AppCompatActivity {
                     switch(status) {
                         case "10002":
                             User.userReset();
-                            Intent intent = new Intent(AccountCenter.this, MainActivity.class);
-                            startActivity(intent);
+                            //Intent intent = new Intent(AccountCenter.this, MainActivity.class);
+                            //startActivity(intent);
                             AccountCenter.this.finish();
                             break;
                         case "10004":

@@ -123,7 +123,6 @@ public class AddBill extends AppCompatActivity {
 
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -134,6 +133,7 @@ public class AddBill extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     public void saveBill(View view) throws Exception {
         if (incomeText.getText().toString().equals("") || expendText.getText().toString().equals("")){
@@ -173,9 +173,11 @@ public class AddBill extends AppCompatActivity {
         //startActivity(intent);
     }
 
+
     public void cancelBill(View view) {
         onBackPressed();
     }
+
 
     public void debug(int billId) {
 
