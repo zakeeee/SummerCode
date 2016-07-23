@@ -3,6 +3,7 @@ package com.example.guru.pa;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
@@ -19,22 +20,26 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.special.ResideMenu.ResideMenu;
 import com.special.ResideMenu.ResideMenuItem;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String FILENAME = "testFile2.txt";
-    public static SubActionButton button1;
-    public static SubActionButton button2;
-    public static SubActionButton button3;
     private  ResideMenu mResideMenu;
-    public static Boolean LOGGEDIN = false;
-    public static String USERNAME;
+    //public static Boolean LOGGEDIN = false;
+    //public static String USERNAME;
     private ResideMenuItem item[];
-
+    private View cir;
 
     private void createResideMenu() {
         // attach to current activity;
@@ -84,6 +89,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        User.mSharedPre = this.getSharedPreferences(User.INIFILENAME, MODE_PRIVATE);
+        User.userSet();
+
         TextView card=(TextView)findViewById(R.id.item1);
         card.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,12 +115,12 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        View cir = navigationView.getHeaderView(0);
+        cir = navigationView.getHeaderView(0);
         if (cir != null) {
             cir.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v){
-                    if(MainActivity.LOGGEDIN) {
+                    if(User.mLoggedIn) {
                         Intent intent = new Intent(MainActivity.this, AccountCenter.class);
                         startActivity(intent);
                     }
@@ -124,11 +132,15 @@ public class MainActivity extends AppCompatActivity
             } );
         }
 
-        if(MainActivity.LOGGEDIN){
-            TextView tv = (TextView) cir.findViewById(R.id.logged_username);
-            tv.setText(USERNAME);
-        }
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(cir!=null){
+            TextView tv = (TextView) cir.findViewById(R.id.logged_username);
+            tv.setText(User.mUsername);
+        }
     }
 
     @Override
@@ -211,7 +223,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -220,16 +231,20 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_travel:
-                ActivityController.jumpToAnotherActivity(MainActivity.this, JourneyManage.class);
+                Intent intent = new Intent(MainActivity.this, JourneyManage.class);
+                startActivity(intent);
                 return true;
             case R.id.nav_money:
-                ActivityController.jumpToAnotherActivity(MainActivity.this, MoneyManage.class);
+                Intent intent1 = new Intent(MainActivity.this, MoneyManage.class);
+                startActivity(intent1);
                 return true;
             case R.id.nav_password:
-                ActivityController.jumpToAnotherActivity(MainActivity.this, PasswordManage.class);
+                Intent intent2 = new Intent(MainActivity.this, PasswordManage.class);
+                startActivity(intent2);
                 return true;
             case R.id.nav_settings:
-                ActivityController.jumpToAnotherActivity(MainActivity.this, SettingsActivity.class);
+                Intent intent3 = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent3);
                 return true;
         }
 
@@ -238,11 +253,41 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void onNavHeaderClick() {
-        if(MainActivity.LOGGEDIN) {
-            ActivityController.jumpToAnotherActivity(MainActivity.this, AccountCenter.class);
-        } else {
-            ActivityController.jumpToAnotherActivity(MainActivity.this, LogIn.class);
-        }
+    /* 登出 */
+    private void onLogOut(String url, RequestParams params) {
+
+        HttpClient.post(url, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                String status = null;
+                String res = "11";
+
+                try {
+                    status = response.getString("status");
+                    res = response.getString("response");
+
+                    switch(status) {
+                        case "10002":
+                            User.userReset();
+                            Intent intent = new Intent(MainActivity.this, LogIn.class);
+                            startActivity(intent);
+                            MainActivity.this.finish();
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+                Toast.makeText(MainActivity.this, status+","+res, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
     }
+
 }

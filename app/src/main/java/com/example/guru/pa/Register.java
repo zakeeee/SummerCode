@@ -1,5 +1,8 @@
 package com.example.guru.pa;
 
+import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -55,20 +58,32 @@ public class Register extends AppCompatActivity {
                     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                     StrictMode.setThreadPolicy(policy);
 
-                    RequestParams requestParams = new RequestParams();
-                    requestParams.add("username",name);
-                    requestParams.add("password",password);
-                    onReg("regist/",requestParams);
+                    /* 用户注册 */
+                    onRegist("regist/",User.userRegist(name, password));
                 }
             }
         });
 
     }
 
-    /**
-     * 注册
-     * */
-    public void onReg(String url, RequestParams params) {
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /* 注册 */
+    private void onRegist(String url, RequestParams params) {
+
         HttpClient.post(url, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -80,12 +95,11 @@ public class Register extends AppCompatActivity {
                     res = response.getString("response");
                 } catch (JSONException e) {
                     Toast.makeText(Register.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    return;
                 }
 
                 switch (status) {
                     case "11000":
-                        ActivityController.jumpToAnotherActivity(Register.this, LogIn.class);
+                        Register.this.onBackPressed();
                         break;
                     default:
                         break;
@@ -99,19 +113,6 @@ public class Register extends AppCompatActivity {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
             }
         });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case android.R.id.home:
-                this.finish();
-                return true;
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
 }
