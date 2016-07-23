@@ -109,8 +109,7 @@ public class Bill extends AppCompatActivity {
                 switch (index) {
                     case 0:
                         // open
-                        sendId(position);
-                        //ActivityController.jumpToAnotherActivity(Bill.this,MoneyDetail.class);
+                        ActivityController.jumpToAnotherActivity(Bill.this,MoneyDetail.class);
                         break;
                     case 1:
                         strs.remove(position);

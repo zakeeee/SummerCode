@@ -89,7 +89,7 @@ public class JourneyManage extends AppCompatActivity {
                 switch (index) {
                     case 0:
                         // open
-                        sendId(position);
+                        ActivityController.jumpToAnotherActivity(JourneyManage.this,JourneyDetail.class);
                         break;
                     case 1:
                         strs.remove(position);
