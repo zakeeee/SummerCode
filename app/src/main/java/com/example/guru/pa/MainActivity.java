@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity
     public static String USERNAME;
     private ResideMenuItem item[];
 
+
     private void createResideMenu() {
         // attach to current activity;
         mResideMenu = new ResideMenu(this);
@@ -82,6 +83,16 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        TextView card=(TextView)findViewById(R.id.item1);
+        card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    Intent intent=new Intent(MainActivity.this,JourneyDetail.class);
+                    startActivity(intent);
+            }
+        });
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -164,20 +175,42 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.menu_plus) {
-            if(mResideMenu.isOpened()) {
-                mResideMenu.closeMenu();
-            } else {
-                mResideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
-            }
-            return true;
-        } else if (id == R.id.menu_search) {
-            Toast.makeText(MainActivity.this, "search clicked", Toast.LENGTH_SHORT).show();
+
+        switch (id){
+            case R.id.menu_plus:
+                if(mResideMenu.isOpened()) {
+                    mResideMenu.closeMenu();
+                } else {
+                    mResideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
+                }
+                break;
+            case R.id.menu_search:
+                Toast.makeText(MainActivity.this, "search clicked", Toast.LENGTH_SHORT).show();
+                break;
+//            case R.id.item1:
+//                Toast.makeText(MainActivity.this, "111", Toast.LENGTH_SHORT).show();
+//                Intent intent=new Intent(MainActivity.this,AddJourney.class);
+//                startActivity(intent);
+//                break;
+            default:
+                break;
         }
+        //noinspection SimplifiableIfStatement
+//        if (id == R.id.menu_plus) {
+//            if(mResideMenu.isOpened()) {
+//                mResideMenu.closeMenu();
+//            } else {
+//                mResideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
+//            }
+//            return true;
+//        } else if (id == R.id.menu_search) {
+//            Toast.makeText(MainActivity.this, "search clicked", Toast.LENGTH_SHORT).show();
+//        }
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override

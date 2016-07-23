@@ -115,7 +115,8 @@ public class MoneyManage extends AppCompatActivity {
 
         switch (id) {
             case R.id.bill_list:
-                ActivityController.jumpToAnotherActivity(MoneyManage.this, Bill.class);
+                Intent intent=new Intent(MoneyManage.this,Bill.class);
+                startActivity(intent);
                 break;
             case android.R.id.home:
                 this.finish();
