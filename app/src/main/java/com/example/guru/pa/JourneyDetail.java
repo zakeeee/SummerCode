@@ -28,8 +28,8 @@ public class JourneyDetail extends AppCompatActivity {
         super.onResume();
         Intent intent = getIntent();
         if (intent != null) {
-            scheduleId = intent.getIntExtra(MainActivity.MESSAGE_JOURNEY, 0);
-
+            scheduleId = intent.getIntExtra("pa.journey.manage.detail", 0);
+//Log.e("JourneyDetail", scheduleId + "  ");
             mDBOperator = new DataBaseOperator(this);
             Schedule schedule = mDBOperator.getScheduleById(scheduleId);
             TextView date = (TextView)findViewById(R.id.journey_detail_date);
@@ -69,7 +69,7 @@ public class JourneyDetail extends AppCompatActivity {
 
     public void sendId() {
         Intent intent = new Intent(JourneyDetail.this, AddJourney.class);
-        intent.putExtra(MainActivity.MESSAGE_JOURNEY, scheduleId);
+        intent.putExtra("pa.journey.detail.edit", scheduleId);
         startActivity(intent);
     }
 }

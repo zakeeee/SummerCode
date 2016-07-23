@@ -1,9 +1,10 @@
 package com.example.guru.pa;
 
+
 /**
  * Created by Haoyu on 2016/7/19.
  */
-public class Schedule {
+public class Schedule implements Comparable<Schedule>{
     private String date;
     private String time;
     private String content;
@@ -47,5 +48,18 @@ public class Schedule {
 
     public void setContent(String content) {this.content = content;}
 
+    @Override
+    public String toString() {
+        return "时间: " + date + " " + time + "\n" + "内容:\n" + content;
+    }
 
+    @Override
+    public int compareTo(Schedule b) {
+        int ret = this.getDate().compareTo(b.getDate());
+        if (ret == 0) {
+            return this.getTime().compareTo(b.getTime());
+        }
+        else
+            return ret;
+    }
 }

@@ -79,9 +79,7 @@ public class AddBill extends AppCompatActivity {
         Intent intent = getIntent();
         gottenId = -1;
         if (intent != null) {
-            gottenId = intent.getIntExtra("billId", -1);
-
-            Log.e("BillUpdate",gottenId + "");
+            gottenId = intent.getIntExtra("pa.money.detail.edit", -1);
 
             if (gottenId > 0) {
                 BillDBOperator initDB = new BillDBOperator(this);
@@ -94,7 +92,7 @@ public class AddBill extends AppCompatActivity {
                 int sHour = 0;
                 int sMinute = 0;
                 if (initBill != null) {
-                    String date = initBill.getYear() + "-" + initBill.getMonth() + "-" + initBill.getDay();
+                    String date = initBill.getDate();
                     String backup = initBill.getBackup();
                     try {
                         sDate = sdfDate.parse(date).getTime();

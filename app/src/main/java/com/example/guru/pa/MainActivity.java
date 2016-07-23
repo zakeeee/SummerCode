@@ -3,9 +3,11 @@ package com.example.guru.pa;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,9 +21,16 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.special.ResideMenu.ResideMenu;
 import com.special.ResideMenu.ResideMenuItem;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,17 +41,19 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     //public static final String FILENAME = "testFile2.txt";
-    public static final String MESSAGE_JOURNEY = "pa.scheduleId";
-    public static final String MESSAGE_BILL = "pa.billId";
+    //public static final String MESSAGE_JOURNEY = "pa.scheduleId";
+    //public static final String MESSAGE_BILL = "pa.billId";
     public static SubActionButton button1;
     public static SubActionButton button2;
     public static SubActionButton button3;
     private  ResideMenu mResideMenu;
-    public static Boolean LOGGEDIN = false;
-    public static String USERNAME;
+    //public static Boolean LOGGEDIN = false;
+    //public static String USERNAME;
     private ResideMenuItem item[];
+    private View cir;
     private DataBaseOperator mJourneyDB;
-    private ArrayList<TagSchedule> mJourneyList;
+    private ArrayList<Schedule> mJourneyList;
+
 
 
     private void createResideMenu() {
@@ -93,7 +104,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initCard();
+        User.mSharedPre = this.getSharedPreferences(User.INIFILENAME, MODE_PRIVATE);
+        User.userSet();
+
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -110,12 +123,12 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        View cir = navigationView.getHeaderView(0);
+        cir = navigationView.getHeaderView(0);
         if (cir != null) {
             cir.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v){
-                    if(MainActivity.LOGGEDIN) {
+                    if(User.mLoggedIn) {
                         Intent intent = new Intent(MainActivity.this, AccountCenter.class);
                         startActivity(intent);
                     }
@@ -127,10 +140,16 @@ public class MainActivity extends AppCompatActivity
             } );
         }
 
-        if(MainActivity.LOGGEDIN){
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(cir!=null){
             TextView tv = (TextView) cir.findViewById(R.id.logged_username);
-            tv.setText(USERNAME);
+            tv.setText(User.mUsername);
         }
+        initCard();
 
     }
 
@@ -138,31 +157,36 @@ public class MainActivity extends AppCompatActivity
      * 初始化卡片
      */
     public void initCard() {
-        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
-        SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
-        String year = yearFormat.format(new Date());
-        String month = monthFormat.format(new Date());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("y-M-d");
+        String date = dateFormat.format(new Date());
         mJourneyDB = new DataBaseOperator(this);
-        mJourneyList = mJourneyDB.getTagScheduleByMY(Integer.parseInt(year), Integer.parseInt(month));
-
+        mJourneyList = mJourneyDB.getScheduleBydate(date);
         TextView card1 = (TextView)findViewById(R.id.card1);
-        card1.setOnClickListener(new View.OnClickListener() {
+        TextView card2 = (TextView)findViewById(R.id.card2);
+
+        if (mJourneyList != null) {
+            card1.setText(mJourneyList.get(0).toString());
+        }
+        if (mJourneyList != null && mJourneyList.size() > 1) {
+            card2.setText(mJourneyList.get(1).toString());
+        }
+        card1.setOnClickListener(handler(0));
+        card2.setOnClickListener(handler(1));
+
+    }
+
+    /**
+     * @param index
+     * @return
+     */
+    public View.OnClickListener handler(final int index) {
+        return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mJourneyList != null)
-                    goToJourneyDetail(mJourneyList.get(0).getScheduleId());
+                    goToJourneyDetail(mJourneyList.get(index).getScheduleId());
             }
-        });
-
-        TextView card2 =(TextView)findViewById(R.id.card2);
-        card2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mJourneyList != null && mJourneyList.size() > 1)
-                    goToJourneyDetail(mJourneyList.get(1).getScheduleId());
-            }
-        });
-
+        };
     }
 
     @Override
@@ -245,7 +269,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -254,16 +277,20 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_travel:
-                ActivityController.jumpToAnotherActivity(MainActivity.this, JourneyManage.class);
+                Intent intent = new Intent(MainActivity.this, JourneyManage.class);
+                startActivity(intent);
                 return true;
             case R.id.nav_money:
-                ActivityController.jumpToAnotherActivity(MainActivity.this, MoneyManage.class);
+                Intent intent1 = new Intent(MainActivity.this, MoneyManage.class);
+                startActivity(intent1);
                 return true;
             case R.id.nav_password:
-                ActivityController.jumpToAnotherActivity(MainActivity.this, PasswordManage.class);
+                Intent intent2 = new Intent(MainActivity.this, PasswordManage.class);
+                startActivity(intent2);
                 return true;
             case R.id.nav_settings:
-                ActivityController.jumpToAnotherActivity(MainActivity.this, SettingsActivity.class);
+                Intent intent3 = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent3);
                 return true;
         }
 
@@ -272,19 +299,48 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void onNavHeaderClick() {
-        if(MainActivity.LOGGEDIN) {
-            ActivityController.jumpToAnotherActivity(MainActivity.this, AccountCenter.class);
-        } else {
-            ActivityController.jumpToAnotherActivity(MainActivity.this, LogIn.class);
-        }
+    /* 登出 */
+    private void onLogOut(String url, RequestParams params) {
+
+        HttpClient.post(url, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                String status = null;
+                String res = "11";
+
+                try {
+                    status = response.getString("status");
+                    res = response.getString("response");
+
+                    switch(status) {
+                        case "10002":
+                            User.userReset();
+                            Intent intent = new Intent(MainActivity.this, LogIn.class);
+                            startActivity(intent);
+                            MainActivity.this.finish();
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+                Toast.makeText(MainActivity.this, status+","+res, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
     }
 
 
-    public void goToJourneyDetail(int sendId) {
 
+    public void goToJourneyDetail(int sendId) {
         Intent intent=new Intent(MainActivity.this,JourneyDetail.class);
-        intent.putExtra(MainActivity.MESSAGE_JOURNEY, sendId);
+        intent.putExtra("pa.journey.manage.detail", sendId);
         startActivity(intent);
     }
 }
