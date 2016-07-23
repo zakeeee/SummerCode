@@ -29,14 +29,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
+import java.lang.String;
 
 public class PasswordManage extends AppCompatActivity {
-
+    public static Integer update_PM_id = 0;
+    private PasswordOperate mPasswordOperate;
+    private ArrayList<PasswordMessage> mPMArrayList;
+    private ArrayList<Integer> mhash = null;
     /* 必备的三个量：一个List（也可以为数组）,一个Adapter,一个ListView */
-    private ArrayList<Info> mInfo;
-    private ArrayAdapter<Info> arrayAdapter;
+    private ArrayList<String> strs;
+    private ArrayAdapter<String> arrayAdapter;
     private SwipeMenuListView mListView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,44 @@ public class PasswordManage extends AppCompatActivity {
         /* ActionBar添加返回按钮 */
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        /**
+         * 强烈不建议在onCreate里面进行以下操作
+         * 数据量大时会让人感觉界面卡顿
+         * 建议在另一个线程里加载，然后更新UI
+         */
+
+        strs = new ArrayList<String>();
+        mPMArrayList = new ArrayList<PasswordMessage>();
+        mhash = new ArrayList<Integer>();
+        mPasswordOperate = new PasswordOperate(this);
+        mPMArrayList = mPasswordOperate.getAllPasswordMessage();
+        if(mPMArrayList == null){
+            Toast.makeText(PasswordManage.this, "无内容", Toast.LENGTH_SHORT).show();
+            strs.add("木有内容");
+        }
+        else {
+            String tempStr = "";
+            PasswordMessage tempPM = null;
+            for (int i = 0; i < mPMArrayList.size(); i++) {
+                tempPM = mPMArrayList.get(i);
+                //解密
+                String de_purpose = DES3Utils.decryptMode(tempPM.getPurpose());
+                String de_username = DES3Utils.decryptMode(tempPM.getUsername());
+                String de_password = DES3Utils.decryptMode(tempPM.getPassword());
+                String de_extra = DES3Utils.decryptMode(tempPM.getExtra());
+
+                tempStr ="用途:" + de_purpose + "\n" +
+                        "账号:" + de_username + "\n"+
+                        "密码:" + de_password + "\n"+
+                        "备注:" + de_extra;
+                mhash.add(tempPM.getId());
+                strs.add(tempStr);
+            }
+        }
+
+        /* 实例化ArrayAdapter */
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strs);
 
         /* 实例化SwipeMenuListView */
         mListView = (SwipeMenuListView) findViewById(R.id.password_list);
@@ -61,7 +102,7 @@ public class PasswordManage extends AppCompatActivity {
                 SwipeMenuItem openItem = new SwipeMenuItem(getApplicationContext());
                 openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9, 0xCE)));
                 openItem.setWidth(180);
-                openItem.setTitle("Open");
+                openItem.setTitle("编辑");
                 openItem.setTitleSize(18);
                 openItem.setTitleColor(Color.rgb(0x00, 0x00, 0x00));
                 // 添加到SwipeMenu
@@ -71,7 +112,7 @@ public class PasswordManage extends AppCompatActivity {
                 SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
                 deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
                 deleteItem.setWidth(180);
-                deleteItem.setTitle("X"); /* 未来会换成icon */
+                deleteItem.setTitle("删除"); /* 未来会换成icon */
                 deleteItem.setTitleSize(18);
                 deleteItem.setTitleColor(Color.WHITE);
                 // 添加到SwipeMenu
@@ -80,7 +121,7 @@ public class PasswordManage extends AppCompatActivity {
         };
 
         /* 给mListView设置Adapter,MenuCreator,设置滑动方向 */
-
+        mListView.setAdapter(arrayAdapter);
         mListView.setMenuCreator(creator);
         mListView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
 
@@ -90,51 +131,30 @@ public class PasswordManage extends AppCompatActivity {
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
                 switch (index) {
                     case 0:
-                        // open
-                        Intent intent = new Intent(PasswordManage.this,PasswordDetail.class);
+                        // 编辑
+                        update_PM_id = mhash.get(position);
+                        Intent intent = new Intent(PasswordManage.this, AddPassword.class);
                         startActivity(intent);
+                        PasswordManage.this.finish();
                         break;
                     case 1:
+                        // 删除
+                        strs.remove(position);
                         deleteContent(position);
-                        // delete
+                        arrayAdapter.notifyDataSetChanged();
                         break;
                 }
                 // false : close the menu; true : not close the menu
                 return false;
             }
         });
-
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        mInfo = new ArrayList<Info>();
-
-        /* 添加到本地列表中 */
-
-        /* 添加到云端列表中 */
-        getFromCloud(User.userDownloadPassword());
-
-        /* 实例化ArrayAdapter */
-        arrayAdapter = new ArrayAdapter<Info>(this, android.R.layout.simple_list_item_1, mInfo);
-        mListView.setAdapter(arrayAdapter);
     }
 
 
-    private void deleteContent(int position) {
-
-        if(mInfo.get(position).mLocal) {
-            mInfo.remove(position);
-            arrayAdapter.notifyDataSetChanged();
-        } else {
-            Map<String, Integer> map = new HashMap<String, Integer>();
-            map.put("id", mInfo.get(position).mInfoID);
-            deleteFromCloud(User.userDeletePassword(map),position);
-        }
-
+    public void deleteContent(int position){
+        int id = mhash.get(position);
+        mhash.remove(position);
+        mPasswordOperate.deleteByid(id);
     }
 
     @Override
@@ -169,10 +189,14 @@ public class PasswordManage extends AppCompatActivity {
             case R.id.password_plus:
                 Intent intent = new Intent(PasswordManage.this, AddPassword.class);
                 startActivity(intent);
+                PasswordManage.this.finish();
                 return true;
             case android.R.id.home:
-                finish();
+                PasswordManage.this.finish();
                 return true;
+            case R.id.password_search:
+                Toast.makeText(PasswordManage.this, "暂时木有功能！", Toast.LENGTH_SHORT).show();
+                break;
             default:
                 break;
         }
@@ -265,7 +289,7 @@ public class PasswordManage extends AppCompatActivity {
                     /* 判断返回码 */
                     switch(status) {
                         case "40000":
-                            mInfo.remove(position);
+                            //mInfo.remove(position);
                             arrayAdapter.notifyDataSetChanged();
                             break;
                         default:
