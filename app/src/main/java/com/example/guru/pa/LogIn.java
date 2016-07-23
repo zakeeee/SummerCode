@@ -23,6 +23,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.Cursor;
 import android.widget.Toast;
 
+import com.bigkoo.svprogresshud.SVProgressHUD;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
@@ -43,6 +44,7 @@ public class LogIn extends AppCompatActivity {
     private EditText edname;
     private EditText edpassword;
     private Button login;
+    private SVProgressHUD mSVProgressHUD;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +54,12 @@ public class LogIn extends AppCompatActivity {
         /* 添加返回按钮 */
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        mSVProgressHUD = new SVProgressHUD(this);
 
         edname = (EditText) findViewById(R.id.editText);
         edpassword = (EditText) findViewById(R.id.editText2);
         login = (Button) findViewById(R.id.login);
+
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +75,7 @@ public class LogIn extends AppCompatActivity {
 
                     /* 用户登陆 */
                     onLogIn("login/", User.userLogIn(name, password));
+                    mSVProgressHUD.showWithStatus("加载中...");
 
                 }
 
@@ -119,8 +124,7 @@ public class LogIn extends AppCompatActivity {
                             User.mLoggedIn = true;
                             User.mUsername = response.getString("username");
                             User.mToken = response.getString("token");
-                            Log.e("haha", User.mToken);
-                            //onGetInfo("getuserinfo/",User.userGetInfo());
+                            onGetInfo("getuserinfo/",User.userGetInfo());
                             LogIn.this.onBackPressed();
                             break;
                         default:
@@ -130,14 +134,13 @@ public class LogIn extends AppCompatActivity {
                     Toast.makeText(LogIn.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
-                Toast.makeText(LogIn.this, status+","+res, Toast.LENGTH_SHORT).show();
+                Toast.makeText(LogIn.this, res, Toast.LENGTH_SHORT).show();
+                mSVProgressHUD.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
-
-                Toast.makeText(LogIn.this, "onfailed", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -153,17 +156,18 @@ public class LogIn extends AppCompatActivity {
                 try {
                     status = response.getString("status");
                     res = response.getString("response");
-                    if(status == "666") {
+                    if(status.equals("666")) {
                         User.mUsername = response.getString("username");
                         User.mNickname = response.getString("nickname");
-                        User.mSex = response.getString("sex");
+                        User.mSex = response.getInt("sex");
                         User.mExtra = response.getString("extra");
+                        User.userSave();
                     }
                 } catch (JSONException e) {
                     Toast.makeText(LogIn.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
-                Toast.makeText(LogIn.this, status+","+res, Toast.LENGTH_SHORT).show();
+                Toast.makeText(LogIn.this, res, Toast.LENGTH_SHORT).show();
             }
 
             @Override

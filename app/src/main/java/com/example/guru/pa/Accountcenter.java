@@ -71,17 +71,7 @@ public class AccountCenter extends AppCompatActivity {
         mUsername.setText(User.mUsername);
         mNickname.setText(User.mNickname);
         mExtra.setText(User.mExtra);
-        switch (User.mSex) {
-            case "0":
-                mSex.setSelection(2);
-                break;
-            case "1":
-                mSex.setSelection(1);
-                break;
-            default:
-                mSex.setSelection(0);
-                break;
-        }
+        mSex.setSelection(User.mSex);
 
     }
 

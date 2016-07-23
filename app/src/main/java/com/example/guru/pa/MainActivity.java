@@ -3,6 +3,7 @@ package com.example.guru.pa;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
@@ -39,7 +40,6 @@ public class MainActivity extends AppCompatActivity
     //public static String USERNAME;
     private ResideMenuItem item[];
     private View cir;
-
 
     private void createResideMenu() {
         // attach to current activity;
@@ -88,6 +88,9 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        User.mSharedPre = this.getSharedPreferences(User.INIFILENAME, MODE_PRIVATE);
+        User.userSet();
 
         TextView card=(TextView)findViewById(R.id.item1);
         card.setOnClickListener(new View.OnClickListener() {
@@ -138,12 +141,6 @@ public class MainActivity extends AppCompatActivity
             TextView tv = (TextView) cir.findViewById(R.id.logged_username);
             tv.setText(User.mUsername);
         }
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-
     }
 
     @Override
@@ -224,7 +221,6 @@ public class MainActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
-
 
 
     @SuppressWarnings("StatementWithEmptyBody")

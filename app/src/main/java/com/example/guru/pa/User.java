@@ -2,6 +2,7 @@ package com.example.guru.pa;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Image;
 import android.os.Message;
 import android.util.Log;
@@ -30,11 +31,13 @@ public class User {
 
     public static String mUsername = "请登陆";
     public static String mNickname = "";
-    public static String mSex = "";
+    public static int mSex = 0;
     public static String mExtra = "";
     public static Image mHeadPortrait = null;
     public static Boolean mLoggedIn = false;
     public static String mToken = "";
+    public static SharedPreferences mSharedPre;
+    public static String INIFILENAME = "userinfo";
 
     /* 用户登陆 */
     public static RequestParams userLogIn(String uname, String passwd){
@@ -125,14 +128,37 @@ public class User {
         return requestParams;
     }
 
+    /* 重置用户数据 */
     public static void userReset() {
         mUsername = "请登陆";
         mNickname = "";
-        mSex = "";
+        mSex = 0;
         mExtra = "";
         mHeadPortrait = null;
         mLoggedIn = false;
         mToken = "";
+    }
+
+    /* 初始化用户数据 */
+    public static void userSet() {
+        mUsername = mSharedPre.getString("username","请登陆");
+        mNickname = mSharedPre.getString("nickname","");
+        mSex = mSharedPre.getInt("sex",0);
+        mExtra = mSharedPre.getString("extra","");
+        mLoggedIn = mSharedPre.getBoolean("loggedin",false);
+        mToken = mSharedPre.getString("token","");
+    }
+
+    /* 保存用户数据 */
+    public static void userSave() {
+        SharedPreferences.Editor editor = mSharedPre.edit();
+        editor.putString("username",mUsername);
+        editor.putString("nickname",mNickname);
+        editor.putInt("sex",mSex);
+        editor.putString("extra",mExtra);
+        editor.putBoolean("loggedin",mLoggedIn);
+        editor.putString("token",mToken);
+        editor.commit();
     }
 
 }
