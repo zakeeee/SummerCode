@@ -231,16 +231,20 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_travel:
-                ActivityController.jumpToAnotherActivity(MainActivity.this, JourneyManage.class);
+                Intent intent = new Intent(MainActivity.this, JourneyManage.class);
+                startActivity(intent);
                 return true;
             case R.id.nav_money:
-                ActivityController.jumpToAnotherActivity(MainActivity.this, MoneyManage.class);
+                Intent intent1 = new Intent(MainActivity.this, MoneyManage.class);
+                startActivity(intent1);
                 return true;
             case R.id.nav_password:
-                ActivityController.jumpToAnotherActivity(MainActivity.this, PasswordManage.class);
+                Intent intent2 = new Intent(MainActivity.this, PasswordManage.class);
+                startActivity(intent2);
                 return true;
             case R.id.nav_settings:
-                ActivityController.jumpToAnotherActivity(MainActivity.this, SettingsActivity.class);
+                Intent intent3 = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent3);
                 return true;
         }
 

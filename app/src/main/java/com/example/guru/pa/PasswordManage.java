@@ -82,7 +82,8 @@ public class PasswordManage extends AppCompatActivity {
                 switch (index) {
                     case 0:
                         // open
-                        ActivityController.jumpToAnotherActivity(PasswordManage.this,PasswordDetail.class);
+                        Intent intent = new Intent(PasswordManage.this,PasswordDetail.class);
+                        startActivity(intent);
                         break;
                     case 1:
                         strs.remove(position);

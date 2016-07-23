@@ -39,7 +39,7 @@ public class User {
     public static SharedPreferences mSharedPre;
     public static String INIFILENAME = "userinfo";
 
-    /* 用户登陆 */
+    /* 用户登陆请求参数 */
     public static RequestParams userLogIn(String uname, String passwd){
         RequestParams requestParams = new RequestParams();
         requestParams.add("username",uname);
@@ -48,7 +48,7 @@ public class User {
         return requestParams;
     }
 
-    /* 用户登出 */
+    /* 用户登出请求参数 */
     public static RequestParams userLogout(){
         RequestParams requestParams = new RequestParams();
         requestParams.add("username",mUsername);
@@ -57,7 +57,7 @@ public class User {
         return requestParams;
     }
 
-    /* 用户注册 */
+    /* 用户注册请求参数 */
     public static RequestParams userRegist(String uname, String passwd){
         RequestParams requestParams = new RequestParams();
         requestParams.add("username",uname);
@@ -66,7 +66,7 @@ public class User {
         return requestParams;
     }
 
-    /* 用户获取相关信息 */
+    /* 用户获取相关信息请求参数 */
     public static RequestParams userGetInfo(){
         RequestParams requestParams = new RequestParams();
         requestParams.add("username",mUsername);
@@ -74,7 +74,7 @@ public class User {
         return requestParams;
     }
 
-    /* 用户上传行程 */
+    /* 用户上传行程请求参数 */
     public static RequestParams userUploadJourney(Map<String,String> map){
         RequestParams requestParams = new RequestParams(map);
         requestParams.add("username",mUsername);
@@ -83,7 +83,7 @@ public class User {
         return requestParams;
     }
 
-    /* 用户下载行程 */
+    /* 用户下载行程请求参数 */
     public static RequestParams userDownloadJourney(){
         RequestParams requestParams = new RequestParams();
         requestParams.add("username",mUsername);
@@ -92,7 +92,7 @@ public class User {
         return requestParams;
     }
 
-    /* 用户上传账单 */
+    /* 用户上传账单请求参数 */
     public static RequestParams userUploadBill(Map<String,String> map){
         RequestParams requestParams = new RequestParams(map);
         requestParams.add("username",mUsername);
@@ -101,7 +101,7 @@ public class User {
         return requestParams;
     }
 
-    /* 用户下载账单 */
+    /* 用户下载账单请求参数 */
     public static RequestParams userDownloadBill(){
         RequestParams requestParams = new RequestParams();
         requestParams.add("username",mUsername);
@@ -110,7 +110,7 @@ public class User {
         return requestParams;
     }
 
-    /* 用户上传密码 */
+    /* 用户上传密码请求参数 */
     public static RequestParams userUploadPassword(Map<String,String> map){
         RequestParams requestParams = new RequestParams(map);
         requestParams.add("username",mUsername);
@@ -119,7 +119,7 @@ public class User {
         return requestParams;
     }
 
-    /* 用户下载密码 */
+    /* 用户下载密码请求参数 */
     public static RequestParams userDownloadPassword(){
         RequestParams requestParams = new RequestParams();
         requestParams.add("username",mUsername);
@@ -128,7 +128,7 @@ public class User {
         return requestParams;
     }
 
-    /* 重置用户数据 */
+    /* 重置用户数据请求参数 */
     public static void userReset() {
         mUsername = "请登陆";
         mNickname = "";
