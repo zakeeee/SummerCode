@@ -33,6 +33,7 @@ public class JourneyManage extends AppCompatActivity {
     private ArrayList<Schedule> mScheduleArrayList;
     private ArrayList<TagSchedule> mTagScheduleArrayList;
     private DataBaseOperator mDBOperator;
+    public static final String SEND_TAG = "sendId";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +89,7 @@ public class JourneyManage extends AppCompatActivity {
                 switch (index) {
                     case 0:
                         // open
-                        Intent intent=new Intent(JourneyManage.this,JourneyDetail.class);
-                        startActivity(intent);
+                        ActivityController.jumpToAnotherActivity(JourneyManage.this,JourneyDetail.class);
                         break;
                     case 1:
                         strs.remove(position);
@@ -130,7 +130,7 @@ public class JourneyManage extends AppCompatActivity {
 
                 tempContent = tempSch.getContent();
                 int maxlen = 20;
-                Log.e("length", tempContent.length() + "");
+               // Log.e("length", tempContent.length() + "");
                 if (tempContent.length() > maxlen) {
                     tempContent = "Content :" + tempContent.substring(0, maxlen - 1);
                 }
@@ -197,7 +197,15 @@ public class JourneyManage extends AppCompatActivity {
 
     public void deleteContent(int position) {
         int deleteId = mHash.get(position);
+
         mDBOperator.deleteScheduleById(deleteId);
+    }
+
+    public void sendId(int position) {
+        int sendId = mHash.get(position);
+        Intent  intent = new Intent(this, JourneyDetail.class);
+        intent.putExtra(SEND_TAG, sendId);
+        startActivity(intent);
     }
 
     public void openJourneyAdd(){

@@ -7,9 +7,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class MoneyDetail extends AppCompatActivity {
 
+
+    private BillDBOperator mDBOperator;
+    private int billId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,13 +30,37 @@ public class MoneyDetail extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = getIntent();
+        if (intent != null) {
+            billId = intent.getIntExtra(JourneyManage.SEND_TAG, 0);
+
+            mDBOperator = new BillDBOperator(this);
+            BillVO gottenBill = mDBOperator.getBillById(billId);
+            TextView date = (TextView)findViewById(R.id.money_detail_date);
+            TextView income = (TextView)findViewById(R.id.money_detail_income);
+            TextView expend = (TextView)findViewById(R.id.money_detail_expend);
+            TextView incomeSource = (TextView)findViewById(R.id.money_detail_income_res);
+            TextView expendDes = (TextView)findViewById(R.id.money_detail_expend_purpose);
+            TextView backup = (TextView)findViewById(R.id.money_detail_income_backup);
+
+            date.setText(gottenBill.getYear() + "-" + gottenBill.getMonth() + "-" + gottenBill.getDay());
+            income.setText("￥ " + gottenBill.getIncome());
+            expend.setText("￥ " + gottenBill.getExpend());
+            incomeSource.setText("收入来源:\n" + gottenBill.getIncomeSource());
+            expendDes.setText("支出目的:\n" + gottenBill.getExpendDes());
+            backup.setText("备注：\n" + gottenBill.getBackup());
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         switch (id) {
             case R.id.edit:
-                Intent intent = new Intent(MoneyDetail.this, AddBill.class);
-                startActivity(intent);
+                sendId();
                 break;
             case android.R.id.home:
                 this.finish();
@@ -43,4 +71,11 @@ public class MoneyDetail extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void sendId() {
+        Intent intent = new Intent(MoneyDetail.this, AddBill.class);
+        intent.putExtra("billId", billId);
+        startActivity(intent);
+    }
+
 }
