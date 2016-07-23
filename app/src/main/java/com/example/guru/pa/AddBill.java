@@ -12,9 +12,18 @@ import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.bigkoo.svprogresshud.SVProgressHUD;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
+import cz.msebera.android.httpclient.Header;
 
 public class AddBill extends AppCompatActivity {
 
@@ -170,8 +179,50 @@ public class AddBill extends AppCompatActivity {
         onBackPressed();
     }
 
-
     public void debug(int billId) {
 
+    }
+
+    /* 添加到云端 */
+    private void addToCloud(RequestParams params) {
+
+        /* 发送到的url */
+        String url = "postbill/";
+
+        /* POST请求 */
+        HttpClient.post(url, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                String status = null;
+                String res = "11";
+
+                try {
+                    status = response.getString("status");
+                    res = response.getString("response");
+
+                    /* 判断返回码 */
+                    switch(status) {
+                        case "20000":
+                            AddBill.this.onBackPressed();
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(AddBill.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+                /* 提示返回信息 */
+                Toast.makeText(AddBill.this, res, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                /* 超时提示 */
+                Toast.makeText(AddBill.this, "连接超时，请检查网络连接", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

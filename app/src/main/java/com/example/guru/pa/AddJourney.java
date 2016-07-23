@@ -26,9 +26,17 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
+import cz.msebera.android.httpclient.Header;
 
 public class AddJourney extends AppCompatActivity {
 
@@ -308,5 +316,48 @@ public class AddJourney extends AppCompatActivity {
             Log.e("deleteAll", "successful");
         }
         */
+    }
+
+    /* 添加到云端 */
+    private void addToCloud(RequestParams params) {
+
+        /* 发送到的url */
+        String url = "postjourney/";
+
+        /* POST请求 */
+        HttpClient.post(url, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                String status = null;
+                String res = "11";
+
+                try {
+                    status = response.getString("status");
+                    res = response.getString("response");
+
+                    /* 判断返回码 */
+                    switch(status) {
+                        case "20000":
+                            AddJourney.this.onBackPressed();
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(AddJourney.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+                /* 提示返回信息 */
+                Toast.makeText(AddJourney.this, res, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                /* 超时提示 */
+                Toast.makeText(AddJourney.this, "连接超时，请检查网络连接", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

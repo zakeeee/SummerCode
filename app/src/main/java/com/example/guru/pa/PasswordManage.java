@@ -17,9 +17,16 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import cz.msebera.android.httpclient.Header;
 
 public class PasswordManage extends AppCompatActivity {
 
@@ -127,6 +134,7 @@ public class PasswordManage extends AppCompatActivity {
         mListView.setAdapter(arrayAdapter);
     }
 
+
     public void deleteContent(int index){
 
     }
@@ -172,5 +180,47 @@ public class PasswordManage extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /* 从云端获取 */
+    private void getFromCloud(RequestParams params) {
+
+        /* 发送到的url */
+        String url = "getpassword/";
+
+        /* POST请求 */
+        HttpClient.post(url, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                String status = null;
+                String res = "11";
+
+                try {
+                    status = response.getString("status");
+                    res = response.getString("response");
+
+                    /* 判断返回码 */
+                    switch(status) {
+                        case "30000":
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(PasswordManage.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+                /* 提示返回信息 */
+                Toast.makeText(PasswordManage.this, res, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                /* 超时提示 */
+                Toast.makeText(PasswordManage.this, "连接超时，请检查网络连接", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

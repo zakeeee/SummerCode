@@ -11,6 +11,14 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
+
 public class AddPassword extends AppCompatActivity {
     private SQLiteDatabase db;
     private EditText addpassword_purpose;//用途
@@ -92,8 +100,16 @@ public class AddPassword extends AppCompatActivity {
             //LocalSave(en_purpose,en_username,en_password,en_extra);
             // Toast.makeText(AddPassword.this, "保存成功！", Toast.LENGTH_SHORT).show();
         }else if(check ==1){
-            Toast.makeText(AddPassword.this, "云端还木有实现功能~~", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(AddPassword.this, "云端还木有实现功能~~", Toast.LENGTH_SHORT).show();
             //云端备份
+            RequestParams requestParams = new RequestParams();
+            requestParams.add("username", User.mUsername);
+            requestParams.add("token", User.mToken);
+            requestParams.add("purpose", purpose);
+            requestParams.add("uname", username);
+            requestParams.add("passwd", password);
+            requestParams.add("extra", extra);
+            addToCloud(requestParams);
         }
     }
 
@@ -107,5 +123,48 @@ public class AddPassword extends AppCompatActivity {
         super.onDestroy();
         db.close();
         check = 0;
+    }
+
+    /* 添加到云端 */
+    private void addToCloud(RequestParams params) {
+
+        /* 发送到的url */
+        String url = "postpassword/";
+
+        /* POST请求 */
+        HttpClient.post(url, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                String status = null;
+                String res = "11";
+
+                try {
+                    status = response.getString("status");
+                    res = response.getString("response");
+
+                    /* 判断返回码 */
+                    switch(status) {
+                        case "20000":
+                            AddPassword.this.onBackPressed();
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(AddPassword.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+                /* 提示返回信息 */
+                Toast.makeText(AddPassword.this, res, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                /* 超时提示 */
+                Toast.makeText(AddPassword.this, "连接超时，请检查网络连接", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
