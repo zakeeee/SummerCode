@@ -19,17 +19,24 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.special.ResideMenu.ResideMenu;
 import com.special.ResideMenu.ResideMenuItem;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String FILENAME = "testFile2.txt";
     private  ResideMenu mResideMenu;
-    public static Boolean LOGGEDIN = false;
-    public static String USERNAME;
+    //public static Boolean LOGGEDIN = false;
+    //public static String USERNAME;
     private ResideMenuItem item[];
     private View cir;
 
@@ -99,7 +106,7 @@ public class MainActivity extends AppCompatActivity
             cir.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v){
-                    if(MainActivity.LOGGEDIN) {
+                    if(User.mLoggedIn) {
                         Intent intent = new Intent(MainActivity.this, AccountCenter.class);
                         startActivity(intent);
                     }
@@ -116,10 +123,16 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if(MainActivity.LOGGEDIN && cir!=null){
+        if(cir!=null){
             TextView tv = (TextView) cir.findViewById(R.id.logged_username);
-            tv.setText(USERNAME);
+            tv.setText(User.mUsername);
         }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+
     }
 
     @Override
@@ -205,6 +218,43 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    /* 登出 */
+    private void onLogOut(String url, RequestParams params) {
+
+        HttpClient.post(url, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                String status = null;
+                String res = "11";
+
+                try {
+                    status = response.getString("status");
+                    res = response.getString("response");
+
+                    switch(status) {
+                        case "10002":
+                            User.userReset();
+                            Intent intent = new Intent(MainActivity.this, LogIn.class);
+                            startActivity(intent);
+                            MainActivity.this.finish();
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+                Toast.makeText(MainActivity.this, status+","+res, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
     }
 
 }
