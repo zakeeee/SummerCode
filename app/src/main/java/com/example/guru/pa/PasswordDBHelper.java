@@ -16,11 +16,11 @@ public class PasswordDBHelper extends SQLiteOpenHelper{
             "id integer primary key autoincrement," +
             "purpose text," +
             "username text," +
-            "password text" +
+            "password text," +
             "extra text" +
             ")";
 
-    private static String SQL_TWO = "DROP TABLE if exists schedule";
+    //private static String SQL_TWO = "DROP TABLE if exists " + TABLE;
 
     public PasswordDBHelper(Context context, String dataBaseName, SQLiteDatabase.CursorFactory factory, int version){
         super(context, dataBaseName, factory,version);
@@ -39,7 +39,7 @@ public class PasswordDBHelper extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
-        db.execSQL(SQL_TWO);
-        onCreate(db);
+      //  db.execSQL(SQL_TWO);
+      //  onCreate(db);
     }
 }

@@ -17,7 +17,16 @@ public class PasswordOperate {
         mpasswordDBHelper = new PasswordDBHelper(context, DBNAME);
     }
 
-    public int save(PasswordMessage passwordMessage){
+    public void save(PasswordMessage passwordMessage){
+        SQLiteDatabase db = mpasswordDBHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("purpose", passwordMessage.getPurpose());
+        values.put("username", passwordMessage.getUsername());
+        values.put("password", passwordMessage.getPassword());
+        values.put("extra", passwordMessage.getExtra());
+        db.insert(PasswordDBHelper.TABLE, null, values);
+    }
+ /*   public int save(PasswordMessage passwordMessage){
         SQLiteDatabase db = mpasswordDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("purpose", passwordMessage.getPurpose());
@@ -39,7 +48,7 @@ public class PasswordOperate {
             db.endTransaction();
         }
         return id;
-    }
+    }*/
 
     public PasswordMessage getByid(Integer id){
         SQLiteDatabase db = mpasswordDBHelper.getWritableDatabase();

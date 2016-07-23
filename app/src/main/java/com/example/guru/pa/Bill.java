@@ -44,7 +44,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ListIterator;
 
-public class Bill extends AppCompatActivity implements View.OnClickListener{
+public class Bill extends AppCompatActivity {
 
     private BillDBOperator mDBOperator = null;
     private ArrayList<BillVO> mBillList = null;
@@ -192,7 +192,8 @@ public class Bill extends AppCompatActivity implements View.OnClickListener{
 
         switch (id) {
             case R.id.bill_plus:
-                ActivityController.jumpToAnotherActivity(Bill.this, AddBill.class);
+                Intent intent = new Intent(Bill.this, AddBill.class);
+                startActivity(intent);
                 break;
             case android.R.id.home:
                 this.finish();
@@ -207,10 +208,5 @@ public class Bill extends AppCompatActivity implements View.OnClickListener{
         int billId = mHash.get(index);
         mHash.remove(index);
         mDBOperator.deleteBillById(billId);
-    }
-
-    @Override
-    public void onClick(View v) {
-
     }
 }

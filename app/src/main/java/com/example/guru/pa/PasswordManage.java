@@ -18,19 +18,18 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.lang.String;
 
 public class PasswordManage extends AppCompatActivity {
-
-    private FileOperate fileOperate;
-    private String fileContent = null;
-    private String[] lineContent;
+    public static Integer update_PM_id = 0;
+    private PasswordOperate mPasswordOperate;
+    private ArrayList<PasswordMessage> mPMArrayList;
+    private ArrayList<Integer> mhash = null;
     /* 必备的三个量：一个List（也可以为数组）,一个Adapter,一个ListView */
     private ArrayList<String> strs;
     private ArrayAdapter<String> arrayAdapter;
     private SwipeMenuListView mListView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,26 +46,32 @@ public class PasswordManage extends AppCompatActivity {
          * 建议在另一个线程里加载，然后更新UI
          */
 
-        fileOperate = new FileOperate(this);
-        try {
-            fileContent = fileOperate.read(MainActivity.FILENAME);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         strs = new ArrayList<String>();
-
-        if(fileContent == null){
-            Toast.makeText(PasswordManage.this, "打开文件失败", Toast.LENGTH_SHORT).show();
+        mPMArrayList = new ArrayList<PasswordMessage>();
+        mhash = new ArrayList<Integer>();
+        mPasswordOperate = new PasswordOperate(this);
+        mPMArrayList = mPasswordOperate.getAllPasswordMessage();
+        if(mPMArrayList == null){
+            Toast.makeText(PasswordManage.this, "无内容", Toast.LENGTH_SHORT).show();
             strs.add("木有内容");
         }
         else {
-            lineContent = fileContent.split("\n");
+            String tempStr = "";
+            PasswordMessage tempPM = null;
+            for (int i = 0; i < mPMArrayList.size(); i++) {
+                tempPM = mPMArrayList.get(i);
+                //解密
+                String de_purpose = DES3Utils.decryptMode(tempPM.getPurpose());
+                String de_username = DES3Utils.decryptMode(tempPM.getUsername());
+                String de_password = DES3Utils.decryptMode(tempPM.getPassword());
+                String de_extra = DES3Utils.decryptMode(tempPM.getExtra());
 
-            int index = 0;
-            for (String s : lineContent){
-                strs.add(index, s);
-                index++;
+                tempStr ="用途:" + de_purpose + "\n" +
+                        "账号:" + de_username + "\n"+
+                        "密码:" + de_password + "\n"+
+                        "备注:" + de_extra;
+                mhash.add(tempPM.getId());
+                strs.add(tempStr);
             }
         }
 
@@ -87,7 +92,7 @@ public class PasswordManage extends AppCompatActivity {
                 SwipeMenuItem openItem = new SwipeMenuItem(getApplicationContext());
                 openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9, 0xCE)));
                 openItem.setWidth(180);
-                openItem.setTitle("Open");
+                openItem.setTitle("编辑");
                 openItem.setTitleSize(18);
                 openItem.setTitleColor(Color.rgb(0x00, 0x00, 0x00));
                 // 添加到SwipeMenu
@@ -97,7 +102,7 @@ public class PasswordManage extends AppCompatActivity {
                 SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
                 deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
                 deleteItem.setWidth(180);
-                deleteItem.setTitle("X"); /* 未来会换成icon */
+                deleteItem.setTitle("删除"); /* 未来会换成icon */
                 deleteItem.setTitleSize(18);
                 deleteItem.setTitleColor(Color.WHITE);
                 // 添加到SwipeMenu
@@ -116,37 +121,29 @@ public class PasswordManage extends AppCompatActivity {
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
                 switch (index) {
                     case 0:
-                        // open
+                        // 编辑
+                        update_PM_id = mhash.get(position);
+                        Intent intent = new Intent(PasswordManage.this, AddPassword.class);
+                        startActivity(intent);
+                        PasswordManage.this.finish();
                         break;
                     case 1:
+                        // 删除
                         strs.remove(position);
                         deleteContent(position);
                         arrayAdapter.notifyDataSetChanged();
-                        // delete
                         break;
                 }
                 // false : close the menu; true : not close the menu
                 return false;
             }
         });
-
-
     }
 
-    public void deleteContent(int index){
-        String newContent = "";
-        for (int i = 0; i < lineContent.length; ++ i) {
-            if (i != index){
-                newContent += lineContent + "\n";
-            }
-        }
-        fileOperate = new FileOperate(this);
-        fileOperate.ifFileExist(MainActivity.FILENAME);
-        try {
-            fileOperate.rewrite(MainActivity.FILENAME, newContent);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+    public void deleteContent(int position){
+        int id = mhash.get(position);
+        mhash.remove(position);
+        mPasswordOperate.deleteByid(id);
     }
 
     @Override
@@ -181,10 +178,14 @@ public class PasswordManage extends AppCompatActivity {
             case R.id.password_plus:
                 Intent intent = new Intent(PasswordManage.this, AddPassword.class);
                 startActivity(intent);
+                PasswordManage.this.finish();
                 return true;
             case android.R.id.home:
-                finish();
+                PasswordManage.this.finish();
                 return true;
+            case R.id.password_search:
+                Toast.makeText(PasswordManage.this, "暂时木有功能！", Toast.LENGTH_SHORT).show();
+                break;
             default:
                 break;
         }
