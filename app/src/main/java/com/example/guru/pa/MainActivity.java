@@ -23,10 +23,17 @@ import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.special.ResideMenu.ResideMenu;
 import com.special.ResideMenu.ResideMenuItem;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String FILENAME = "testFile2.txt";
+    //public static final String FILENAME = "testFile2.txt";
+    public static final String MESSAGE_JOURNEY = "pa.scheduleId";
+    public static final String MESSAGE_BILL = "pa.billId";
     public static SubActionButton button1;
     public static SubActionButton button2;
     public static SubActionButton button3;
@@ -34,6 +41,8 @@ public class MainActivity extends AppCompatActivity
     public static Boolean LOGGEDIN = false;
     public static String USERNAME;
     private ResideMenuItem item[];
+    private DataBaseOperator mJourneyDB;
+    private ArrayList<TagSchedule> mJourneyList;
 
 
     private void createResideMenu() {
@@ -84,14 +93,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView card=(TextView)findViewById(R.id.item1);
-        card.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                    Intent intent=new Intent(MainActivity.this,JourneyDetail.class);
-                    startActivity(intent);
-            }
-        });
+        initCard();
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -128,6 +131,37 @@ public class MainActivity extends AppCompatActivity
             TextView tv = (TextView) cir.findViewById(R.id.logged_username);
             tv.setText(USERNAME);
         }
+
+    }
+
+    /**
+     * 初始化卡片
+     */
+    public void initCard() {
+        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
+        String year = yearFormat.format(new Date());
+        String month = monthFormat.format(new Date());
+        mJourneyDB = new DataBaseOperator(this);
+        mJourneyList = mJourneyDB.getTagScheduleByMY(Integer.parseInt(year), Integer.parseInt(month));
+
+        TextView card1 = (TextView)findViewById(R.id.card1);
+        card1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mJourneyList != null)
+                    goToJourneyDetail(mJourneyList.get(0).getScheduleId());
+            }
+        });
+
+        TextView card2 =(TextView)findViewById(R.id.card2);
+        card2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mJourneyList != null && mJourneyList.size() > 1)
+                    goToJourneyDetail(mJourneyList.get(1).getScheduleId());
+            }
+        });
 
     }
 
@@ -244,5 +278,13 @@ public class MainActivity extends AppCompatActivity
         } else {
             ActivityController.jumpToAnotherActivity(MainActivity.this, LogIn.class);
         }
+    }
+
+
+    public void goToJourneyDetail(int sendId) {
+
+        Intent intent=new Intent(MainActivity.this,JourneyDetail.class);
+        intent.putExtra(MainActivity.MESSAGE_JOURNEY, sendId);
+        startActivity(intent);
     }
 }

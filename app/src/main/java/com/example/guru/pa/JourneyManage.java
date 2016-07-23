@@ -33,7 +33,7 @@ public class JourneyManage extends AppCompatActivity {
     private ArrayList<Schedule> mScheduleArrayList;
     private ArrayList<TagSchedule> mTagScheduleArrayList;
     private DataBaseOperator mDBOperator;
-    public static final String SEND_TAG = "sendId";
+   // public static final String SEND_TAG = "sendId";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,7 +204,7 @@ public class JourneyManage extends AppCompatActivity {
     public void sendId(int position) {
         int sendId = mHash.get(position);
         Intent  intent = new Intent(this, JourneyDetail.class);
-        intent.putExtra(SEND_TAG, sendId);
+        intent.putExtra(MainActivity.MESSAGE_JOURNEY, sendId);
         startActivity(intent);
     }
 

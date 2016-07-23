@@ -28,7 +28,7 @@ public class JourneyDetail extends AppCompatActivity {
         super.onResume();
         Intent intent = getIntent();
         if (intent != null) {
-            scheduleId = intent.getIntExtra(JourneyManage.SEND_TAG, 0);
+            scheduleId = intent.getIntExtra(MainActivity.MESSAGE_JOURNEY, 0);
 
             mDBOperator = new DataBaseOperator(this);
             Schedule schedule = mDBOperator.getScheduleById(scheduleId);
@@ -69,7 +69,7 @@ public class JourneyDetail extends AppCompatActivity {
 
     public void sendId() {
         Intent intent = new Intent(JourneyDetail.this, AddJourney.class);
-        intent.putExtra("scheduleId", scheduleId);
+        intent.putExtra(MainActivity.MESSAGE_JOURNEY, scheduleId);
         startActivity(intent);
     }
 }
