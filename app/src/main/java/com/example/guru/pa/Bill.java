@@ -144,7 +144,7 @@ public class Bill extends AppCompatActivity {
             String lineContent = "";
             for (int i = 0; i <  mBillList.size(); ++ i) {
                 billVO = mBillList.get(i);
-                lineContent = "billId: " + billVO.getBillId() + " " +
+                lineContent =
                         "date: " + billVO.getYear() + "-" + billVO.getMonth() + "-" + billVO.getDay() + "\n" +
                         "支出: " + billVO.getExpend() + " " + "收入: " + billVO.getIncome();
                 mHash.add(billVO.getBillId());

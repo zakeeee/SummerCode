@@ -124,7 +124,7 @@ public class JourneyManage extends AppCompatActivity {
             Schedule tempSch = null;
             for (int i = 0; i < mScheduleArrayList.size(); ++ i) {
                 tempSch = mScheduleArrayList.get(i);
-                tempStr = "ID: " + tempSch.getScheduleId() + " " +
+                tempStr =
                         "Date: " + tempSch.getDate() + " " +
                         "Time: " + tempSch.getTime() + "\n";
 
