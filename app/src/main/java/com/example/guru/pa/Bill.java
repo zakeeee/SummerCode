@@ -108,7 +108,9 @@ public class Bill extends AppCompatActivity {
                 switch (index) {
                     case 0:
                         // open
-                        ActivityController.jumpToAnotherActivity(Bill.this,MoneyDetail.class);
+                        //ActivityController.jumpToAnotherActivity(Bill.this,MoneyDetail.class);
+                        Intent intent=new Intent(Bill.this,MoneyDetail.class);
+                        startActivity(intent);
                         break;
                     case 1:
                         strs.remove(position);

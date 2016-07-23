@@ -112,8 +112,6 @@ public class AddBill extends AppCompatActivity {
 
         int billId = mDBOperator.saveBill(billVO);
 
-
-
         this.finish();
         //Intent intent = new Intent(this, Bill.class);
         //startActivity(intent);

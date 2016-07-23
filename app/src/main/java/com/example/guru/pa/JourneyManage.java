@@ -88,7 +88,8 @@ public class JourneyManage extends AppCompatActivity {
                 switch (index) {
                     case 0:
                         // open
-                        ActivityController.jumpToAnotherActivity(JourneyManage.this,JourneyDetail.class);
+                        Intent intent=new Intent(JourneyManage.this,JourneyDetail.class);
+                        startActivity(intent);
                         break;
                     case 1:
                         strs.remove(position);
