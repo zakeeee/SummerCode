@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -31,15 +32,29 @@ import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String FILENAME = "testFile2.txt";
+    //public static final String FILENAME = "testFile2.txt";
+    //public static final String MESSAGE_JOURNEY = "pa.scheduleId";
+    //public static final String MESSAGE_BILL = "pa.billId";
+    public static SubActionButton button1;
+    public static SubActionButton button2;
+    public static SubActionButton button3;
     private  ResideMenu mResideMenu;
     //public static Boolean LOGGEDIN = false;
     //public static String USERNAME;
     private ResideMenuItem item[];
     private View cir;
+    private DataBaseOperator mJourneyDB;
+    private ArrayList<Schedule> mJourneyList;
+
+
 
     private void createResideMenu() {
         // attach to current activity;
@@ -92,14 +107,7 @@ public class MainActivity extends AppCompatActivity
         User.mSharedPre = this.getSharedPreferences(User.INIFILENAME, MODE_PRIVATE);
         User.userSet();
 
-        TextView card=(TextView)findViewById(R.id.item1);
-        card.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                    Intent intent=new Intent(MainActivity.this,JourneyDetail.class);
-                    startActivity(intent);
-            }
-        });
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -141,6 +149,44 @@ public class MainActivity extends AppCompatActivity
             TextView tv = (TextView) cir.findViewById(R.id.logged_username);
             tv.setText(User.mUsername);
         }
+        initCard();
+
+    }
+
+    /**
+     * 初始化卡片
+     */
+    public void initCard() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("y-M-d");
+        String date = dateFormat.format(new Date());
+        mJourneyDB = new DataBaseOperator(this);
+        mJourneyList = mJourneyDB.getScheduleBydate(date);
+        TextView card1 = (TextView)findViewById(R.id.card1);
+        TextView card2 = (TextView)findViewById(R.id.card2);
+
+        if (mJourneyList != null) {
+            card1.setText(mJourneyList.get(0).toString());
+        }
+        if (mJourneyList != null && mJourneyList.size() > 1) {
+            card2.setText(mJourneyList.get(1).toString());
+        }
+        card1.setOnClickListener(handler(0));
+        card2.setOnClickListener(handler(1));
+
+    }
+
+    /**
+     * @param index
+     * @return
+     */
+    public View.OnClickListener handler(final int index) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mJourneyList != null)
+                    goToJourneyDetail(mJourneyList.get(index).getScheduleId());
+            }
+        };
     }
 
     @Override
@@ -290,4 +336,11 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+
+
+    public void goToJourneyDetail(int sendId) {
+        Intent intent=new Intent(MainActivity.this,JourneyDetail.class);
+        intent.putExtra("pa.journey.manage.detail", sendId);
+        startActivity(intent);
+    }
 }

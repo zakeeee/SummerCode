@@ -212,6 +212,33 @@ public class DataBaseOperator {
     }
 
     /**
+     * 按日期查找
+     * @param date
+     * @return
+     */
+    public ArrayList<Schedule> getScheduleBydate(String date){
+        SQLiteDatabase db = mDBOpenHelper.getWritableDatabase();
+        ArrayList<Schedule> retList = new ArrayList<Schedule>();
+        String[] columns = {"scheduleId", "date", "time", "content"};
+        String selections = "date=?";
+        String[] selectionArgs = {date};
+        Cursor cursor = db.query(DataBaseHelper.TABLE_NORMAL, columns, selections,
+                selectionArgs, null, null, null);
+        while (cursor.moveToNext()){
+            int gottenSId = cursor.getInt(cursor.getColumnIndex("scheduleId"));
+            String gottenDate = cursor.getString(cursor.getColumnIndex("date"));
+            String gottenTime = cursor.getString(cursor.getColumnIndex("time"));
+            String gottenContent = cursor.getString(cursor.getColumnIndex("content"));
+            retList.add(new Schedule(gottenSId, gottenDate, gottenTime, gottenContent));
+        }
+        cursor.close();
+        if (retList != null && retList.size() > 0) {
+            return retList;
+        }
+        return null;
+    }
+
+    /**
      * 查询当前月份的标记日程
      * @param currentYear
      * @param currentMonth

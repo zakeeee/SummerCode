@@ -113,7 +113,7 @@ public class AddJourney extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // 获得当前日历选中的日期
-        mDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        mDateFormat = new SimpleDateFormat("y-M-d");
         mDate = (CalendarViewScrollable) findViewById(R.id.journey_cal);
         mGottenDate = mDateFormat.format(mDate.getDate()); //默认日期
         mDate.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -142,13 +142,13 @@ public class AddJourney extends AppCompatActivity {
         Intent intent = getIntent();
         gottenId = -1;
         if (intent != null) {
-            gottenId = intent.getIntExtra("scheduleId", -1);
+            gottenId = intent.getIntExtra("pa.journey.detail.edit", -1);
             if (gottenId > 0) {
                 DataBaseOperator initDB = new DataBaseOperator(this);
                 Schedule schedule = initDB.getScheduleById(gottenId);
                 TagSchedule tagSchedule = initDB.getTagScheduleById(gottenId);
 
-                SimpleDateFormat sdfDate = new SimpleDateFormat("yy-MM-dd");
+                SimpleDateFormat sdfDate = new SimpleDateFormat("y-M-d");
                 SimpleDateFormat sdfHour = new SimpleDateFormat("HH");
                 SimpleDateFormat sdfMinute = new SimpleDateFormat("mm");
                 long sDate = 0;

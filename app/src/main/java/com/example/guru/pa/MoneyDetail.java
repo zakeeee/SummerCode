@@ -34,7 +34,7 @@ public class MoneyDetail extends AppCompatActivity {
         super.onResume();
         Intent intent = getIntent();
         if (intent != null) {
-            billId = intent.getIntExtra(JourneyManage.SEND_TAG, 0);
+            billId = intent.getIntExtra("pa.bill.detail", 0);
 
             mDBOperator = new BillDBOperator(this);
             BillVO gottenBill = mDBOperator.getBillById(billId);
@@ -74,7 +74,7 @@ public class MoneyDetail extends AppCompatActivity {
 
     public void sendId() {
         Intent intent = new Intent(MoneyDetail.this, AddBill.class);
-        intent.putExtra("billId", billId);
+        intent.putExtra("pa.money.detail.edit", billId);
         startActivity(intent);
     }
 
