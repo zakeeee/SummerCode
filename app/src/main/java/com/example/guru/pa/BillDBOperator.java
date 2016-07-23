@@ -28,7 +28,10 @@ public class BillDBOperator {
         values.put("expend", bill.getExpend());
         values.put("incomeSource", bill.getIncomeSource());
         values.put("expendDes",bill.getExpendDes());
-       // values.put("date", bill.getDate());
+        values.put("backup",bill.getBackup());
+        values.put("year",bill.getYear());
+        values.put("month",bill.getMonth());
+        values.put("day",bill.getDay());
 
         db.beginTransaction();
         int billId = -1;
@@ -47,36 +50,7 @@ public class BillDBOperator {
         return billId;
     }
 
-    /**
-     *
-     * @param billDetail
-     * @return
-     */
-    public int saveDetail(BillDetail billDetail){
-        SQLiteDatabase db = mDBOpenHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("backup",billDetail.getBackup());
-        values.put("year",billDetail.getYear());
-        values.put("month",billDetail.getMonth());
-        values.put("day",billDetail.getDay());
-        values.put("billId",billDetail.getBillId());
 
-        db.beginTransaction();
-        int detailId = -1;
-        try {
-            String sql = "select max(Id) from" + " " + BillDBHelper.TABLE_DETAIL;
-            db.insert(BillDBHelper.TABLE_DETAIL, null, values);
-            Cursor cursor = db.rawQuery(sql, null);
-            if (cursor.moveToFirst()){
-                detailId = (int)cursor.getLong(0);
-            }
-            cursor.close();
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
-        return detailId;
-    }
 
     /**
      * @param billId
@@ -84,8 +58,8 @@ public class BillDBOperator {
      */
     public BillVO getBillById(int billId){
         SQLiteDatabase db = mDBOpenHelper.getWritableDatabase();
-        String[] columns = {"billId", "income", "expend", "incomeSource", "expendDes"
-             //   , "date"
+        String[] columns = {"billId", "income", "expend", "incomeSource", "expendDes",
+                "backup", "year", "month", "day"
         };
         String selections = "billId=?";
         String[] selectionArgs = {String.valueOf(billId)};
@@ -97,43 +71,20 @@ public class BillDBOperator {
             int gottenExpend = cursor.getInt(cursor.getColumnIndex("expend"));
             String gottenIS = cursor.getString(cursor.getColumnIndex("incomeSource"));
             String gottenED = cursor.getString(cursor.getColumnIndex("expendDes"));
-           // String gottenDate = cursor.getString(cursor.getColumnIndex("date"));
-
-            cursor.close();
-            return new BillVO(gottenBId, gottenIncome, gottenExpend,
-                    gottenIS, gottenED
-                  //  , gottenDate
-            );
-        }
-        cursor.close();
-        return null;
-    }
-
-    /**
-     *
-     * @param detailId
-     * @return
-     */
-    public BillDetail getDetailById(int detailId) {
-        SQLiteDatabase db = mDBOpenHelper.getWritableDatabase();
-        String[] columns = {"billId", "backup", "year", "month", "day"};
-        String selections = "billId=?";
-        String[] selectionArgs = {String.valueOf(detailId)};
-        Cursor cursor = db.query(BillDBHelper.TABLE_DETAIL, columns,
-                selections ,selectionArgs, null, null, null);
-        if (cursor.moveToFirst()){
-            int gottenBId = cursor.getInt(cursor.getColumnIndex("billId"));
             String gottenBackup = cursor.getString(cursor.getColumnIndex("backup"));
             int gYear = cursor.getInt(cursor.getColumnIndex("year"));
             int gMonth = cursor.getInt(cursor.getColumnIndex("month"));
             int gDay = cursor.getInt(cursor.getColumnIndex("day"));
 
             cursor.close();
-            return new BillDetail(gottenBId, gYear, gMonth, gDay, gottenBackup);
+            return new BillVO(gottenBId, gottenIncome, gottenExpend, gYear, gMonth, gDay,
+                    gottenIS, gottenED, gottenBackup
+            );
         }
         cursor.close();
         return null;
     }
+
 
     /**
      * @return
@@ -141,22 +92,24 @@ public class BillDBOperator {
     public ArrayList<BillVO> getAllBill() {
         ArrayList<BillVO> arrayList= new ArrayList<BillVO>();
         SQLiteDatabase db = mDBOpenHelper.getWritableDatabase();
-        String[] columns = {"billId", "income", "expend", "incomeSource", "expendDes"
-              //  , "date"
+        String[] columns = {"billId", "income", "expend", "incomeSource", "expendDes",
+                "backup", "year", "month", "day"
         };
         Cursor cursor = db.query(BillDBHelper.TABLE_BILL, columns,
                 null, null, null, null, null);
         while (cursor.moveToNext()){
             int gottenBId = cursor.getInt(cursor.getColumnIndex("billId"));
             int gottenIncome = cursor.getInt(cursor.getColumnIndex("income"));
-            int gottenExpend = cursor.getInt(cursor.getColumnIndex("income"));
+            int gottenExpend = cursor.getInt(cursor.getColumnIndex("expend"));
             String gottenIS = cursor.getString(cursor.getColumnIndex("incomeSource"));
             String gottenED = cursor.getString(cursor.getColumnIndex("expendDes"));
-           // String gottenDate = cursor.getString(cursor.getColumnIndex("date"));
+            String gottenBackup = cursor.getString(cursor.getColumnIndex("backup"));
+            int gYear = cursor.getInt(cursor.getColumnIndex("year"));
+            int gMonth = cursor.getInt(cursor.getColumnIndex("month"));
+            int gDay = cursor.getInt(cursor.getColumnIndex("day"));
             arrayList.add(
-                    new BillVO(gottenBId, gottenIncome, gottenExpend,
-                            gottenIS, gottenED
-                          //  , gottenDate
+                    new BillVO(gottenBId, gottenIncome, gottenExpend, gYear, gMonth, gDay,
+                            gottenIS, gottenED, gottenBackup
                     )
             );
         }
@@ -177,29 +130,87 @@ public class BillDBOperator {
         values.put("expend", newBill.getExpend());
         values.put("incomeSource", newBill.getIncomeSource());
         values.put("expendDes", newBill.getExpendDes());
-       // values.put("date", newBill.getDate());
+        values.put("backup",newBill.getBackup());
+        values.put("year",newBill.getYear());
+        values.put("month",newBill.getMonth());
+        values.put("day",newBill.getDay());
 
         db.update(BillDBHelper.TABLE_BILL, values,
                 "billId=?", new String[]{String.valueOf(newBill.getBillId())});
     }
 
     /**
-     *
-     * @param billDetail
+     * 按月搜索
+     * @param currentMonth
+     * @return
      */
-    public void updateDetail(BillDetail billDetail){
+    public ArrayList<BillVO> getBillByMonth(int currentMonth){
         SQLiteDatabase db = mDBOpenHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("billId",billDetail.getBillId());
-        values.put("backup",billDetail.getBackup());
-        values.put("year",billDetail.getYear());
-        values.put("month",billDetail.getMonth());
-        values.put("day",billDetail.getDay());
-        values.put("billId",billDetail.getBillId());
-
-        db.update(BillDBHelper.TABLE_DETAIL, values,
-                "billId=?", new String[]{String.valueOf(billDetail.getBillId())});
+        ArrayList<BillVO> retList = new ArrayList<BillVO>();
+        String[] columns = {"billId", "income", "expend", "incomeSource", "expendDes",
+                "backup", "year", "month", "day"
+        };
+        String selections = "month=?";
+        String[] selectionArgs = {String.valueOf(currentMonth)};
+        Cursor cursor = db.query(BillDBHelper.TABLE_BILL, columns, selections,
+                selectionArgs, null, null, null);
+        while (cursor.moveToNext()){
+            int gottenBId = cursor.getInt(cursor.getColumnIndex("billId"));
+            int gottenIncome = cursor.getInt(cursor.getColumnIndex("income"));
+            int gottenExpend = cursor.getInt(cursor.getColumnIndex("expend"));
+            String gottenIS = cursor.getString(cursor.getColumnIndex("incomeSource"));
+            String gottenED = cursor.getString(cursor.getColumnIndex("expendDes"));
+            String gottenBackup = cursor.getString(cursor.getColumnIndex("backup"));
+            int gYear = cursor.getInt(cursor.getColumnIndex("year"));
+            int gMonth = cursor.getInt(cursor.getColumnIndex("month"));
+            int gDay = cursor.getInt(cursor.getColumnIndex("day"));
+            retList.add(new BillVO(gottenBId, gottenIncome, gottenExpend, gYear, gMonth, gDay,
+                            gottenIS, gottenED, gottenBackup)
+            );
+        }
+        cursor.close();
+        if (retList != null && retList.size() > 0) {
+            return retList;
+        }
+        return null;
     }
+
+    /**
+     * 按天查看
+     * @param currentDay
+     * @return
+     */
+    public ArrayList<BillVO> getBillByDay(int currentDay){
+        SQLiteDatabase db = mDBOpenHelper.getWritableDatabase();
+        ArrayList<BillVO> retList = new ArrayList<BillVO>();
+        String[] columns = {"billId", "income", "expend", "incomeSource", "expendDes",
+                "backup", "year", "month", "day"
+        };
+        String selections = "day=?";
+        String[] selectionArgs = {String.valueOf(currentDay)};
+        Cursor cursor = db.query(BillDBHelper.TABLE_BILL, columns, selections,
+                selectionArgs, null, null, null);
+        while (cursor.moveToNext()){
+            int gottenBId = cursor.getInt(cursor.getColumnIndex("billId"));
+            int gottenIncome = cursor.getInt(cursor.getColumnIndex("income"));
+            int gottenExpend = cursor.getInt(cursor.getColumnIndex("expend"));
+            String gottenIS = cursor.getString(cursor.getColumnIndex("incomeSource"));
+            String gottenED = cursor.getString(cursor.getColumnIndex("expendDes"));
+            String gottenBackup = cursor.getString(cursor.getColumnIndex("backup"));
+            int gYear = cursor.getInt(cursor.getColumnIndex("year"));
+            int gMonth = cursor.getInt(cursor.getColumnIndex("month"));
+            int gDay = cursor.getInt(cursor.getColumnIndex("day"));
+            retList.add(new BillVO(gottenBId, gottenIncome, gottenExpend, gYear, gMonth, gDay,
+                    gottenIS, gottenED, gottenBackup)
+            );
+        }
+        cursor.close();
+        if (retList != null && retList.size() > 0) {
+            return retList;
+        }
+        return null;
+    }
+
 
     /**
      *
@@ -217,6 +228,7 @@ public class BillDBOperator {
             db.endTransaction();
         }
     }
+
 /*
     public void deleteAll(){
         mDBOpenHelper.onUpgrade(mDBOpenHelper.getWritableDatabase(),1, 1);

@@ -12,7 +12,7 @@
 
 
         <TextView
-            android:id="@+id/journeydetail_day"
+            android:id="@+id/journey_detail_date"
             android:hint="年-月-日"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -22,7 +22,7 @@
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"/>
         <TextView
-            android:id="@+id/journeydetail_time"
+            android:id="@+id/journey_detail_time"
             android:hint="时间"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -32,7 +32,7 @@
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"/>
         <TextView
-            android:id="@+id/jouneydetail"
+            android:id="@+id/journey_detail_backup"
             android:layout_width="match_parent"
             android:hint="备注"
             android:layout_height="0dp"
