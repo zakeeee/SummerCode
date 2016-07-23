@@ -83,6 +83,10 @@
         <activity
             android:name=".JourneyDetail"
             android:label="编辑">
+            <intent-filter>
+                <action android:name="com.example.guru.pa.detail"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
         </activity>
     </application>
 

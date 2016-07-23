@@ -74,14 +74,19 @@ public class MoneyManage extends AppCompatActivity {
         mMonthBill = mDBOperator.getBillByMonth(thisMonth);
         mTotalIncome[0] = mTotalIncome[1]
                 = mTotalExpend[0] = mTotalExpend[1] = 0;
-        for (int i = 0; i < mDayBill.size(); ++ i) {
-            mTotalIncome[0] += mDayBill.get(i).getIncome();
-            mTotalExpend[0] += mDayBill.get(i).getExpend();
+
+        if (mDayBill != null && mDayBill.size() > 0) {
+            for (int i = 0; i < mDayBill.size(); ++ i) {
+                mTotalIncome[0] += mDayBill.get(i).getIncome();
+                mTotalExpend[0] += mDayBill.get(i).getExpend();
+            }
         }
 
-        for (int i = 0; i < mMonthBill.size(); ++ i) {
-            mTotalIncome[1] += mMonthBill.get(i).getIncome();
-            mTotalExpend[1] += mMonthBill.get(i).getExpend();
+        if (mMonthBill != null && mMonthBill.size() > 0) {
+            for (int i = 0; i < mMonthBill.size(); ++ i) {
+                mTotalIncome[1] += mMonthBill.get(i).getIncome();
+                mTotalExpend[1] += mMonthBill.get(i).getExpend();
+            }
         }
 
         profit = mTotalIncome[1] - mTotalExpend[1];
