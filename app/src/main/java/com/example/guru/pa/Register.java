@@ -1,5 +1,8 @@
 package com.example.guru.pa;
 
+import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,8 +14,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -51,32 +58,15 @@ public class Register extends AppCompatActivity {
                     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                     StrictMode.setThreadPolicy(policy);
 
-                    RequestParams requestParams = new RequestParams();
-                    requestParams.add("username",name);
-                    requestParams.add("password",password);
-                    onReg("regist/",requestParams);
+                    /* 用户注册 */
+                    onRegist("regist/",User.userRegist(name, password));
                 }
             }
         });
 
     }
 
-    /**
-     * 注册
-     * */
-    public void onReg(String url, RequestParams params) {
-        HttpClient.post(url, params, new TextHttpResponseHandler() {
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Toast.makeText(Register.this, responseString, Toast.LENGTH_SHORT).show();
-            }
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                Toast.makeText(Register.this, responseString, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -89,6 +79,40 @@ public class Register extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /* 注册 */
+    private void onRegist(String url, RequestParams params) {
+
+        HttpClient.post(url, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                String status = null;
+                String res = "11";
+
+                try {
+                    status = response.getString("status");
+                    res = response.getString("response");
+                } catch (JSONException e) {
+                    Toast.makeText(Register.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+                switch (status) {
+                    case "11000":
+                        Register.this.onBackPressed();
+                        break;
+                    default:
+                        break;
+                }
+
+                Toast.makeText(Register.this, status+","+res, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
     }
 
 }

@@ -1,7 +1,9 @@
 package com.example.guru.pa;
 
+import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +26,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -41,6 +44,7 @@ public class AddJourney extends AppCompatActivity {
     private SimpleDateFormat mDateFormat = null;
     private String mGottenTime = null;
     private DataBaseOperator mDBOperator = null;
+    private int gottenId;
     private int mSelectedWayPosition;
     private int mSelectedTPosition;
     private int mYear;
@@ -87,18 +91,21 @@ public class AddJourney extends AppCompatActivity {
                     mSelectedTPosition = spinner_T.getSelectedItemPosition();
                     spinner_T.setVisibility(View.VISIBLE);
                 }
-
             }
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-
             }
 
         });
 
+    }
 
+    @TargetApi(Build.VERSION_CODES.M)
+    @Override
+    protected void onResume() {
+        super.onResume();
         // 获得当前日历选中的日期
-        mDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        mDateFormat = new SimpleDateFormat("y-M-d");
         mDate = (CalendarViewScrollable) findViewById(R.id.journey_cal);
         mGottenDate = mDateFormat.format(mDate.getDate()); //默认日期
         mDate.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -121,7 +128,50 @@ public class AddJourney extends AppCompatActivity {
                 mGottenTime = String.valueOf(hourOfDay) + ":" + String.valueOf(minute);
             }
         });
+        /**
+         * 初始化界面（若为编辑状态）
+         */
+        Intent intent = getIntent();
+        gottenId = -1;
+        if (intent != null) {
+            gottenId = intent.getIntExtra("pa.journey.detail.edit", -1);
+            if (gottenId > 0) {
+                DataBaseOperator initDB = new DataBaseOperator(this);
+                Schedule schedule = initDB.getScheduleById(gottenId);
+                TagSchedule tagSchedule = initDB.getTagScheduleById(gottenId);
 
+                SimpleDateFormat sdfDate = new SimpleDateFormat("y-M-d");
+                SimpleDateFormat sdfHour = new SimpleDateFormat("HH");
+                SimpleDateFormat sdfMinute = new SimpleDateFormat("mm");
+                long sDate = 0;
+                int sHour = 0;
+                int sMinute = 0;
+
+                if (schedule != null) {
+                    String date = schedule.getDate();
+                    String time = schedule.getTime();
+                    String content = schedule.getContent();
+                    try {
+                        sDate = sdfDate.parse(date).getTime();
+                        sHour = (int)sdfHour.parse(time).getTime();
+                        sMinute = (int)sdfMinute.parse(time).getTime();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    mDate.setDate(sDate);
+                  //  mTime.setHour(sHour);
+                   // mTime.setMinute(sMinute);
+                    EditText editText = (EditText)findViewById(R.id.journey_backup);
+                    editText.setText(content);
+                }
+
+                if (tagSchedule != null) {
+                    //这个好像没用
+                    spinner_Way.setSelection(1, true);
+                    spinner_T.setSelection(tagSchedule.getRemindId(), true);
+                }
+            }
+        }
     }
 
     @Override
@@ -132,6 +182,7 @@ public class AddJourney extends AppCompatActivity {
             this.finish();
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -149,12 +200,24 @@ public class AddJourney extends AppCompatActivity {
         schedule.setContent(mScheduleContent);
         schedule.setDate(mGottenDate);
         schedule.setTime(mGottenTime);
-        int scheduleId =  mDBOperator.saveSchedule(schedule);
 
-        int tagId = -1;
-        if (mSelectedWayPosition != 0) {
-            tagId = saveTagSchedule(scheduleId);
+        if (gottenId > 0) {
+            schedule.setScheduleId(gottenId);
+            mDBOperator.updateSchedule(schedule);
+            if (mSelectedWayPosition != 0) {
+                updateTagSchedule(gottenId);
+            }
+            else {
+                mDBOperator.deleteTagScheduleById(gottenId);
+            }
         }
+        else{
+            int scheduleId =  mDBOperator.saveSchedule(schedule);
+            if (mSelectedWayPosition != 0) {
+                saveTagSchedule(scheduleId);
+            }
+        }
+
 
         //test database
         // deBug(scheduleId,tagId);
@@ -166,8 +229,7 @@ public class AddJourney extends AppCompatActivity {
         if (mDBOperator != null){
             mDBOperator.closeDB();
         }
-//        Intent intent = new Intent(this, JourneyManage.class);
-//        startActivity(intent);
+
     }
 
     public void cancelJourney(View view){
@@ -191,6 +253,16 @@ public class AddJourney extends AppCompatActivity {
         tagSchedule.setDay(mDay);
         int tagId = mDBOperator.saveTagSchedule(tagSchedule);
         return tagId;
+    }
+
+    public void updateTagSchedule(int scheduleId){
+        TagSchedule tagSchedule = new TagSchedule();
+        tagSchedule.setScheduleId(scheduleId);
+        tagSchedule.setRemindId(mSelectedTPosition);
+        tagSchedule.setYear(mYear);
+        tagSchedule.setMonth(mMonth);
+        tagSchedule.setDay(mDay);
+        mDBOperator.updateTagSchedule(tagSchedule);
     }
 
 

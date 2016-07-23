@@ -6,6 +6,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <!--<android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>-->
+
+    <!--<include layout="@layout/content_money_manage" />-->
+
     <LinearLayout
         android:background="#1abc9c"
         android:layout_width="match_parent"
@@ -96,19 +112,51 @@
 
     </LinearLayout>
 
-    <TextView
-        android:text="今日收入：     "
-        android:gravity="center_vertical"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_weight="9"
-        android:layout_height="0dp" />
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:text="今日支出：     "
-        android:gravity="center_vertical"
+        <TextView
+            android:text="今日收入：     "
+            android:gravity="center_vertical"
+            android:layout_width="0dp"
+            android:layout_weight="0.3"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="￥ 0     "
+            android:id="@+id/day_income"
+            android:layout_width="0dp"
+            android:layout_weight="0.7"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_weight="9"
-        android:layout_height="0dp" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="今日支出：     "
+            android:gravity="center_vertical"
+            android:layout_width="0dp"
+            android:layout_weight="0.3"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="￥ 0     "
+            android:id="@+id/day_expend"
+            android:layout_width="0dp"
+            android:layout_weight="0.7"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
 
     <ImageView
         android:layout_width="match_parent"

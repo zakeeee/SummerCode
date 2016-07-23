@@ -18,17 +18,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 public class MoneyManage extends AppCompatActivity {
 
-    private String fileContent = null;
-    private String[] lineContent = null;
-    private String[] elementContent = null;
-    private long[] total = new long[2];
-    private int indexOftotal;
-    // index == 0 --> income, index == 1 --> expend
-    // 来源与目的的标签和内容之间没有加空格，所以只有两个地方会被识别为整数
+    private BillDBOperator mDBOperator;
+    private ArrayList<BillVO> mDayBill;
+    private ArrayList<BillVO> mMonthBill;
+    /**
+     * index == 0 --> day accumulation
+     * index == 1 --> month accumulation
+     */
+    private long[] mTotalIncome = new long[2];
+    private long[] mTotalExpend = new long[2];
     private long profit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +43,12 @@ public class MoneyManage extends AppCompatActivity {
         /* ActionBar添加返回按钮 */
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearlayout_buttons);
         Button button = (Button) linearLayout.findViewById(R.id.jiyibi);
@@ -52,36 +63,43 @@ public class MoneyManage extends AppCompatActivity {
             });
         }
 
-        FileOperate fileOperate = new FileOperate(this);
-        fileOperate.ifFileExist(MainActivity.FILENAME);
-        try {
-            fileContent = fileOperate.read(MainActivity.FILENAME);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        lineContent = fileContent.split("\n");
-        total[0] = total[1] = profit = 0;
+        mDBOperator = new BillDBOperator(this);
+        int thisMonth = Integer.parseInt((new SimpleDateFormat("MM")).format(
+                new Date(System.currentTimeMillis())
+        ));
+        int today = Integer.parseInt((new SimpleDateFormat("dd")).format(
+                new Date(System.currentTimeMillis())
+        ));
+        mDayBill = mDBOperator.getBillByDay(today);
+        mMonthBill = mDBOperator.getBillByMonth(thisMonth);
+        mTotalIncome[0] = mTotalIncome[1]
+                = mTotalExpend[0] = mTotalExpend[1] = 0;
 
-        for (String s : lineContent){
-           // Log.e("TestNumber", s);
-            indexOftotal = 0;
-            elementContent = s.split(" ");
-            for (String element : elementContent){
-               // Log.e("TestNumber", element);
-                if (isNumeric(element) && !element.equals("")){
-
-                    total[indexOftotal++] += Long.parseLong(element);
-                }
+        if (mDayBill != null && mDayBill.size() > 0) {
+            for (int i = 0; i < mDayBill.size(); ++ i) {
+                mTotalIncome[0] += mDayBill.get(i).getIncome();
+                mTotalExpend[0] += mDayBill.get(i).getExpend();
             }
         }
-        profit = total[0] - total[1];
+
+        if (mMonthBill != null && mMonthBill.size() > 0) {
+            for (int i = 0; i < mMonthBill.size(); ++ i) {
+                mTotalIncome[1] += mMonthBill.get(i).getIncome();
+                mTotalExpend[1] += mMonthBill.get(i).getExpend();
+            }
+        }
+
+        profit = mTotalIncome[1] - mTotalExpend[1];
         TextView viewOfIncome = (TextView)findViewById(R.id.income_this_month);
         TextView viewOfExpend = (TextView)findViewById(R.id.expend_this_month);
         TextView viewOfProfit = (TextView)findViewById(R.id.accumulateProfit);
-        viewOfIncome.setText(total[0] + "");
-        viewOfExpend.setText(total[1] + "");
+        TextView viewOfDayIncome = (TextView)findViewById(R.id.day_income);
+        TextView viewOfDayExpend = (TextView)findViewById(R.id.day_expend);
+        viewOfDayExpend.setText(mTotalExpend[0] + "");
+        viewOfDayIncome.setText(mTotalIncome[0] + "");
+        viewOfIncome.setText(mTotalIncome[1] + "");
+        viewOfExpend.setText(mTotalExpend[1] + "");
         viewOfProfit.setText(profit + "");
-
     }
 
     @Override
@@ -97,7 +115,7 @@ public class MoneyManage extends AppCompatActivity {
 
         switch (id) {
             case R.id.bill_list:
-                Intent intent = new Intent(MoneyManage.this, Bill.class);
+                Intent intent=new Intent(MoneyManage.this,Bill.class);
                 startActivity(intent);
                 break;
             case android.R.id.home:
