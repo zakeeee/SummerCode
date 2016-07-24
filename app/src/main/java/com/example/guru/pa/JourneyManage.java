@@ -173,7 +173,9 @@ public class JourneyManage extends AppCompatActivity {
                 openJourneySearch();
                 return true;
             case R.id.journey_sort:
-                openJourneySort();
+                if (mScheduleArrayList != null &&  mScheduleArrayList.size() > 0){
+                    openJourneySort();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
