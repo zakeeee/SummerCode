@@ -70,30 +70,6 @@ public class AddPassword extends AppCompatActivity {
         addpassword_username.setText(mUsername);
         addpassword_password.setText(mPassword);
         addpassword_extra.setText(mExtra);
-
-        /*if(mLocal) {
-            if(mID != 0){
-*//*                mpasswordOperate = new PasswordOperate(this);
-                PasswordMessage tempPM = mpasswordOperate.getByid(update_PM_id);
-                //解密
-                String de_purpose = DES3Utils.decryptMode(tempPM.getPurpose());
-                String de_username = DES3Utils.decryptMode(tempPM.getUsername());
-                String de_password = DES3Utils.decryptMode(tempPM.getPassword());
-                String de_extra = DES3Utils.decryptMode(tempPM.getExtra());*//*
-                addpassword_purpose.setText(de_purpose);
-                addpassword_username.setText(de_username);
-                addpassword_password.setText(de_password);
-                addpassword_extra.setText(de_extra);
-            }
-        } else {
-            if(mID != 0){
-                addpassword_purpose.setText(mPurpose);
-                addpassword_username.setText(mUsername);
-                addpassword_password.setText(mPassword);
-                addpassword_extra.setText(mExtra);
-            }
-        }*/
-
     }
 
     @Override
@@ -191,11 +167,8 @@ public class AddPassword extends AppCompatActivity {
                 if (mpasswordOperate != null){
                     mpasswordOperate.closeDB();
                 }
-                //Intent intent = new Intent(this, PasswordManage.class);
-                //startActivity(intent);
                 AddPassword.this.finish();
             }else if(check ==1){
-                //Toast.makeText(AddPassword.this, "云端还木有实现功能~~", Toast.LENGTH_SHORT).show();
                 //云端备份
                 //数据加密
                 String en_purpose = DES3Utils.encryptMode(purpose);
