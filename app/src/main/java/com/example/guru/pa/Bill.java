@@ -39,6 +39,7 @@ import com.baoyz.swipemenulistview.SwipeMenuListView;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.io.IOException;
 import java.util.List;
@@ -53,7 +54,7 @@ public class Bill extends AppCompatActivity {
     private ArrayList<String> strs;
     private ArrayAdapter<String> arrayAdapter;
     private SwipeMenuListView mListView;
-    public static final String SEND_TAG = "sendId";
+    //public static final String SEND_TAG = "sendId";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +110,7 @@ public class Bill extends AppCompatActivity {
                 switch (index) {
                     case 0:
                         // open
-                        ActivityController.jumpToAnotherActivity(Bill.this,MoneyDetail.class);
+                        sendId(position);
                         break;
                     case 1:
                         strs.remove(position);
@@ -134,22 +135,8 @@ public class Bill extends AppCompatActivity {
         mBillList = new ArrayList<BillVO>();
         mDBOperator = new BillDBOperator(this);
         mBillList = mDBOperator.getAllBill();
-        if(mBillList == null){
-            Toast.makeText(Bill.this, "无内容", Toast.LENGTH_SHORT).show();
-            strs.add("木有内容");
-        }
-        else {
-            BillVO billVO = null;
-            String lineContent = "";
-            for (int i = 0; i <  mBillList.size(); ++ i) {
-                billVO = mBillList.get(i);
-                lineContent = "billId: " + billVO.getBillId() + " " +
-                        "date: " + billVO.getYear() + "-" + billVO.getMonth() + "-" + billVO.getDay() + "\n" +
-                        "支出: " + billVO.getExpend() + " " + "收入: " + billVO.getIncome();
-                mHash.add(billVO.getBillId());
-                strs.add(lineContent);
-            }
-        }
+
+        displayContent(mBillList);
 
         /* 实例化ArrayAdapter */
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strs);
@@ -194,11 +181,15 @@ public class Bill extends AppCompatActivity {
 
         switch (id) {
             case R.id.bill_plus:
-                ActivityController.jumpToAnotherActivity(Bill.this, AddBill.class);
+                Intent intent = new Intent(Bill.this, AddBill.class);
+                startActivity(intent);
                 break;
             case android.R.id.home:
                 this.finish();
                 return true;
+            case R.id.bill_sort:
+                sortBill();
+                break;
             default:
                 break;
         }
@@ -208,7 +199,7 @@ public class Bill extends AppCompatActivity {
     public void sendId(int position) {
         int sendId = mHash.get(position);
         Intent  intent = new Intent(this, MoneyDetail.class);
-        intent.putExtra(SEND_TAG, sendId);
+        intent.putExtra("pa.bill.detail", sendId);
         startActivity(intent);
     }
 
@@ -216,5 +207,30 @@ public class Bill extends AppCompatActivity {
         int billId = mHash.get(index);
         mHash.remove(index);
         mDBOperator.deleteBillById(billId);
+    }
+
+    public void sortBill() {
+        strs.clear();
+        arrayAdapter.notifyDataSetChanged();
+        mHash.clear();
+        List<BillVO> newBillList = new ArrayList<BillVO>();
+        newBillList = mBillList;
+        Collections.sort(newBillList);
+        displayContent(new ArrayList<BillVO>(newBillList));
+    }
+
+    public void displayContent(ArrayList<BillVO> list) {
+        if(list == null){
+            Toast.makeText(Bill.this, "无内容", Toast.LENGTH_SHORT).show();
+            strs.add("木有内容");
+        }
+        else {
+            BillVO billVO;
+            for (int i = 0; i <  list.size(); ++ i) {
+                billVO = list.get(i);
+                mHash.add(billVO.getBillId());
+                strs.add(billVO.toString());
+            }
+        }
     }
 }

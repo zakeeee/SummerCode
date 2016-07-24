@@ -3,7 +3,7 @@ package com.example.guru.pa;
 /**
  * Created by Haoyu on 2016/7/22.
  */
-public class BillVO {
+public class BillVO implements Comparable<BillVO>{
 
     private int billId;
     private int income;
@@ -103,6 +103,27 @@ public class BillVO {
         this.expendDes = expendDes;
     }
 
+    public String getDate() {
+        return year + "-" + month + "-" + day;
+    }
 
+    @Override
+    public String toString() {
+        return "date: " + year + "-" + month + "-" + day + "\n"
+                 + "收入: " + income + " " +"支出: " + expend  ;
+    }
 
+    @Override
+    public int compareTo(BillVO b) {
+        int ret = this.getDate().compareTo(b.getDate());
+        int reInc = this.getIncome() - b.getIncome();
+        if (ret == 0) {
+            if (reInc == 0)
+                return  this.getExpend() - b.getExpend();
+            else
+                return reInc;
+        }
+        else
+            return ret;
+    }
 }

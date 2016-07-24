@@ -3,7 +3,7 @@ package com.example.guru.pa;
 /**
  * Created by Haoyu on 2016/7/20.
  */
-public class TagSchedule {
+public class TagSchedule implements Comparable<TagSchedule>{
 
     private int day;
     private int month;
@@ -70,5 +70,10 @@ public class TagSchedule {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    @Override
+    public int compareTo(TagSchedule b){
+        return this.getRemindId()  - b.getRemindId();
     }
 }
