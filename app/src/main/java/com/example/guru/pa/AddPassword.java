@@ -28,10 +28,29 @@ public class AddPassword extends AppCompatActivity {
     private PasswordOperate mpasswordOperate;
     RadioGroup radiogroup;
     public static int check = 0;
+
+    private int mID;
+    private boolean mLocal;
+    private String mPurpose;
+    private String mUsername;
+    private String mPassword;
+    private String mExtra;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_password);
+
+        Intent intent=getIntent();
+
+        if(intent.hasExtra("update_PM_id")) {
+            mID = intent.getIntExtra("update_PM_id", 0);
+            mLocal = intent.getBooleanExtra("local", true);
+            mPurpose = intent.getStringExtra("purpose");
+            mUsername = intent.getStringExtra("uname");
+            mPassword = intent.getStringExtra("passwd");
+            mExtra = intent.getStringExtra("extra");
+        }
 
         //ActionBar添加返回按钮
         ActionBar actionBar = getSupportActionBar();
@@ -47,19 +66,34 @@ public class AddPassword extends AppCompatActivity {
         //添加事件监听器
         radiogroup.setOnCheckedChangeListener(new RadioGroupListener());
 
-        if(PasswordManage.update_PM_id != 0){
-            mpasswordOperate = new PasswordOperate(this);
-            PasswordMessage tempPM = mpasswordOperate.getByid(PasswordManage.update_PM_id);
-            //解密
-            String de_purpose = DES3Utils.decryptMode(tempPM.getPurpose());
-            String de_username = DES3Utils.decryptMode(tempPM.getUsername());
-            String de_password = DES3Utils.decryptMode(tempPM.getPassword());
-            String de_extra = DES3Utils.decryptMode(tempPM.getExtra());
-            addpassword_purpose.setText(de_purpose);
-            addpassword_username.setText(de_username);
-            addpassword_password.setText(de_password);
-            addpassword_extra.setText(de_extra);
-        }
+        addpassword_purpose.setText(mPurpose);
+        addpassword_username.setText(mUsername);
+        addpassword_password.setText(mPassword);
+        addpassword_extra.setText(mExtra);
+
+        /*if(mLocal) {
+            if(mID != 0){
+*//*                mpasswordOperate = new PasswordOperate(this);
+                PasswordMessage tempPM = mpasswordOperate.getByid(update_PM_id);
+                //解密
+                String de_purpose = DES3Utils.decryptMode(tempPM.getPurpose());
+                String de_username = DES3Utils.decryptMode(tempPM.getUsername());
+                String de_password = DES3Utils.decryptMode(tempPM.getPassword());
+                String de_extra = DES3Utils.decryptMode(tempPM.getExtra());*//*
+                addpassword_purpose.setText(de_purpose);
+                addpassword_username.setText(de_username);
+                addpassword_password.setText(de_password);
+                addpassword_extra.setText(de_extra);
+            }
+        } else {
+            if(mID != 0){
+                addpassword_purpose.setText(mPurpose);
+                addpassword_username.setText(mUsername);
+                addpassword_password.setText(mPassword);
+                addpassword_extra.setText(mExtra);
+            }
+        }*/
+
     }
 
     @Override
@@ -72,6 +106,7 @@ public class AddPassword extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
     //监听保存方式
     private class RadioGroupListener implements RadioGroup.OnCheckedChangeListener{
         public void onCheckedChanged(RadioGroup group, int checkedId){
@@ -81,6 +116,7 @@ public class AddPassword extends AppCompatActivity {
                 check=0;
         }
     }
+
     //保存
     public void savePassword(View view){
         String purpose = addpassword_purpose.getText().toString();
@@ -92,28 +128,52 @@ public class AddPassword extends AppCompatActivity {
             Toast.makeText(AddPassword.this, "账号密码不能为空！", Toast.LENGTH_SHORT).show();
             return;
         }
-        //数据加密
-        String en_purpose = DES3Utils.encryptMode(purpose);
-        String en_username = DES3Utils.encryptMode(username);
-        String en_password = DES3Utils.encryptMode(password);
-        String en_extra = DES3Utils.encryptMode(extra);
 
-        if(PasswordManage.update_PM_id != 0){/***修改信息***/
+
+        if(mID != 0){/***修改信息***/
             if(check==0){
                 //修改本地备份
                 mpasswordOperate = new PasswordOperate(this);
-                PasswordMessage PM = new PasswordMessage(PasswordManage.update_PM_id,en_purpose,en_username,en_password,en_extra);
-                mpasswordOperate.update(PM);
+
+                if(mLocal) {
+                    /* 如果原本是本地的就更新 */
+                    PasswordMessage PM = new PasswordMessage(mID,true,purpose,username,password,extra);
+                    mpasswordOperate.update(PM);
+                } else {
+                    /* 如果原本是云端的就新建 */
+                    PasswordMessage PM = new PasswordMessage();
+                    PM.setPurpose(purpose);
+                    PM.setUsername(username);
+                    PM.setPassword(password);
+                    PM.setExtra(extra);
+                    mpasswordOperate.save(PM);
+                }
 
                 if (mpasswordOperate != null){
                     mpasswordOperate.closeDB();
                 }
-                Intent intent = new Intent(this, PasswordManage.class);
-                startActivity(intent);
                 AddPassword.this.finish();
             }else if(check ==1){
-                Toast.makeText(AddPassword.this, "云端还木有实现功能~~", Toast.LENGTH_SHORT).show();
                 //修改云端备份
+                //数据加密
+                String en_purpose = DES3Utils.encryptMode(purpose);
+                String en_username = DES3Utils.encryptMode(username);
+                String en_password = DES3Utils.encryptMode(password);
+                String en_extra = DES3Utils.encryptMode(extra);
+                RequestParams requestParams = new RequestParams();
+                requestParams.put("username", User.mUsername);
+                requestParams.put("token", User.mToken);
+                requestParams.put("purpose", en_purpose);
+                requestParams.put("uname", en_username);
+                requestParams.put("passwd", en_password);
+                requestParams.put("extra", en_extra);
+
+                if(!mLocal) {
+                    /* 如果原本是云端的就更新 */
+                    requestParams.put("id", mID);
+                }
+
+                addToCloud(requestParams);
             }
         }
         else {/***增加新信息***/
@@ -122,21 +182,34 @@ public class AddPassword extends AppCompatActivity {
                 PasswordMessage PM = new PasswordMessage();
                 mpasswordOperate = new PasswordOperate(this);
 
-                PM.setPurpose(en_purpose);
-                PM.setUsername(en_username);
-                PM.setPassword(en_password);
-                PM.setExtra(en_extra);
+                PM.setPurpose(purpose);
+                PM.setUsername(username);
+                PM.setPassword(password);
+                PM.setExtra(extra);
 
                 mpasswordOperate.save(PM);
                 if (mpasswordOperate != null){
                     mpasswordOperate.closeDB();
                 }
-                Intent intent = new Intent(this, PasswordManage.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, PasswordManage.class);
+                //startActivity(intent);
                 AddPassword.this.finish();
             }else if(check ==1){
-                Toast.makeText(AddPassword.this, "云端还木有实现功能~~", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(AddPassword.this, "云端还木有实现功能~~", Toast.LENGTH_SHORT).show();
                 //云端备份
+                //数据加密
+                String en_purpose = DES3Utils.encryptMode(purpose);
+                String en_username = DES3Utils.encryptMode(username);
+                String en_password = DES3Utils.encryptMode(password);
+                String en_extra = DES3Utils.encryptMode(extra);
+                RequestParams requestParams = new RequestParams();
+                requestParams.put("username", User.mUsername);
+                requestParams.put("token", User.mToken);
+                requestParams.put("purpose", en_purpose);
+                requestParams.put("uname", en_username);
+                requestParams.put("passwd", en_password);
+                requestParams.put("extra", en_extra);
+                addToCloud(requestParams);
             }
         }
     }
@@ -153,7 +226,6 @@ public class AddPassword extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         check = 0;
-        PasswordManage.update_PM_id = 0;
     }
 
     /* 添加到云端 */

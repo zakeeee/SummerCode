@@ -32,13 +32,10 @@ import cz.msebera.android.httpclient.Header;
 import java.lang.String;
 
 public class PasswordManage extends AppCompatActivity {
-    public static Integer update_PM_id = 0;
+
     private PasswordOperate mPasswordOperate;
     private ArrayList<PasswordMessage> mPMArrayList;
-    private ArrayList<Integer> mhash = null;
-    /* 必备的三个量：一个List（也可以为数组）,一个Adapter,一个ListView */
-    private ArrayList<String> strs;
-    private ArrayAdapter<String> arrayAdapter;
+    private ArrayAdapter<PasswordMessage> arrayAdapter;
     private SwipeMenuListView mListView;
 
     @Override
@@ -50,43 +47,11 @@ public class PasswordManage extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        /**
-         * 强烈不建议在onCreate里面进行以下操作
-         * 数据量大时会让人感觉界面卡顿
-         * 建议在另一个线程里加载，然后更新UI
-         */
-
-        strs = new ArrayList<String>();
         mPMArrayList = new ArrayList<PasswordMessage>();
-        mhash = new ArrayList<Integer>();
         mPasswordOperate = new PasswordOperate(this);
-        mPMArrayList = mPasswordOperate.getAllPasswordMessage();
-        if(mPMArrayList == null){
-            Toast.makeText(PasswordManage.this, "无内容", Toast.LENGTH_SHORT).show();
-            strs.add("木有内容");
-        }
-        else {
-            String tempStr = "";
-            PasswordMessage tempPM = null;
-            for (int i = 0; i < mPMArrayList.size(); i++) {
-                tempPM = mPMArrayList.get(i);
-                //解密
-                String de_purpose = DES3Utils.decryptMode(tempPM.getPurpose());
-                String de_username = DES3Utils.decryptMode(tempPM.getUsername());
-                String de_password = DES3Utils.decryptMode(tempPM.getPassword());
-                String de_extra = DES3Utils.decryptMode(tempPM.getExtra());
-
-                tempStr ="用途:" + de_purpose + "\n" +
-                        "账号:" + de_username + "\n"+
-                        "密码:" + de_password + "\n"+
-                        "备注:" + de_extra;
-                mhash.add(tempPM.getId());
-                strs.add(tempStr);
-            }
-        }
 
         /* 实例化ArrayAdapter */
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strs);
+        arrayAdapter = new ArrayAdapter<PasswordMessage>(this, android.R.layout.simple_list_item_1, mPMArrayList);
 
         /* 实例化SwipeMenuListView */
         mListView = (SwipeMenuListView) findViewById(R.id.password_list);
@@ -132,16 +97,19 @@ public class PasswordManage extends AppCompatActivity {
                 switch (index) {
                     case 0:
                         // 编辑
-                        update_PM_id = mhash.get(position);
                         Intent intent = new Intent(PasswordManage.this, AddPassword.class);
+                        intent.putExtra("update_PM_id",mPMArrayList.get(position).getId());
+                        intent.putExtra("local",mPMArrayList.get(position).getLocal());
+                        intent.putExtra("purpose",mPMArrayList.get(position).getPurpose());
+                        intent.putExtra("uname",mPMArrayList.get(position).getUsername());
+                        intent.putExtra("passwd",mPMArrayList.get(position).getPassword());
+                        intent.putExtra("extra",mPMArrayList.get(position).getExtra());
                         startActivity(intent);
-                        PasswordManage.this.finish();
+                        //PasswordManage.this.finish();
                         break;
                     case 1:
                         // 删除
-                        strs.remove(position);
                         deleteContent(position);
-                        arrayAdapter.notifyDataSetChanged();
                         break;
                 }
                 // false : close the menu; true : not close the menu
@@ -150,11 +118,38 @@ public class PasswordManage extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPMArrayList.clear();
+        if(mPasswordOperate.getAllPasswordMessage() == null){
+            Toast.makeText(PasswordManage.this, "无内容", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            mPMArrayList.addAll(mPasswordOperate.getAllPasswordMessage());
+        }
+        getFromCloud(User.userDownloadPassword());
+        arrayAdapter.notifyDataSetChanged();
+    }
+
 
     public void deleteContent(int position){
-        int id = mhash.get(position);
-        mhash.remove(position);
-        mPasswordOperate.deleteByid(id);
+        boolean local = mPMArrayList.get(position).getLocal();
+        int id = mPMArrayList.get(position).getId();
+        if(local) {
+            mPasswordOperate.deleteByid(id);
+            mPMArrayList.remove(position);
+            arrayAdapter.notifyDataSetChanged();
+        } else {
+            //Map<String, Integer> map = new HashMap<String, Integer>();
+            //map.put("id",Integer.valueOf(id));
+            RequestParams req = new RequestParams();
+            req.put("username", User.mUsername);
+            req.put("token", User.mToken);
+            req.put("id",id);
+            //
+            deleteFromCloud(req,position);
+        }
     }
 
     @Override
@@ -189,7 +184,7 @@ public class PasswordManage extends AppCompatActivity {
             case R.id.password_plus:
                 Intent intent = new Intent(PasswordManage.this, AddPassword.class);
                 startActivity(intent);
-                PasswordManage.this.finish();
+                //PasswordManage.this.finish();
                 return true;
             case android.R.id.home:
                 PasswordManage.this.finish();
@@ -230,21 +225,11 @@ public class PasswordManage extends AppCompatActivity {
                                 JSONObject ith = new JSONObject(list.getString(String.valueOf(i)));
 
                                 Integer id = ith.getInt("id");
-                                String purpose = ith.getString("purpose");
-                                String uname = ith.getString("uname");
-                                String passwd = ith.getString("passwd");
-                                String extra = ith.getString("extra");
-
-                                String content = "目的："+purpose+"\n"
-                                            +"账号："+uname+"\n"
-                                            +"密码："+passwd+"\n"
-                                            +"备注："+extra+"\n"
-                                            +"<云端存储>";
-
-                                Info info = new Info(id, false, content);
-                                Log.e("id", String.valueOf(id));
-                                Log.e("content", content);
-
+                                String purpose =DES3Utils.decryptMode(ith.getString("purpose"));
+                                String uname = DES3Utils.decryptMode(ith.getString("uname"));
+                                String passwd = DES3Utils.decryptMode(ith.getString("passwd"));
+                                String extra = DES3Utils.decryptMode(ith.getString("extra"));
+                                mPMArrayList.add(new PasswordMessage(id, false, purpose, uname, passwd, extra));
                             }
                             arrayAdapter.notifyDataSetChanged();
                             break;
@@ -264,7 +249,7 @@ public class PasswordManage extends AppCompatActivity {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
 
                 /* 超时提示 */
-                Toast.makeText(PasswordManage.this, "连接超时，请检查网络连接", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PasswordManage.this, "云端加载超时", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -289,7 +274,10 @@ public class PasswordManage extends AppCompatActivity {
                     /* 判断返回码 */
                     switch(status) {
                         case "40000":
-                            //mInfo.remove(position);
+                            mPMArrayList.remove(position);
+                            if(position == mPMArrayList.size()-1) {
+                                mPMArrayList.add(new PasswordMessage(-1,true,"111","111","111","111"));
+                            }
                             arrayAdapter.notifyDataSetChanged();
                             break;
                         default:
