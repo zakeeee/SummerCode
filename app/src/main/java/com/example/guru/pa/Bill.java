@@ -35,6 +35,11 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -44,6 +49,8 @@ import java.util.Iterator;
 import java.io.IOException;
 import java.util.List;
 import java.util.ListIterator;
+
+import cz.msebera.android.httpclient.Header;
 
 public class Bill extends AppCompatActivity {
 
@@ -129,6 +136,8 @@ public class Bill extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        getFromCloud(User.userDownloadBill());
 
         strs = new ArrayList<String>();
         mHash = new ArrayList<Integer>();
@@ -232,5 +241,69 @@ public class Bill extends AppCompatActivity {
                 strs.add(billVO.toString());
             }
         }
+    }
+
+    /* 从云端获取 */
+    private void getFromCloud(RequestParams params) {
+
+        /* 发送到的url */
+        String url = "getbill/";
+
+        /* POST请求 */
+        HttpClient.post(url, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                String status = null;
+                String res = "11";
+
+                try {
+                    status = response.getString("status");
+                    res = response.getString("response");
+
+                    /* 判断返回码 */
+                    switch(status) {
+                        case "30000":
+                            JSONObject list = response.getJSONObject("list");
+
+                            for(int i = 0; i < list.length(); i++) {
+                                JSONObject ith = new JSONObject(list.getString(String.valueOf(i)));
+
+                                String date = ith.getString("date");
+                                String income = ith.getString("income");
+                                String incomefrom = ith.getString("incomefrom");
+                                String expand = ith.getString("expand");
+                                String expandto = ith.getString("expandto");
+                                String extra = ith.getString("extra");
+
+                                strs.add("日期："+date+"\n"
+                                        +"收入："+income+"\n"
+                                        +"收入来源："+incomefrom+"\n"
+                                        +"支出："+expand+"\n"
+                                        +"支出目的："+expandto+"\n"
+                                        +"备注："+extra+"\n"
+                                        +"<云端存储>"
+                                );
+                            }
+                            arrayAdapter.notifyDataSetChanged();
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(Bill.this, "exception", Toast.LENGTH_SHORT).show();
+                }
+
+                /* 提示返回信息 */
+                Toast.makeText(Bill.this, res, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                /* 超时提示 */
+                Toast.makeText(Bill.this, "连接超时，请检查网络连接", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

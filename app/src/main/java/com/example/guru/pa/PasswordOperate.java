@@ -64,7 +64,7 @@ public class PasswordOperate {
             String gottenPassword = cursor.getString(cursor.getColumnIndex("password"));
             String gottenExtra = cursor.getString(cursor.getColumnIndex("extra"));
             cursor.close();
-            return new PasswordMessage(gottenId, gottenPurpose, gottenUsername, gottenPassword, gottenExtra);
+            return new PasswordMessage(gottenId, true, gottenPurpose, gottenUsername, gottenPassword, gottenExtra);
         }
         cursor.close();
         return null;
@@ -83,7 +83,7 @@ public class PasswordOperate {
             String gottenPassword = cursor.getString(cursor.getColumnIndex("password"));
             String gottenExtra = cursor.getString(cursor.getColumnIndex("extra"));
             arrayList.add(
-                 new PasswordMessage(gottenId, gottenPurpose, gottenUsername, gottenPassword, gottenExtra)
+                 new PasswordMessage(gottenId,true, gottenPurpose, gottenUsername, gottenPassword, gottenExtra)
             );
         }
         cursor.close();

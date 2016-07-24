@@ -128,6 +128,33 @@ public class User {
         return requestParams;
     }
 
+    /* 用户删除行程请求参数 */
+    public static RequestParams userDeleteJourney(Map<String,String> map){
+        RequestParams requestParams = new RequestParams(map);
+        requestParams.add("username",mUsername);
+        requestParams.add("token",mToken);
+
+        return requestParams;
+    }
+
+    /* 用户删除账单请求参数 */
+    public static RequestParams userDeleteBill(Map<String,String> map){
+        RequestParams requestParams = new RequestParams(map);
+        requestParams.add("username",mUsername);
+        requestParams.add("token",mToken);
+
+        return requestParams;
+    }
+
+    /* 用户删除密码请求参数 */
+    public static RequestParams userDeletePassword(Map<String,Integer> map){
+        RequestParams requestParams = new RequestParams(map);
+        requestParams.add("username",mUsername);
+        requestParams.add("token",mToken);
+
+        return requestParams;
+    }
+
     /* 重置用户数据请求参数 */
     public static void userReset() {
         mUsername = "请登陆";
@@ -137,6 +164,7 @@ public class User {
         mHeadPortrait = null;
         mLoggedIn = false;
         mToken = "";
+        userSave();
     }
 
     /* 初始化用户数据 */

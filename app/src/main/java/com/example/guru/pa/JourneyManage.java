@@ -19,11 +19,18 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 public class JourneyManage extends AppCompatActivity {
 
@@ -111,6 +118,9 @@ public class JourneyManage extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        getFromCloud(User.userDownloadJourney());
+
         mHash = new ArrayList<Integer>();
         strs = new ArrayList<String>();
         mScheduleArrayList = new ArrayList<Schedule>();
@@ -170,11 +180,13 @@ public class JourneyManage extends AppCompatActivity {
         }
     }
 
+
     public void deleteContent(int position) {
         int deleteId = mHash.get(position);
 
         mDBOperator.deleteScheduleById(deleteId);
     }
+
 
     public void sendId(int position) {
         int sendId = mHash.get(position);
@@ -184,14 +196,17 @@ public class JourneyManage extends AppCompatActivity {
         startActivity(intent);
     }
 
+
     public void openJourneyAdd(){
         Intent intent = new Intent(JourneyManage.this, AddJourney.class);
         startActivity(intent);
     }
 
+
     public void openJourneySearch(){
 
     }
+
 
     public void openJourneySort(){
         strs.clear();
@@ -202,6 +217,7 @@ public class JourneyManage extends AppCompatActivity {
         Collections.sort(mNewList);
         displayContent(new ArrayList<Schedule>(mNewList));
     }
+
 
     public void displayContent(ArrayList<Schedule> list) {
         if(list == null){
@@ -230,5 +246,65 @@ public class JourneyManage extends AppCompatActivity {
                 strs.add(tempStr + tempContent);
             }
         }
+    }
+
+    /* 从云端获取 */
+    private void getFromCloud(RequestParams params) {
+
+        /* 发送到的url */
+        String url = "getjourney/";
+
+        /* POST请求 */
+        HttpClient.post(url, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                String status = null;
+                String res = "11";
+
+                try {
+                    status = response.getString("status");
+                    res = response.getString("response");
+
+                    /* 判断返回码 */
+                    switch(status) {
+                        case "30000":
+                            JSONObject list = response.getJSONObject("list");
+
+                            for(int i = 0; i < list.length(); i++) {
+                                JSONObject ith = new JSONObject(list.getString(String.valueOf(i)));
+
+                                String date = ith.getString("date");
+                                String time = ith.getString("time");
+                                String noti = ith.getString("noti");
+                                String extra = ith.getString("extra");
+
+                                strs.add("日期："+date+"\n"
+                                        +"时间："+time+"\n"
+                                        +"提醒方式："+noti+"\n"
+                                        +"备注："+extra+"\n"
+                                        +"<云端存储>"
+                                );
+                            }
+                            arrayAdapter.notifyDataSetChanged();
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(JourneyManage.this, "exception", Toast.LENGTH_SHORT).show();
+                }
+
+                /* 提示返回信息 */
+                Toast.makeText(JourneyManage.this, res, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                /* 超时提示 */
+                Toast.makeText(JourneyManage.this, "连接超时，请检查网络连接", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
