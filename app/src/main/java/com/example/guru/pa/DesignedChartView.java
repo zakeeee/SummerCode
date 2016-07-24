@@ -12,9 +12,9 @@ import android.view.View;
 public class DesignedChartView extends View{
     public int XPoint=100;    //原点的X坐标
     public int YPoint=1000;     //原点的Y坐标
-    public int XScale=128;     //X的刻度长度
-    public int YScale=100;     //Y的刻度长度
-    public int XLength=900;        //X轴的长度
+    public int XScale=80;     //X的刻度长度
+    public int YScale=90;     //Y的刻度长度
+    public int XLength=1000;        //X轴的长度
     public int YLength=900;        //Y轴的长度
     public String[] XLabel;    //X的刻度
     public String[] YLabel;    //Y的刻度

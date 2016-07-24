@@ -109,20 +109,28 @@ public class BillVO implements Comparable<BillVO>{
     }
 
     public String getDate() {
-        return year + "-" + month + "-" + day;
+        String m = month + "";
+        String d = day + "";
+        if (month < 10) m = "0" + m;
+        if (day < 10) d = "0" + d;
+        return year + "-" + m + "-" + d;
     }
 
     @Override
     public String toString() {
+        String m = month + "";
+        String d = day + "";
+        if (month < 10) m = "0" + m;
+        if (day < 10) d = "0" + d;
         String str = "";
         if(mLocal) {
             str = "<本地>\n"
-                    +"date: " + year + "-" + month + "-" + day + "\n"
+                    +"date: " + year + "-" + m + "-" + d + "\n"
                     +"收入: " + income + "\n"
                     +"支出: " + expend;
         } else {
             str = "<云端>\n"
-                    +"date: " + year + "-" + month + "-" + day + "\n"
+                    +"date: " + year + "-" + m + "-" + d + "\n"
                     +"收入: " + income + "\n"
                     +"支出: " + expend;
         }

@@ -1,5 +1,6 @@
 package com.example.guru.pa;
 
+import android.app.AlarmManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -43,6 +44,16 @@ public class MainActivity extends AppCompatActivity
     //public static final String FILENAME = "testFile2.txt";
     //public static final String MESSAGE_JOURNEY = "pa.scheduleId";
     //public static final String MESSAGE_BILL = "pa.billId";
+    private static final long A_MINUTE = 1000 * 60;
+    public static final long[] INTERVAL_MILLS = {
+            A_MINUTE, A_MINUTE * 2, A_MINUTE * 3, A_MINUTE * 10,
+            AlarmManager.INTERVAL_HALF_HOUR,
+            AlarmManager.INTERVAL_FIFTEEN_MINUTES,
+            AlarmManager.INTERVAL_HOUR,
+            AlarmManager.INTERVAL_HALF_DAY,
+            AlarmManager.INTERVAL_DAY,
+            AlarmManager.INTERVAL_DAY * 7,
+    };
     public static SubActionButton button1;
     public static SubActionButton button2;
     public static SubActionButton button3;
@@ -157,7 +168,7 @@ public class MainActivity extends AppCompatActivity
      * 初始化卡片
      */
     public void initCard() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("y-M-d");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String date = dateFormat.format(new Date());
         mJourneyDB = new DataBaseOperator(this);
         mJourneyList = mJourneyDB.getScheduleBydate(date);
