@@ -161,7 +161,6 @@ public class MainActivity extends AppCompatActivity
             tv.setText(User.mUsername);
         }
         initCard();
-
     }
 
     /**
@@ -172,8 +171,8 @@ public class MainActivity extends AppCompatActivity
         String date = dateFormat.format(new Date());
         mJourneyDB = new DataBaseOperator(this);
         mJourneyList = mJourneyDB.getScheduleBydate(date);
-        TextView card1 = (TextView)findViewById(R.id.card1);
-        TextView card2 = (TextView)findViewById(R.id.card2);
+        TextView card1 = (TextView)findViewById(R.id.card2);
+        TextView card2 = (TextView)findViewById(R.id.card3);
 
         if (mJourneyList != null) {
             card1.setText(mJourneyList.get(0).toString());
