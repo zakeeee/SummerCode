@@ -75,7 +75,7 @@ public class LogIn extends AppCompatActivity {
 
                     /* 用户登陆 */
                     onLogIn("login/", User.userLogIn(name, password));
-                    mSVProgressHUD.showWithStatus("加载中...");
+                    mSVProgressHUD.showWithStatus("正在登陆...");
 
                 }
 

@@ -30,9 +30,17 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
+import cz.msebera.android.httpclient.Header;
 
 public class AddJourney extends AppCompatActivity {
 
@@ -44,9 +52,9 @@ public class AddJourney extends AppCompatActivity {
     private CalendarViewScrollable mDate = null;
     private TimePicker mTime = null;
     private String mScheduleContent = null;
-    private String mGottenDate = "";
+    private String mGottenDate = null;
     private SimpleDateFormat mDateFormat = null;
-    private String mGottenTime = "";
+    private String mGottenTime = null;
     private DataBaseOperator mDBOperator = null;
     private int gottenId;
     private int mSelectedWayPosition;
