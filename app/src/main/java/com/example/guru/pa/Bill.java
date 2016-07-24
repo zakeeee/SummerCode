@@ -327,8 +327,11 @@ public class Bill extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
 
-                /* 超时提示 */
-                Toast.makeText(Bill.this, "连接超时，请检查网络连接", Toast.LENGTH_SHORT).show();
+                if(User.mLoggedIn) {
+                    /* 超时提示 */
+                    Toast.makeText(Bill.this, "连接超时，请检查网络连接", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }

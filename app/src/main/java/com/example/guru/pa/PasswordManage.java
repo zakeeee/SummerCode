@@ -244,8 +244,11 @@ public class PasswordManage extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
 
-                /* 超时提示 */
-                Toast.makeText(PasswordManage.this, "云端加载超时", Toast.LENGTH_SHORT).show();
+                if(User.mLoggedIn) {
+                    /* 超时提示 */
+                    Toast.makeText(PasswordManage.this, "云端加载超时", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }
