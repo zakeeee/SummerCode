@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Created by Haoyu on 2016/7/22.
@@ -228,6 +229,7 @@ public class BillDBOperator {
             db.endTransaction();
         }
     }
+
 
 /*
     public void deleteAll(){
