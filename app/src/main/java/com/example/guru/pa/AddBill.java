@@ -272,12 +272,12 @@ public class AddBill extends AppCompatActivity {
         }
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         check = 0;
     }
+
 
     public void cancelBill(View view) {
         onBackPressed();

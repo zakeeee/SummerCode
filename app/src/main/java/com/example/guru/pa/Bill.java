@@ -219,11 +219,21 @@ public class Bill extends AppCompatActivity {
     }
 
 
-    public void deleteContent(int index){
-        int billId = mBillList.get(index).getBillId();
-        mDBOperator.deleteBillById(billId);
-        mBillList.remove(index);
-        arrayAdapter.notifyDataSetChanged();
+    public void deleteContent(int position){
+        boolean local = mBillList.get(position).getLocal();
+        int id = mBillList.get(position).getBillId();
+        if(local) {
+            mDBOperator.deleteBillById(id);
+            mBillList.remove(position);
+            arrayAdapter.notifyDataSetChanged();
+        } else {
+            RequestParams req = new RequestParams();
+            req.put("username", User.mUsername);
+            req.put("token", User.mToken);
+            req.put("id",id);
+            //
+            deleteFromCloud(req,position);
+        }
     }
 
 
@@ -280,6 +290,7 @@ public class Bill extends AppCompatActivity {
                             for(int i = 0; i < list.length(); i++) {
                                 JSONObject ith = new JSONObject(list.getString(String.valueOf(i)));
 
+                                Integer billId = ith.getInt("id");
                                 Integer year = ith.getInt("year");
                                 Integer month = ith.getInt("month");
                                 Integer day = ith.getInt("day");
@@ -290,6 +301,7 @@ public class Bill extends AppCompatActivity {
                                 String backup = ith.getString("backup");
 
                                 BillVO billVO = new BillVO();
+                                billVO.setBillId(billId);
                                 billVO.setLocal(false);
                                 billVO.setYear(year);
                                 billVO.setMonth(month);
@@ -301,6 +313,50 @@ public class Bill extends AppCompatActivity {
                                 billVO.setBackup(backup);
                                 mBillList.add(billVO);
                             }
+                            arrayAdapter.notifyDataSetChanged();
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(Bill.this, "exception", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                /* 超时提示 */
+                Toast.makeText(Bill.this, "连接超时，请检查网络连接", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /* 云端删除 */
+    private void deleteFromCloud(RequestParams params, final int position) {
+
+        /* 发送到的url */
+        String url = "deletebill/";
+
+        /* POST请求 */
+        HttpClient.post(url, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                String status = null;
+                String res = "11";
+
+                try {
+                    status = response.getString("status");
+                    res = response.getString("response");
+
+                    /* 判断返回码 */
+                    switch(status) {
+                        case "40000":
+                            mBillList.remove(position);
+                            /*if(position == mBillList.size()-1) {
+                                mPMArrayList.add(new PasswordMessage(-1,true,"111","111","111","111"));
+                            }*/
                             arrayAdapter.notifyDataSetChanged();
                             break;
                         default:
@@ -322,5 +378,7 @@ public class Bill extends AppCompatActivity {
                 Toast.makeText(Bill.this, "连接超时，请检查网络连接", Toast.LENGTH_SHORT).show();
             }
         });
+
     }
+
 }

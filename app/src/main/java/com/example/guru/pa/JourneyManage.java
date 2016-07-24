@@ -293,9 +293,6 @@ public class JourneyManage extends AppCompatActivity {
                 } catch (JSONException e) {
                     Toast.makeText(JourneyManage.this, "exception", Toast.LENGTH_SHORT).show();
                 }
-
-                /* 提示返回信息 */
-                Toast.makeText(JourneyManage.this, res, Toast.LENGTH_SHORT).show();
             }
 
             @Override
