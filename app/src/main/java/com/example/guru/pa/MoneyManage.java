@@ -17,6 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+//import com.github.mikephil.charting.charts.LineChart;
+//import com.github.mikephil.charting.data.ChartData;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,7 +46,6 @@ public class MoneyManage extends AppCompatActivity {
         /* ActionBar添加返回按钮 */
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
     }
 
     @Override
@@ -62,6 +64,15 @@ public class MoneyManage extends AppCompatActivity {
                 }
             });
         }
+
+        Button button1 = (Button) linearLayout.findViewById(R.id.licai);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MoneyManage.this, ChartView.class);
+                startActivity(intent);
+            }
+        });
 
         mDBOperator = new BillDBOperator(this);
         int thisMonth = Integer.parseInt((new SimpleDateFormat("MM")).format(
@@ -132,4 +143,6 @@ public class MoneyManage extends AppCompatActivity {
         Pattern pattern = Pattern.compile("[0-9]*");
         return pattern.matcher(str).matches();
     }
+
+
 }
