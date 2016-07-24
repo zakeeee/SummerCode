@@ -48,7 +48,7 @@ public class AddBill extends AppCompatActivity {
 
         // 获得当前日历选中的日期
         //dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        calendarView = (CalendarView)findViewById(R.id.calendarView);
+        calendarView = (CalendarView) findViewById(R.id.calendarView);
        // calendarDate = dateFormat.format(calendarView.getDate());
         mYear = Integer.parseInt((new SimpleDateFormat("yyyy")).format(calendarView.getDate()));
         mMonth = Integer.parseInt((new SimpleDateFormat("MM")).format(calendarView.getDate()));
