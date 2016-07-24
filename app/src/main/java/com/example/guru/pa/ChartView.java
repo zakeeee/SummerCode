@@ -16,13 +16,13 @@ public class ChartView extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        //SetInfo(String[] XLabels,String[] YLabels,String[] AllData,String strTitle)
+        //SetInfo(String[] XLabels,String[] YLabels,String[] DataIncome,String[] DataExpend,String strTitle)
         DesignedChartView chartView = new DesignedChartView(ChartView.this);
         chartView.SetInfo(new String[] { "6-6", "6-7", "6-8", "6-9", "6-10", "6-11", "6-12" },
-                new String[] { "","50", "100", "150", "200", "250", "300", "350"},
+                new String[] { "","50", "100", "150", "200", "250", "300", "350","400"},
                 new String[] { "123", "333", "88", "76", "280", "70","288"},
-                new String[] { "144", "55", "84", "133", "114", "90","320"},
-                "支出收入曲线");
+                new String[] { "55", "84", "133", "114", "90","320","155"},
+                "收入支出曲线 （收入BLUE 支出RED）");
 
         setContentView(chartView);
     }
