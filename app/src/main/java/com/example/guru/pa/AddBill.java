@@ -57,7 +57,6 @@ public class AddBill extends AppCompatActivity {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month,
                                             int dayOfMonth) {
-
                 mYear = year;
                 mMonth = month + 1;
                 mDay = dayOfMonth;
@@ -85,7 +84,7 @@ public class AddBill extends AppCompatActivity {
                 BillDBOperator initDB = new BillDBOperator(this);
                 BillVO initBill = initDB.getBillById(gottenId);
 
-                SimpleDateFormat sdfDate = new SimpleDateFormat("yy-MM-dd");
+                SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
                 SimpleDateFormat sdfHour = new SimpleDateFormat("HH");
                 SimpleDateFormat sdfMinute = new SimpleDateFormat("mm");
                 long sDate = 0;
@@ -127,7 +126,7 @@ public class AddBill extends AppCompatActivity {
     }
 
     public void saveBill(View view) throws Exception {
-        if (incomeText.getText().toString().equals("") || expendText.getText().toString().equals("")){
+        if (incomeText.getText().toString().equals("") && expendText.getText().toString().equals("")){
             Toast.makeText(AddBill.this,"收入或支出不能为空", Toast.LENGTH_SHORT).show();
             return;
         }

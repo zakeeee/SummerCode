@@ -2,8 +2,12 @@ package com.example.guru.pa;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Build;
+import android.os.IBinder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -40,9 +44,9 @@ public class AddJourney extends AppCompatActivity {
     private CalendarViewScrollable mDate = null;
     private TimePicker mTime = null;
     private String mScheduleContent = null;
-    private String mGottenDate = null;
+    private String mGottenDate = "";
     private SimpleDateFormat mDateFormat = null;
-    private String mGottenTime = null;
+    private String mGottenTime = "";
     private DataBaseOperator mDBOperator = null;
     private int gottenId;
     private int mSelectedWayPosition;
@@ -50,6 +54,9 @@ public class AddJourney extends AppCompatActivity {
     private int mYear;
     private int mMonth;
     private int mDay;
+    private Intent intentService;
+    private AlarmService mService;
+    private boolean mBound = false;
     private ScrollView mScrollView;
 
     @Override
@@ -104,16 +111,25 @@ public class AddJourney extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        //与service绑定
+        intentService = new Intent(this, AlarmService.class);
+        bindService(intentService, mConnection, Context.BIND_AUTO_CREATE);
+
+
         // 获得当前日历选中的日期
-        mDateFormat = new SimpleDateFormat("y-M-d");
+        mDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         mDate = (CalendarViewScrollable) findViewById(R.id.journey_cal);
         mGottenDate = mDateFormat.format(mDate.getDate()); //默认日期
         mDate.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month,
                                             int dayOfMonth) {
-                mGottenDate = String.valueOf(year) + "-" + String.valueOf(month + 1)
-                        + "-" + String.valueOf(dayOfMonth);
+                ++ month;
+                String m = String.valueOf(month);
+                String d = String.valueOf(dayOfMonth);
+                if (month < 10) m = "0" + m;
+                if (dayOfMonth < 10) d = "0" + d;
+                mGottenDate = String.valueOf(year) + "-" + m + "-" + d;
                 mYear = year;
                 mMonth = month + 1;
                 mDay = dayOfMonth;
@@ -140,7 +156,7 @@ public class AddJourney extends AppCompatActivity {
                 Schedule schedule = initDB.getScheduleById(gottenId);
                 TagSchedule tagSchedule = initDB.getTagScheduleById(gottenId);
 
-                SimpleDateFormat sdfDate = new SimpleDateFormat("y-M-d");
+                SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
                 SimpleDateFormat sdfHour = new SimpleDateFormat("HH");
                 SimpleDateFormat sdfMinute = new SimpleDateFormat("mm");
                 long sDate = 0;
@@ -186,7 +202,7 @@ public class AddJourney extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void saveJourney(View view){
+    public void saveJourney(View view) throws ParseException {
         Schedule schedule = new Schedule();
         mDBOperator = new DataBaseOperator(this);
         mBackUp = (EditText)findViewById(R.id.journey_backup);
@@ -215,6 +231,7 @@ public class AddJourney extends AppCompatActivity {
             int scheduleId =  mDBOperator.saveSchedule(schedule);
             if (mSelectedWayPosition != 0) {
                 saveTagSchedule(scheduleId);
+                setAlarmClock(schedule);
             }
         }
 
@@ -232,6 +249,33 @@ public class AddJourney extends AppCompatActivity {
 
     }
 
+    /** Defines callbacks for service binding, passed to bindService() */
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            AlarmService.LocalBinder binder = (AlarmService.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
+
+    public void setAlarmClock(Schedule schedule) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        long triggerMills = sdf.parse(mGottenDate + " " +mGottenTime).getTime() + 50000;
+        long intervalMills = MainActivity.INTERVAL_MILLS[0];
+        mService.setTimeAndContent(
+                triggerMills, intervalMills, schedule.getScheduleId(), schedule.getContent());
+
+        startService(intentService);
+        Toast.makeText(AddJourney.this, "提醒设置成功", Toast.LENGTH_SHORT).show();
+    }
+
     public void cancelJourney(View view){
         onBackPressed();
     }
@@ -242,6 +286,16 @@ public class AddJourney extends AppCompatActivity {
             mDBOperator.closeDB();
         }
         this.finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Unbind from the service
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
     }
 
     public int saveTagSchedule(int scheduleId){
@@ -265,48 +319,4 @@ public class AddJourney extends AppCompatActivity {
         mDBOperator.updateTagSchedule(tagSchedule);
     }
 
-
-    //debug
-    public void deBug(int scheduleId, int tagId) {
-        /*
-        Schedule testSchedule = mDBOperator.getScheduleById(scheduleId);
-        Log.e("TestDB", testSchedule.getContent() + "\n" +
-                testSchedule.getDate() + '\n' + testSchedule.getTime() + "\n" +
-                testSchedule.getScheduleId());
-
-        //Log.e("Spinner",mSelectedWayPosition + " " + mSelectedTPosition);
-        // Log.e("year and month",mYear + " " + mMonth);
-
-
-        ArrayList<TagSchedule> ts = mDBOperator.getTagScheduleByMY(2016, 7);
-        for (int i = 0; ts != null && (i < ts.size()); ++ i) {
-            TagSchedule tt = ts.get(i);
-            Log.e("TestTagDB",tt.getTagId() + " " + tt.getRemindId() + " " +
-                    tt.getScheduleId() + " " + tt.getYear() + " " + tt.getMonth()
-                    + " " + tt.getDay());
-        }
-        */
-        // Log.e("scheduleId",scheduleId + "");
-        ArrayList<Schedule> s1 = mDBOperator.getAllSchedule();
-        // mDBOperator.deleteScheduleById(3);
-        //Schedule s3 = new Schedule();
-        //s3.setScheduleId(7);
-        // s3.setContent("Hello World");
-        // mDBOperator.updateSchedule(s3);
-        //  mDBOperator.deleteAll();
-        //   ArrayList<Schedule> s2 = mDBOperator.getAllSchedule();
-        for (int i = 0; i < s1.size(); ++ i){
-            Schedule ss = s1.get(i);
-            Log.e("S1",ss.getScheduleId() + " " + ss.getContent() + " " + ss.getTime());
-        }
-        /*
-        for (int i = 0; (s2 != null) && (i < s2.size()); ++ i) {
-            Schedule ss = s2.get(i);
-            Log.e("S2", ss.getScheduleId() + " " + ss.getContent() + " " + ss.getTime());
-        }
-        if (s2 == null) {
-            Log.e("deleteAll", "successful");
-        }
-        */
-    }
 }

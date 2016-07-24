@@ -104,12 +104,20 @@ public class BillVO implements Comparable<BillVO>{
     }
 
     public String getDate() {
-        return year + "-" + month + "-" + day;
+        String m = month + "";
+        String d = day + "";
+        if (month < 10) m = "0" + m;
+        if (day < 10) d = "0" + d;
+        return year + "-" + m + "-" + d;
     }
 
     @Override
     public String toString() {
-        return "date: " + year + "-" + month + "-" + day + "\n"
+        String m = month + "";
+        String d = day + "";
+        if (month < 10) m = "0" + m;
+        if (day < 10) d = "0" + d;
+        return "date: " + year + "-" + m + "-" + d + "\n"
                  + "收入: " + income + " " +"支出: " + expend  ;
     }
 

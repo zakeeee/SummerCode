@@ -30,7 +30,7 @@
                 android:layout_width="match_parent" >
 
                 <TextView
-                    android:text=""
+                    android:text="暂无行程"
                     android:textSize="26sp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -47,7 +47,7 @@
 
                 <TextView
                     android:id="@+id/card2"
-                    android:text=""
+                    android:text="暂无行程"
                     android:textSize="26sp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
@@ -62,7 +62,7 @@
 
                 <TextView
                     android:id="@+id/card3"
-                    android:text=""
+                    android:text="暂无行程"
                     android:textSize="26sp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />

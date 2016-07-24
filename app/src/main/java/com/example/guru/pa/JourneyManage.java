@@ -172,8 +172,9 @@ public class JourneyManage extends AppCompatActivity {
 
     public void deleteContent(int position) {
         int deleteId = mHash.get(position);
-
+        mHash.remove(position);
         mDBOperator.deleteScheduleById(deleteId);
+        mScheduleArrayList.remove(position);
     }
 
     public void sendId(int position) {

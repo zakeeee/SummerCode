@@ -27,6 +27,7 @@
             <EditText
                 android:hint="收入"
                 android:inputType="numberDecimal"
+                android:text="0"
                 android:id="@+id/addbill_income"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -41,6 +42,7 @@
             <EditText
                 android:hint="支出"
                 android:inputType="numberDecimal"
+                android:text="0"
                 android:id="@+id/addbill_expend"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

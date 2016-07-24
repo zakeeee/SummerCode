@@ -9,6 +9,12 @@
     <!-- 网络请求权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_p"
@@ -52,10 +58,10 @@
             android:label="账单" />
         <activity
             android:name=".AddJourney"
-            android:label="添加行程" />
+            android:label="编辑你的行程" />
         <activity
             android:name=".AddBill"
-            android:label="记一笔" />
+            android:label="编辑账单" />
         <activity
             android:name=".Register"
             android:label="注册" />
@@ -83,6 +89,16 @@
         <activity
             android:name=".PasswordDetail"
             android:label="密码详情" />
+
+        <service
+            android:name="com.example.guru.pa.AlarmService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
+        <receiver
+            android:process=":remote"
+            android:name=".AlarmClock">
+        </receiver>
     </application>
 
 </manifest>

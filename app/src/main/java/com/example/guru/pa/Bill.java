@@ -188,7 +188,9 @@ public class Bill extends AppCompatActivity {
                 this.finish();
                 return true;
             case R.id.bill_sort:
-                sortBill();
+                if (mBillList != null && mBillList.size() > 0){
+                    sortBill();
+                }
                 break;
             default:
                 break;
@@ -207,6 +209,7 @@ public class Bill extends AppCompatActivity {
         int billId = mHash.get(index);
         mHash.remove(index);
         mDBOperator.deleteBillById(billId);
+        mBillList.remove(index);
     }
 
     public void sortBill() {
