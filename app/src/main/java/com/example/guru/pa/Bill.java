@@ -11,6 +11,7 @@ import android.content.pm.ApplicationInfo;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
@@ -57,11 +58,8 @@ public class Bill extends AppCompatActivity {
     private BillDBOperator mDBOperator = null;
     private ArrayList<BillVO> mBillList = null;
     private ArrayList<Integer> mHash = null;
-    /* 必备的三个量：一个List（也可以为数组）,一个Adapter,一个ListView */
-    private ArrayList<String> strs;
-    private ArrayAdapter<String> arrayAdapter;
+    private ArrayAdapter<BillVO> arrayAdapter;
     private SwipeMenuListView mListView;
-    //public static final String SEND_TAG = "sendId";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +69,12 @@ public class Bill extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+//        mHash = new ArrayList<Integer>();
+        mBillList = new ArrayList<BillVO>();
+        mDBOperator = new BillDBOperator(this);
 
+        /* 实例化ArrayAdapter */
+        arrayAdapter = new ArrayAdapter<BillVO>(this, android.R.layout.simple_list_item_1, mBillList);
 
         /* 实例化SwipeMenuListView */
         mListView = (SwipeMenuListView) findViewById(R.id.bill_list);
@@ -106,7 +109,7 @@ public class Bill extends AppCompatActivity {
         };
 
         /* 给mListView设置Adapter,MenuCreator,设置滑动方向 */
-
+        mListView.setAdapter(arrayAdapter);
         mListView.setMenuCreator(creator);
         mListView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
 
@@ -120,9 +123,9 @@ public class Bill extends AppCompatActivity {
                         sendId(position);
                         break;
                     case 1:
-                        strs.remove(position);
+                        //strs.remove(position);
                         deleteContent(position);
-                        arrayAdapter.notifyDataSetChanged();
+                        //arrayAdapter.notifyDataSetChanged();
                         // delete
                         break;
                 }
@@ -137,20 +140,13 @@ public class Bill extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        mBillList.clear();
+        if(mDBOperator.getAllBill() != null) {
+            mBillList.addAll(mDBOperator.getAllBill());
+        }
         getFromCloud(User.userDownloadBill());
+        arrayAdapter.notifyDataSetChanged();
 
-        strs = new ArrayList<String>();
-        mHash = new ArrayList<Integer>();
-        mBillList = new ArrayList<BillVO>();
-        mDBOperator = new BillDBOperator(this);
-        mBillList = mDBOperator.getAllBill();
-
-        displayContent(mBillList);
-
-        /* 实例化ArrayAdapter */
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strs);
-
-        mListView.setAdapter(arrayAdapter);
     }
 
     @Override
@@ -197,7 +193,8 @@ public class Bill extends AppCompatActivity {
                 this.finish();
                 return true;
             case R.id.bill_sort:
-                sortBill();
+                Collections.sort(mBillList);
+                arrayAdapter.notifyDataSetChanged();
                 break;
             default:
                 break;
@@ -205,42 +202,57 @@ public class Bill extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     public void sendId(int position) {
-        int sendId = mHash.get(position);
+        //int sendId = mHash.get(position);
+        BillVO billVO = mBillList.get(position);
         Intent  intent = new Intent(this, MoneyDetail.class);
-        intent.putExtra("pa.bill.detail", sendId);
+        intent.putExtra("billId", billVO.getBillId());
+        intent.putExtra("local", billVO.getLocal());
+        intent.putExtra("date", billVO.getDate());
+        intent.putExtra("income", billVO.getIncome());
+        intent.putExtra("incomeSource", billVO.getIncomeSource());
+        intent.putExtra("expend", billVO.getExpend());
+        intent.putExtra("expendDes", billVO.getExpendDes());
+        intent.putExtra("backup", billVO.getBackup());
         startActivity(intent);
     }
 
+
     public void deleteContent(int index){
-        int billId = mHash.get(index);
-        mHash.remove(index);
+        int billId = mBillList.get(index).getBillId();
         mDBOperator.deleteBillById(billId);
+        mBillList.remove(index);
+        arrayAdapter.notifyDataSetChanged();
     }
 
+
     public void sortBill() {
-        strs.clear();
-        arrayAdapter.notifyDataSetChanged();
-        mHash.clear();
-        List<BillVO> newBillList = new ArrayList<BillVO>();
-        newBillList = mBillList;
-        Collections.sort(newBillList);
-        displayContent(new ArrayList<BillVO>(newBillList));
+        //strs.clear();
+        //arrayAdapter.clear();
+        //arrayAdapter.notifyDataSetChanged();
+        //mHash.clear();
+        //List<BillVO> newBillList = new ArrayList<BillVO>();
+        //newBillList = mBillList;
+
+        //displayContent(new ArrayList<BillVO>(newBillList));
     }
+
 
     public void displayContent(ArrayList<BillVO> list) {
         if(list == null){
             Toast.makeText(Bill.this, "无内容", Toast.LENGTH_SHORT).show();
-            strs.add("木有内容");
+            //strs.add("木有内容");
         }
         else {
             BillVO billVO;
             for (int i = 0; i <  list.size(); ++ i) {
                 billVO = list.get(i);
                 mHash.add(billVO.getBillId());
-                strs.add(billVO.toString());
+                //strs.add(billVO.toString());
             }
         }
+        arrayAdapter.notifyDataSetChanged();
     }
 
     /* 从云端获取 */
@@ -268,21 +280,26 @@ public class Bill extends AppCompatActivity {
                             for(int i = 0; i < list.length(); i++) {
                                 JSONObject ith = new JSONObject(list.getString(String.valueOf(i)));
 
-                                String date = ith.getString("date");
-                                String income = ith.getString("income");
-                                String incomefrom = ith.getString("incomefrom");
-                                String expand = ith.getString("expand");
-                                String expandto = ith.getString("expandto");
-                                String extra = ith.getString("extra");
+                                Integer year = ith.getInt("year");
+                                Integer month = ith.getInt("month");
+                                Integer day = ith.getInt("day");
+                                Integer income = ith.getInt("income");
+                                String incomeSource = ith.getString("incomeSource");
+                                Integer expend = ith.getInt("expend");
+                                String expendDes = ith.getString("expendDes");
+                                String backup = ith.getString("backup");
 
-                                strs.add("日期："+date+"\n"
-                                        +"收入："+income+"\n"
-                                        +"收入来源："+incomefrom+"\n"
-                                        +"支出："+expand+"\n"
-                                        +"支出目的："+expandto+"\n"
-                                        +"备注："+extra+"\n"
-                                        +"<云端存储>"
-                                );
+                                BillVO billVO = new BillVO();
+                                billVO.setLocal(false);
+                                billVO.setYear(year);
+                                billVO.setMonth(month);
+                                billVO.setDay(day);
+                                billVO.setIncome(income);
+                                billVO.setIncomeSource(incomeSource);
+                                billVO.setExpend(expend);
+                                billVO.setExpendDes(expendDes);
+                                billVO.setBackup(backup);
+                                mBillList.add(billVO);
                             }
                             arrayAdapter.notifyDataSetChanged();
                             break;
