@@ -39,14 +39,17 @@ public class DesignedChartView extends View{
 
         //canvas.drawColor(Color.WHITE);//设置背景颜色
         Paint paint= new Paint();
+        Paint paint1= new Paint();
+
         paint.setStyle(Paint.Style.STROKE);
         paint.setAntiAlias(true);//去锯齿
         paint.setColor(Color.BLUE);//颜色
-        Paint paint1=new Paint();
+        paint.setTextSize(20);  //设置轴文字大小
+
         paint1.setStyle(Paint.Style.STROKE);
         paint1.setAntiAlias(true);//去锯齿
-        paint1.setColor(Color.DKGRAY);
-        paint.setTextSize(12);  //设置轴文字大小
+        paint1.setColor(Color.RED);//颜色
+        //paint1.setTextSize(20);
         //设置Y轴
         canvas.drawLine(XPoint, YPoint-YLength, XPoint, YPoint, paint);   //轴线
         for(int i=0;i*YScale<YLength ;i++)
@@ -64,6 +67,7 @@ public class DesignedChartView extends View{
         canvas.drawLine(XPoint,YPoint-YLength,XPoint+3,YPoint-YLength+6,paint);
         //设置X轴
         canvas.drawLine(XPoint,YPoint,XPoint+XLength,YPoint,paint);   //轴线
+
         for(int i=0;i*XScale<XLength;i++)
         {
             canvas.drawLine(XPoint+i*XScale, YPoint, XPoint+i*XScale, YPoint-5, paint);  //刻度
@@ -71,12 +75,26 @@ public class DesignedChartView extends View{
             {
                 canvas.drawText(XLabel[i] , XPoint+i*XScale-10, YPoint+20, paint);  //文字
                 //数据值
-                if(i>0&&YCoord(Data_income[i-1])!=-999&&YCoord(Data_income[i])!=-999&&YCoord(Data_expend[i-1])!=-999&&YCoord(Data_expend[i])!=-999)  //保证有效数据
+                if(i>0&&YCoord(Data_income[i-1])!=-999&&YCoord(Data_income[i])!=-999)  //保证有效数据
                     canvas.drawLine(XPoint+(i-1)*XScale, YCoord(Data_income[i-1]), XPoint+i*XScale, YCoord(Data_income[i]), paint);
-                    canvas.drawCircle(XPoint+i*XScale,YCoord(Data_income[i]), 2, paint);
 
-                    canvas.drawLine(XPoint+(i-1)*XScale, YCoord(Data_expend[i-1]), XPoint+i*XScale, YCoord(Data_expend[i]), paint);
-                    canvas.drawCircle(XPoint+i*XScale,YCoord(Data_expend[i]), 2, paint);
+                canvas.drawCircle(XPoint+i*XScale,YCoord(Data_income[i]), 2, paint);
+            }
+            catch(Exception e)
+            {
+            }
+        }
+
+        for(int j=0;j*XScale<XLength;j++)
+        {
+            //canvas.drawLine(XPoint+j*XScale, YPoint, XPoint+j*XScale, YPoint-5, paint1);  //刻度
+            try
+            {
+                //canvas.drawText(XLabel[j] , XPoint+j*XScale-10, YPoint+20, paint1);  //文字
+                //数据值
+                if(j>0&&YCoord(Data_expend[j-1])!=-999&&YCoord(Data_expend[j])!=-999)  //保证有效数据
+                    canvas.drawLine(XPoint+(j-1)*XScale, YCoord(Data_expend[j-1]), XPoint+j*XScale, YCoord(Data_expend[j]), paint1);
+                canvas.drawCircle(XPoint+j*XScale,YCoord(Data_expend[j]), 2, paint1);
             }
             catch(Exception e)
             {
@@ -84,8 +102,9 @@ public class DesignedChartView extends View{
         }
         canvas.drawLine(XPoint+XLength,YPoint,XPoint+XLength-6,YPoint-3,paint);    //箭头
         canvas.drawLine(XPoint+XLength,YPoint,XPoint+XLength-6,YPoint+3,paint);
-        paint.setTextSize(16);
-        canvas.drawText(Title, 150, 50, paint);
+
+        paint.setTextSize(40);
+        canvas.drawText(Title, 100, 100, paint);
     }
     private int YCoord(String y0)  //计算绘制时的Y坐标，无数据时返回-999
     {
