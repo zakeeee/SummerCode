@@ -106,7 +106,9 @@ public class AddPassword extends AppCompatActivity {
         }
 
 
-        if(mID != 0){/***修改信息***/
+        if(mID != 0){
+            /***修改信息***/
+
             if(check==0){
                 //修改本地备份
                 mpasswordOperate = new PasswordOperate(this);

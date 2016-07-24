@@ -123,7 +123,6 @@ public class PasswordManage extends AppCompatActivity {
         super.onResume();
         mPMArrayList.clear();
         if(mPasswordOperate.getAllPasswordMessage() == null){
-            Toast.makeText(PasswordManage.this, "无内容", Toast.LENGTH_SHORT).show();
         }
         else {
             mPMArrayList.addAll(mPasswordOperate.getAllPasswordMessage());
@@ -239,17 +238,17 @@ public class PasswordManage extends AppCompatActivity {
                 } catch (JSONException e) {
                     Toast.makeText(PasswordManage.this, "exception", Toast.LENGTH_SHORT).show();
                 }
-
-                /* 提示返回信息 */
-                Toast.makeText(PasswordManage.this, res, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
 
-                /* 超时提示 */
-                Toast.makeText(PasswordManage.this, "云端加载超时", Toast.LENGTH_SHORT).show();
+                if(User.mLoggedIn) {
+                    /* 超时提示 */
+                    Toast.makeText(PasswordManage.this, "云端加载超时", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }

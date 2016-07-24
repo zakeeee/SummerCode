@@ -296,17 +296,17 @@ public class JourneyManage extends AppCompatActivity {
                 } catch (JSONException e) {
                     Toast.makeText(JourneyManage.this, "exception", Toast.LENGTH_SHORT).show();
                 }
-
-                /* 提示返回信息 */
-                Toast.makeText(JourneyManage.this, res, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
 
-                /* 超时提示 */
-                Toast.makeText(JourneyManage.this, "连接超时，请检查网络连接", Toast.LENGTH_SHORT).show();
+                if(User.mLoggedIn) {
+                    /* 超时提示 */
+                    Toast.makeText(JourneyManage.this, "连接超时，请检查网络连接", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }

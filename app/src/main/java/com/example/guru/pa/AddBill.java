@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.bigkoo.svprogresshud.SVProgressHUD;
@@ -33,23 +34,34 @@ public class AddBill extends AppCompatActivity {
     private EditText expendDesText = null;
     private EditText mBackupText = null;
     private CalendarView calendarView = null;
-    private String incomeStr = null;
-    private String incomeSourceStr = null;
-    private String expendStr = null;
-    private String expendDesStr = null;
-    private String mBackup = null;
-   // private String calendarDate = null;
-    private SimpleDateFormat dateFormat = null;
     private int mYear;
     private int mMonth;
     private int mDay;
     private BillDBOperator mDBOperator = null;
-    private int gottenId;
+
+    private int mID;
+    private boolean mLocal;
+    private String mDate;
+    private int mIncome;
+    private int mExpend;
+    private String mIncomeSource;
+    private String mExpendDes;
+    private String mBackup;
+
+    public static int check = 0;
+    RadioGroup radiogroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_bill);
+
+        radiogroup = (RadioGroup)findViewById(R.id.addbill_radiogroup);
+        incomeText = (EditText)findViewById(R.id.addbill_income);
+        incomeSourceText = (EditText)findViewById(R.id.addbill_incomesource);
+        expendText = (EditText)findViewById(R.id.addbill_expend);
+        expendDesText = (EditText)findViewById(R.id.addbill_expendpurpose);
+        mBackupText = (EditText)findViewById(R.id.addbill_extra);
 
         /* ActionBar添加返回按钮 */
         ActionBar actionBar = getSupportActionBar();
@@ -66,58 +78,49 @@ public class AddBill extends AppCompatActivity {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month,
                                             int dayOfMonth) {
+
                 mYear = year;
                 mMonth = month + 1;
                 mDay = dayOfMonth;
             }
         });
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        incomeText = (EditText)findViewById(R.id.addbill_income);
-        incomeSourceText = (EditText)findViewById(R.id.addbill_incomesource);
-        expendText = (EditText)findViewById(R.id.addbill_expend);
-        expendDesText = (EditText)findViewById(R.id.addbill_expendpurpose);
-        mBackupText = (EditText)findViewById(R.id.addbill_extra);
+        //添加事件监听器
+        radiogroup.setOnCheckedChangeListener(new RadioGroupListener());
+
         /**
          * 初始化界面（若为编辑状态）
          */
         Intent intent = getIntent();
-        gottenId = -1;
-        if (intent != null) {
-            gottenId = intent.getIntExtra("pa.money.detail.edit", -1);
+        if(intent.hasExtra("billId")) {
+            mID = intent.getIntExtra("billId", 0);
+            mLocal = intent.getBooleanExtra("local", true);
+            mDate = intent.getStringExtra("date");
+            mIncome = intent.getIntExtra("income", 0);
+            mExpend = intent.getIntExtra("expend", 0);
+            mIncomeSource = intent.getStringExtra("incomeSource");
+            mExpendDes = intent.getStringExtra("expendDes");
+            mBackup = intent.getStringExtra("backup");
 
-            if (gottenId > 0) {
-                BillDBOperator initDB = new BillDBOperator(this);
-                BillVO initBill = initDB.getBillById(gottenId);
-
-                SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
-                SimpleDateFormat sdfHour = new SimpleDateFormat("HH");
-                SimpleDateFormat sdfMinute = new SimpleDateFormat("mm");
-                long sDate = 0;
-                int sHour = 0;
-                int sMinute = 0;
-                if (initBill != null) {
-                    String date = initBill.getDate();
-                    String backup = initBill.getBackup();
-                    try {
-                        sDate = sdfDate.parse(date).getTime();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-
-                    calendarView.setDate(sDate);
-                    incomeText.setText(initBill.getIncome() + "");
-                    incomeSourceText.setText(initBill.getIncomeSource());
-                    expendText.setText(initBill.getExpend() + "");
-                    expendDesText.setText(initBill.getExpendDes());
-                    mBackupText.setText(initBill.getBackup());
-                }
-
+            SimpleDateFormat sdfDate = new SimpleDateFormat("yy-MM-dd");
+            //SimpleDateFormat sdfHour = new SimpleDateFormat("HH");
+            //SimpleDateFormat sdfMinute = new SimpleDateFormat("mm");
+            long sDate = 0;
+            //int sHour = 0;
+            //int sMinute = 0;
+            try {
+                sDate = sdfDate.parse(mDate).getTime();
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
+
+            calendarView.setDate(sDate);
+            incomeText.setText(mIncome + "");
+            incomeSourceText.setText(mIncomeSource);
+            expendText.setText(mExpend + "");
+            expendDesText.setText(mExpendDes);
+            mBackupText.setText(mBackup);
+
         }
 
     }
@@ -133,53 +136,151 @@ public class AddBill extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //监听保存方式
+    private class RadioGroupListener implements RadioGroup.OnCheckedChangeListener{
+        public void onCheckedChanged(RadioGroup group, int checkedId){
+            if(checkedId ==  R.id.addbill_radio_cloud)
+                check=1;
+            else if(checkedId ==  R.id.addbill_radio_local)
+                check=0;
+        }
+    }
+
 
     public void saveBill(View view) throws Exception {
-        if (incomeText.getText().toString().equals("") && expendText.getText().toString().equals("")){
+        String incomeStr = incomeText.getText().toString();
+        String incomeSourceStr = incomeSourceText.getText().toString();
+        String expendStr = expendText.getText().toString();
+        String expendDesStr = expendDesText.getText().toString();
+        String backup = mBackupText.getText().toString();
+
+        if (incomeStr.equals("") || expendStr.equals("")){
             Toast.makeText(AddBill.this,"收入或支出不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        incomeStr = incomeText.getText().toString();
-        incomeSourceStr = incomeSourceText.getText().toString();
-        expendStr = expendText.getText().toString();
-        expendDesStr = expendDesText.getText().toString();
-        mBackup = mBackupText.getText().toString();
+        if(mID != 0) {
+            /* 修改信息 */
+            if (check == 0) {
 
+                /* 修改本地数据 */
+                mDBOperator = new BillDBOperator(this);
+                BillVO billVO = new BillVO();
+                billVO.setIncome(Integer.parseInt(incomeStr));
+                billVO.setIncomeSource(incomeSourceStr);
+                billVO.setExpend(Integer.parseInt(expendStr));
+                billVO.setExpendDes(expendDesStr);
+                billVO.setBackup(backup);
+                billVO.setDay(mDay);
+                billVO.setMonth(mMonth);
+                billVO.setYear(mYear);
 
-        mDBOperator = new BillDBOperator(this);
-        BillVO billVO = new BillVO();
-        billVO.setIncome(Integer.parseInt(incomeStr));
-        billVO.setIncomeSource(incomeSourceStr);
-        billVO.setExpend(Integer.parseInt(expendStr));
-        billVO.setExpendDes(expendDesStr);
-        billVO.setBackup(mBackup);
-        billVO.setDay(mDay);
-        billVO.setMonth(mMonth);
-        billVO.setYear(mYear);
+                if (mLocal) {
+                    /* 如果原本是本地的就更新 */
+                    billVO.setBillId(mID);
+                    billVO.setLocal(true);
+                    mDBOperator.updateBill(billVO);
+                } else {
+                    /* 如果原本是云端的就新建 */
+                    mDBOperator.saveBill(billVO);
+                }
 
-        if (gottenId > 0) {
-            billVO.setBillId(gottenId);
-            mDBOperator.updateBill(billVO);
+                if (mDBOperator != null) {
+                    mDBOperator.closeDB();
+                }
+                Intent intent = new Intent();
+                intent.putExtra("billId", billVO.getBillId());
+                intent.putExtra("local", billVO.getLocal());
+                intent.putExtra("date", billVO.getDate());
+                intent.putExtra("income", billVO.getIncome());
+                intent.putExtra("incomeSource", billVO.getIncomeSource());
+                intent.putExtra("expend", billVO.getExpend());
+                intent.putExtra("expendDes", billVO.getExpendDes());
+                intent.putExtra("backup", billVO.getBackup());
+                setResult(2, intent);
+                finish();
+
+            } else if (check == 1) {
+                /* 修改云端数据 */
+                RequestParams requestParams = new RequestParams();
+                requestParams.put("username", User.mUsername);
+                requestParams.put("token", User.mToken);
+                requestParams.put("year", mYear);
+                requestParams.put("month", mMonth);
+                requestParams.put("day", mDay);
+                requestParams.put("income", Integer.parseInt(incomeStr));
+                requestParams.put("incomeSource", incomeSourceStr);
+                requestParams.put("expend", Integer.parseInt(expendStr));
+                requestParams.put("expendDes", expendDesStr);
+                requestParams.put("backup", backup);
+
+                if (!mLocal) {
+                    /* 如果原本是云端的就更新 */
+                    requestParams.put("id", mID);
+                }
+                addToCloud(requestParams);
+            }
+
+        } else {
+            /* 增加信息 */
+            if (check == 0) {
+
+                /* 增加本地数据 */
+                mDBOperator = new BillDBOperator(this);
+                BillVO billVO = new BillVO();
+                billVO.setIncome(Integer.parseInt(incomeStr));
+                billVO.setIncomeSource(incomeSourceStr);
+                billVO.setExpend(Integer.parseInt(expendStr));
+                billVO.setExpendDes(expendDesStr);
+                billVO.setBackup(backup);
+                billVO.setDay(mDay);
+                billVO.setMonth(mMonth);
+                billVO.setYear(mYear);
+                mDBOperator.saveBill(billVO);
+
+                if (mDBOperator != null) {
+                    mDBOperator.closeDB();
+                }
+
+                Intent intent = new Intent();
+                intent.putExtra("billId", billVO.getBillId());
+                intent.putExtra("local", billVO.getLocal());
+                intent.putExtra("date", billVO.getDate());
+                intent.putExtra("income", billVO.getIncome());
+                intent.putExtra("incomeSource", billVO.getIncomeSource());
+                intent.putExtra("expend", billVO.getExpend());
+                intent.putExtra("expendDes", billVO.getExpendDes());
+                intent.putExtra("backup", billVO.getBackup());
+                setResult(2, intent);
+                finish();
+
+            } else if (check == 1) {
+                /* 增加云端数据 */
+                RequestParams requestParams = new RequestParams();
+                requestParams.put("username", User.mUsername);
+                requestParams.put("token", User.mToken);
+                requestParams.put("year", mYear);
+                requestParams.put("month", mMonth);
+                requestParams.put("day", mDay);
+                requestParams.put("income", Integer.parseInt(incomeStr));
+                requestParams.put("incomeSource", incomeSourceStr);
+                requestParams.put("expend", Integer.parseInt(expendStr));
+                requestParams.put("expendDes", expendDesStr);
+                requestParams.put("backup", backup);
+                addToCloud(requestParams);
+            }
         }
-        else {
-            int billId = mDBOperator.saveBill(billVO);
-        }
+    }
 
-
-        this.finish();
-        //Intent intent = new Intent(this, Bill.class);
-        //startActivity(intent);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        check = 0;
     }
 
 
     public void cancelBill(View view) {
         onBackPressed();
-    }
-
-
-    public void debug(int billId) {
-
     }
 
     /* 添加到云端 */

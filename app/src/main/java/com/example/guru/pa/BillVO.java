@@ -14,6 +14,7 @@ public class BillVO implements Comparable<BillVO>{
     private String backup;
     private String incomeSource;
     private String expendDes;
+    private boolean mLocal = true;
 
     public BillVO() {}
     public BillVO(int billId, int income, int expend, int year, int month, int day,
@@ -29,6 +30,8 @@ public class BillVO implements Comparable<BillVO>{
         this.day = day;
     }
 
+
+    public boolean getLocal() { return mLocal; }
 
     public int getBillId() {
         return billId;
@@ -66,6 +69,8 @@ public class BillVO implements Comparable<BillVO>{
         return backup;
     }
 
+
+    public void setLocal(boolean local) { this.mLocal = local; }
 
     public void setBackup(String backup) {
         this.backup = backup;
@@ -117,8 +122,20 @@ public class BillVO implements Comparable<BillVO>{
         String d = day + "";
         if (month < 10) m = "0" + m;
         if (day < 10) d = "0" + d;
-        return "date: " + year + "-" + m + "-" + d + "\n"
-                 + "收入: " + income + " " +"支出: " + expend  ;
+        String str = "";
+        if(mLocal) {
+            str = "<本地>\n"
+                    +"date: " + year + "-" + m + "-" + d + "\n"
+                    +"收入: " + income + "\n"
+                    +"支出: " + expend;
+        } else {
+            str = "<云端>\n"
+                    +"date: " + year + "-" + m + "-" + d + "\n"
+                    +"收入: " + income + "\n"
+                    +"支出: " + expend;
+        }
+
+        return str;
     }
 
     @Override
