@@ -96,6 +96,10 @@
             android:name=".PasswordDetail"
             android:label="密码详情">
         </activity>
+        <activity android:name=".ChartView"
+            android:label="图表" >
+
+        </activity>
     </application>
 
 </manifest>
