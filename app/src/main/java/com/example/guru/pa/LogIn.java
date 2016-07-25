@@ -141,6 +141,9 @@ public class LogIn extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                Toast.makeText(LogIn.this, "连接超时", Toast.LENGTH_SHORT).show();
+                mSVProgressHUD.dismiss();
             }
         });
     }

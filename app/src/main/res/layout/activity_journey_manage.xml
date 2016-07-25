@@ -11,6 +11,7 @@
     tools:context=".JourneyManage">
 
     <com.baoyz.swipemenulistview.SwipeMenuListView
+        android:divider="#000000"
         android:id="@+id/journey_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

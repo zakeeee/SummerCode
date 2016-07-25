@@ -4,11 +4,8 @@ import android.app.AlarmManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -35,7 +32,6 @@ import cz.msebera.android.httpclient.Header;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity
@@ -292,12 +288,25 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
                 return true;
             case R.id.nav_money:
-                Intent intent1 = new Intent(MainActivity.this, MoneyManage.class);
-                startActivity(intent1);
+                if(!User.mLoggedIn) {
+                    Toast.makeText(MainActivity.this, "请登录以查看", Toast.LENGTH_SHORT).show();
+                    Intent intent1 = new Intent(MainActivity.this, LogIn.class);
+                    startActivity(intent1);
+                } else {
+                    Intent intent1 = new Intent(MainActivity.this, MoneyManage.class);
+                    startActivity(intent1);
+                }
                 return true;
             case R.id.nav_password:
-                Intent intent2 = new Intent(MainActivity.this, PasswordManage.class);
-                startActivity(intent2);
+                if(!User.mLoggedIn) {
+                    Toast.makeText(MainActivity.this, "请登录以查看", Toast.LENGTH_SHORT).show();
+                    Intent intent2 = new Intent(MainActivity.this, LogIn.class);
+                    startActivity(intent2);
+                } else {
+                    Intent intent2 = new Intent(MainActivity.this, PasswordManage.class);
+                    startActivity(intent2);
+                }
+
                 return true;
             case R.id.nav_settings:
                 Intent intent3 = new Intent(MainActivity.this, SettingsActivity.class);

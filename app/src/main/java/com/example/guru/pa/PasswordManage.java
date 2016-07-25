@@ -35,7 +35,7 @@ public class PasswordManage extends AppCompatActivity {
 
     private PasswordOperate mPasswordOperate;
     private ArrayList<PasswordMessage> mPMArrayList;
-    private ArrayAdapter<PasswordMessage> arrayAdapter;
+    private PasswordAdapter arrayAdapter;
     private SwipeMenuListView mListView;
 
     @Override
@@ -51,7 +51,7 @@ public class PasswordManage extends AppCompatActivity {
         mPasswordOperate = new PasswordOperate(this);
 
         /* 实例化ArrayAdapter */
-        arrayAdapter = new ArrayAdapter<PasswordMessage>(this, android.R.layout.simple_list_item_1, mPMArrayList);
+        arrayAdapter = new PasswordAdapter(this, mPMArrayList);
 
         /* 实例化SwipeMenuListView */
         mListView = (SwipeMenuListView) findViewById(R.id.password_list);

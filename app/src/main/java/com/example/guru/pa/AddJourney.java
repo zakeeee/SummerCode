@@ -275,7 +275,7 @@ public class AddJourney extends AppCompatActivity {
 
     public void setAlarmClock(Schedule schedule) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        long triggerMills = sdf.parse(mGottenDate + " " +mGottenTime).getTime() + 50000;
+        long triggerMills = sdf.parse(mGottenDate + " " +mGottenTime).getTime() + 20000;
         long intervalMills = MainActivity.INTERVAL_MILLS[0];
         mService.setTimeAndContent(
                 triggerMills, intervalMills, schedule.getScheduleId(), schedule.getContent());
