@@ -273,6 +273,7 @@ public class AddJourney extends AppCompatActivity {
         }
     };
 
+
     public void setAlarmClock(Schedule schedule) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         long triggerMills = sdf.parse(mGottenDate + " " +mGottenTime).getTime() + 20000;
@@ -284,9 +285,11 @@ public class AddJourney extends AppCompatActivity {
         Toast.makeText(AddJourney.this, "提醒设置成功", Toast.LENGTH_SHORT).show();
     }
 
+
     public void cancelJourney(View view){
         onBackPressed();
     }
+
 
     public void onBackPressed(){
 

@@ -37,7 +37,7 @@ public class JourneyManage extends AppCompatActivity {
     /* 必备的三个量：一个List（也可以为数组）,一个Adapter,一个ListView */
     private ArrayList<String> strs;
     private ArrayList<Integer> mHash;
-    private ArrayAdapter<String> arrayAdapter;
+    private JourneyAdapter journeyAdapter;
     private SwipeMenuListView mListView;
     private ArrayList<Schedule> mScheduleArrayList;
     private List<Schedule> mNewList;
@@ -54,6 +54,10 @@ public class JourneyManage extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+
+        mScheduleArrayList = new ArrayList();
+        mDBOperator = new DataBaseOperator(this);
+        journeyAdapter = new JourneyAdapter(this, mScheduleArrayList);
 
         /* 实例化SwipeMenuListView */
         mListView = (SwipeMenuListView) findViewById(R.id.journey_list);
@@ -88,7 +92,7 @@ public class JourneyManage extends AppCompatActivity {
         };
 
         /* 给mListView设置Adapter,MenuCreator,设置滑动方向 */
-
+        mListView.setAdapter(journeyAdapter);
         mListView.setMenuCreator(creator);
         mListView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
 
@@ -102,9 +106,9 @@ public class JourneyManage extends AppCompatActivity {
                         sendId(position);
                         break;
                     case 1:
-                        strs.remove(position);
+                        //strs.remove(position);
                         deleteContent(position);
-                        arrayAdapter.notifyDataSetChanged();
+                        //journeyAdapter.notifyDataSetChanged();
                         // delete
                         break;
                 }
@@ -119,21 +123,27 @@ public class JourneyManage extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        getFromCloud(User.userDownloadJourney());
+        mScheduleArrayList.clear();
+        if(mDBOperator.getAllSchedule() != null) {
+            mScheduleArrayList.addAll(mDBOperator.getAllSchedule());
+        }
+        journeyAdapter.notifyDataSetChanged();
 
-        mHash = new ArrayList<Integer>();
+        //getFromCloud(User.userDownloadJourney());
+
+        /*mHash = new ArrayList<Integer>();
         strs = new ArrayList<String>();
-        mScheduleArrayList = new ArrayList<Schedule>();
+
         //mTagScheduleArrayList = new ArrayList<TagSchedule>();
         mDBOperator = new DataBaseOperator(this);
         mScheduleArrayList = mDBOperator.getAllSchedule();
 
         displayContent(mScheduleArrayList);
 
-        /* 实例化ArrayAdapter */
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strs);
+        *//* 实例化ArrayAdapter *//*
+        journeyAdapter = new JourneyAdapter(this, mScheduleArrayList);
 
-        mListView.setAdapter(arrayAdapter);
+        mListView.setAdapter(journeyAdapter);*/
 
     }
 
@@ -173,9 +183,11 @@ public class JourneyManage extends AppCompatActivity {
                 openJourneySearch();
                 return true;
             case R.id.journey_sort:
-                if (mScheduleArrayList != null && mScheduleArrayList.size() > 0) {
+                /*if (mScheduleArrayList != null && mScheduleArrayList.size() > 0) {
                     openJourneySort();
-                }
+                }*/
+                Collections.sort(mScheduleArrayList);
+                journeyAdapter.notifyDataSetChanged();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -184,18 +196,24 @@ public class JourneyManage extends AppCompatActivity {
 
 
     public void deleteContent(int position) {
-        int deleteId = mHash.get(position);
-        mHash.remove(position);
-        mDBOperator.deleteScheduleById(deleteId);
+        //int deleteId = mHash.get(position);
+        //mHash.remove(position);
+        int id = mScheduleArrayList.get(position).getScheduleId();
+        mDBOperator.deleteScheduleById(id);
         mScheduleArrayList.remove(position);
+        journeyAdapter.notifyDataSetChanged();
     }
 
 
     public void sendId(int position) {
-        int sendId = mHash.get(position);
+        /*int sendId = mHash.get(position);
         Intent  intent = new Intent(this, JourneyDetail.class);
         intent.putExtra("pa.journey.manage.detail", sendId);
 
+        startActivity(intent);*/
+        Schedule schedule = mScheduleArrayList.get(position);
+        Intent  intent = new Intent(this, JourneyDetail.class);
+        intent.putExtra("pa.journey.manage.detail", schedule.getScheduleId());
         startActivity(intent);
     }
 
@@ -213,7 +231,7 @@ public class JourneyManage extends AppCompatActivity {
 
     public void openJourneySort(){
         strs.clear();
-        arrayAdapter.notifyDataSetChanged();
+        journeyAdapter.notifyDataSetChanged();
         mHash.clear();
         mNewList = new ArrayList<Schedule>();
         mNewList = mScheduleArrayList;
@@ -288,7 +306,7 @@ public class JourneyManage extends AppCompatActivity {
                                         +"<云端存储>"
                                 );
                             }
-                            arrayAdapter.notifyDataSetChanged();
+                            journeyAdapter.notifyDataSetChanged();
                             break;
                         default:
                             break;
