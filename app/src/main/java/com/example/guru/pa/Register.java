@@ -38,8 +38,8 @@ public class Register extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         mSVProgressHUD = new SVProgressHUD(this);
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
+        //ActionBar actionbar = getSupportActionBar();
+        //actionbar.setDisplayHomeAsUpEnabled(true);
 
         reg_username_edit = (EditText)findViewById(R.id.reg_username_edit);
         reg_password1_edit = (EditText)findViewById(R.id.reg_password1_edit);
@@ -72,7 +72,7 @@ public class Register extends AppCompatActivity {
 
 
 
-    @Override
+/*    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
@@ -83,7 +83,7 @@ public class Register extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     /* 注册 */
     private void onRegist(String url, RequestParams params) {

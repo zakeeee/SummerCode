@@ -52,8 +52,8 @@ public class LogIn extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         /* 添加返回按钮 */
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        //ActionBar actionBar = getSupportActionBar();
+        //actionBar.setDisplayHomeAsUpEnabled(true);
         mSVProgressHUD = new SVProgressHUD(this);
 
         edname = (EditText) findViewById(R.id.editText);
@@ -95,7 +95,7 @@ public class LogIn extends AppCompatActivity {
         }
     }
 
-    @Override
+/*    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
@@ -104,7 +104,7 @@ public class LogIn extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     /* 登陆 */
     private void onLogIn(String url, RequestParams params) {
