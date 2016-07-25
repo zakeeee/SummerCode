@@ -7,6 +7,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -171,8 +172,31 @@ public class PasswordManage extends AppCompatActivity {
             }
         });
 
+        SearchView sv = (SearchView) searchItem.getActionView();
+        sv.setQueryHint(getString(R.string.searchInfo));
+        sv.setIconifiedByDefault(true);
+        sv.setOnQueryTextListener(oQueryTextListener);
+
         return super.onCreateOptionsMenu(menu);
     }
+
+    SearchView.OnQueryTextListener oQueryTextListener = new SearchView.OnQueryTextListener() {
+
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            //action when press button search
+            arrayAdapter.clear();
+            mPMArrayList = mPasswordOperate.getAccountByPurpose(query);
+            arrayAdapter.addAll(mPMArrayList);
+            arrayAdapter.notifyDataSetChanged();
+            return true;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            return false;
+        }
+    };
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -189,7 +213,7 @@ public class PasswordManage extends AppCompatActivity {
                 PasswordManage.this.finish();
                 return true;
             case R.id.password_search:
-                Toast.makeText(PasswordManage.this, "暂时木有功能！", Toast.LENGTH_SHORT).show();
+
                 break;
             default:
                 break;

@@ -26,29 +26,31 @@ public class PasswordOperate {
         values.put("extra", passwordMessage.getExtra());
         db.insert(PasswordDBHelper.TABLE, null, values);
     }
- /*   public int save(PasswordMessage passwordMessage){
+
+    public ArrayList<PasswordMessage> getAccountByPurpose(String content){
+        ArrayList<PasswordMessage> arrayList= new ArrayList<PasswordMessage>();
         SQLiteDatabase db = mpasswordDBHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("purpose", passwordMessage.getPurpose());
-        values.put("username", passwordMessage.getUsername());
-        values.put("password", passwordMessage.getPassword());
-        values.put("extra", passwordMessage.getExtra());
-        db.beginTransaction();
-        int id = -1;
-        try {
-            String sql = "select max(id) from" + " " + PasswordDBHelper.TABLE;
-            db.insert(PasswordDBHelper.TABLE, null, values);
-            Cursor cursor = db.rawQuery(sql, null);
-            if (cursor.moveToFirst()){
-                id = (int)cursor.getLong(0);
-            }
-            cursor.close();
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
+        String[] columns = {"id", "purpose", "username", "password", "extra"};
+        String sql = "select * from" + " " + PasswordDBHelper.TABLE +
+                " where purpose like '%" + content + "%'";
+        Cursor cursor = db.rawQuery(sql, null);
+        while (cursor.moveToNext()){
+            int gottenId = cursor.getInt(cursor.getColumnIndex("id"));
+            String gottenPurpose = cursor.getString(cursor.getColumnIndex("purpose"));
+            String gottenUsername = cursor.getString(cursor.getColumnIndex("username"));
+            String gottenPassword = cursor.getString(cursor.getColumnIndex("password"));
+            String gottenExtra = cursor.getString(cursor.getColumnIndex("extra"));
+            arrayList.add(
+                    new PasswordMessage(gottenId,
+                            true, gottenPurpose, gottenUsername, gottenPassword, gottenExtra)
+            );
         }
-        return id;
-    }*/
+        cursor.close();
+        if (arrayList != null && arrayList.size() > 0){
+            return arrayList;
+        }
+        return null;
+    }
 
     public PasswordMessage getByid(Integer id){
         SQLiteDatabase db = mpasswordDBHelper.getWritableDatabase();

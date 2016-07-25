@@ -95,4 +95,5 @@
     <string name="sort">排序</string>
     <string name="bill">账单</string>
     <string name="edit">编辑</string>
+    <string name="searchInfo">输入备注内容以检索</string>
 </resources>
