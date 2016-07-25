@@ -238,34 +238,6 @@ public class Bill extends AppCompatActivity {
     }
 
 
-    public void sortBill() {
-        //strs.clear();
-        //arrayAdapter.clear();
-        //arrayAdapter.notifyDataSetChanged();
-        //mHash.clear();
-        //List<BillVO> newBillList = new ArrayList<BillVO>();
-        //newBillList = mBillList;
-
-        //displayContent(new ArrayList<BillVO>(newBillList));
-    }
-
-
-    public void displayContent(ArrayList<BillVO> list) {
-        if(list == null){
-            Toast.makeText(Bill.this, "无内容", Toast.LENGTH_SHORT).show();
-            //strs.add("木有内容");
-        }
-        else {
-            BillVO billVO;
-            for (int i = 0; i <  list.size(); ++ i) {
-                billVO = list.get(i);
-                mHash.add(billVO.getBillId());
-                //strs.add(billVO.toString());
-            }
-        }
-        arrayAdapter.notifyDataSetChanged();
-    }
-
     /* 从云端获取 */
     private void getFromCloud(RequestParams params) {
 

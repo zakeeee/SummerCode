@@ -3,11 +3,11 @@ package com.example.guru.pa;
 import android.app.AlarmManager;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AlertDialog;
+import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final long A_MINUTE = 1000 * 60;
     public static final long[] INTERVAL_MILLS = {
+            -1,
             A_MINUTE, A_MINUTE * 2, A_MINUTE * 3, A_MINUTE * 10,
             AlarmManager.INTERVAL_HALF_HOUR,
             AlarmManager.INTERVAL_FIFTEEN_MINUTES,
@@ -166,7 +167,6 @@ public class MainActivity extends AppCompatActivity
             tv.setText(User.mUsername);
         }
         initCard();
-
     }
 
     /**

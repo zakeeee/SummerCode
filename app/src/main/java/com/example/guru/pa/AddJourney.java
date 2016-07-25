@@ -108,9 +108,16 @@ public class AddJourney extends AppCompatActivity {
                 }
             }
             @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-            }
+            public void onNothingSelected(AdapterView<?> parentView) {}
 
+        });
+        spinner_T.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                mSelectedTPosition = position;
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {}
         });
 
     }
@@ -239,13 +246,9 @@ public class AddJourney extends AppCompatActivity {
             int scheduleId =  mDBOperator.saveSchedule(schedule);
             if (mSelectedWayPosition != 0) {
                 saveTagSchedule(scheduleId);
-                setAlarmClock(schedule);
+                setAlarmClock(schedule, scheduleId);
             }
         }
-
-
-        //test database
-        // deBug(scheduleId,tagId);
 
         Toast.makeText(AddJourney.this, "行程添加成功", Toast.LENGTH_SHORT).show();
 
@@ -273,23 +276,21 @@ public class AddJourney extends AppCompatActivity {
         }
     };
 
-
-    public void setAlarmClock(Schedule schedule) throws ParseException {
+    public void setAlarmClock(Schedule schedule, int alarmId) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        long triggerMills = sdf.parse(mGottenDate + " " +mGottenTime).getTime() + 20000;
-        long intervalMills = MainActivity.INTERVAL_MILLS[0];
-        mService.setTimeAndContent(
-                triggerMills, intervalMills, schedule.getScheduleId(), schedule.getContent());
+        long triggerMills = sdf.parse(mGottenDate + " " +mGottenTime).getTime();
+        long intervalMills = MainActivity.INTERVAL_MILLS[mSelectedTPosition];
 
+        mService.setTimeAndContent(
+                triggerMills, intervalMills, alarmId, schedule.getContent()
+        );
         startService(intentService);
         Toast.makeText(AddJourney.this, "提醒设置成功", Toast.LENGTH_SHORT).show();
     }
 
-
     public void cancelJourney(View view){
         onBackPressed();
     }
-
 
     public void onBackPressed(){
 

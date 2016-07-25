@@ -26,31 +26,21 @@ import java.util.Random;
  */
 public class AlarmClock extends BroadcastReceiver {
 
-    private long triggerAtMillis;
-    private long intervalMillis;
-    private int alarmId;
-    private String content = "新的提醒：\n";
+    private String content = "新的提醒\n";
 
     public AlarmClock() {
         //必须要有,没有就报错
     }
 
-    public AlarmClock(long triggerAtMillis, long intervalMillis, int alarmId, String content) {
-        this.triggerAtMillis = triggerAtMillis;
-        this.intervalMillis = intervalMillis;
-        this.alarmId = alarmId;
-        this.content += content;
-    }
     @Override
     public void onReceive(Context context, Intent intent)
     {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
         wl.acquire();
-
+        content += intent.getStringExtra("pa.setAlarm.alarmClock.message");
 
         Toast.makeText(context, content, Toast.LENGTH_LONG).show();
-
         Vibrator  vv =(Vibrator) context.getSystemService(Service.VIBRATOR_SERVICE);
         vv.vibrate(3000);
 
@@ -67,20 +57,5 @@ public class AlarmClock extends BroadcastReceiver {
         wl.release();
     }
 
-    public void setAlarm(Context context)
-    {
 
-        AlarmManager alarmManager =( AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, AlarmClock.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, triggerAtMillis, intervalMillis, pendingIntent);
-    }
-
-    public void cancelAlarm(Context context)
-    {
-        Intent intent = new Intent(context, AlarmClock.class);
-        PendingIntent sender = PendingIntent.getBroadcast(context, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.cancel(sender);
-    }
 }
