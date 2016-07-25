@@ -45,6 +45,29 @@ public class DataBaseOperator {
         return scheduleId;
     }
 
+    public ArrayList<Schedule> getScheduleByContent(String content){
+        ArrayList<Schedule> arrayList= new ArrayList<Schedule>();
+        SQLiteDatabase db = mDBOpenHelper.getWritableDatabase();
+        String[] columns = {"scheduleId", "date", "time", "content"};
+        String sql = "select * from" + " " + DataBaseHelper.TABLE_NORMAL +
+                " where content like '%" + content + "%'";
+        Cursor cursor = db.rawQuery(sql, null);
+        while (cursor.moveToNext()){
+            int gottenSId = cursor.getInt(cursor.getColumnIndex("scheduleId"));
+            String gottenDate = cursor.getString(cursor.getColumnIndex("date"));
+            String gottenTime = cursor.getString(cursor.getColumnIndex("time"));
+            String gottenContent = cursor.getString(cursor.getColumnIndex("content"));
+            arrayList.add(
+                    new Schedule(gottenSId, gottenDate, gottenTime, gottenContent)
+            );
+        }
+        cursor.close();
+        if (arrayList != null && arrayList.size() > 0){
+            return arrayList;
+        }
+        return null;
+    }
+
     /**
      * @param scheduleId
      * @return
@@ -210,6 +233,8 @@ public class DataBaseOperator {
             db.endTransaction();
         }
     }
+
+
 
     /**
      * 按日期查找

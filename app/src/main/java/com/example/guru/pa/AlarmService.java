@@ -1,6 +1,9 @@
 package com.example.guru.pa;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Handler;
@@ -9,6 +12,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
 import java.util.Random;
 
 public class AlarmService extends Service {
@@ -29,15 +33,14 @@ public class AlarmService extends Service {
 
     @Override
     public void onCreate() {
+        alarmClock = new AlarmClock();
         super.onCreate();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        alarmClock = new AlarmClock(trigger, interval, alarmId, alarmContent);
-
-        alarmClock.setAlarm(this);
+        setAlarm(this);
         return START_STICKY;
     }
 
@@ -52,6 +55,31 @@ public class AlarmService extends Service {
         this.interval = interval;
         this.alarmId = id;
         this.alarmContent = content;
+    }
+
+    public void setAlarm(Context context)
+    {
+
+        AlarmManager alarmManager =( AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, AlarmClock.class);
+        intent.putExtra("pa.setAlarm.alarmClock.message", alarmContent);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        if (interval < 0) {
+            alarmManager.set(AlarmManager. ELAPSED_REALTIME_WAKEUP, trigger, pendingIntent);
+        }
+        else {
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, trigger, interval, pendingIntent);
+        }
+
+
+    }
+
+    public void cancelAlarm(Context context)
+    {
+        Intent intent = new Intent(context, AlarmClock.class);
+        PendingIntent sender = PendingIntent.getBroadcast(context, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(sender);
     }
 
 }

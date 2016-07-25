@@ -1,18 +1,23 @@
 package com.example.guru.pa;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.provider.ContactsContract;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -43,6 +48,7 @@ public class JourneyManage extends AppCompatActivity {
     private List<Schedule> mNewList;
     //private ArrayList<TagSchedule> mTagScheduleArrayList;
     private DataBaseOperator mDBOperator;
+    private SearchView mSearchView;
 
 
     @Override
@@ -113,6 +119,7 @@ public class JourneyManage extends AppCompatActivity {
             }
         });
 
+        mSearchView = (SearchView)findViewById(R.id.journey_search);
     }
 
     @Override
@@ -156,6 +163,8 @@ public class JourneyManage extends AppCompatActivity {
                 return true;
             }
         });
+
+
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -211,21 +220,18 @@ public class JourneyManage extends AppCompatActivity {
     }
 
 
+
     public void openJourneySort(){
         strs.clear();
         arrayAdapter.notifyDataSetChanged();
-        mHash.clear();
-        mNewList = new ArrayList<Schedule>();
-        mNewList = mScheduleArrayList;
-        Collections.sort(mNewList);
-        displayContent(new ArrayList<Schedule>(mNewList));
+        Collections.sort(mScheduleArrayList);
+        displayContent(mScheduleArrayList);
     }
 
 
     public void displayContent(ArrayList<Schedule> list) {
         if(list == null){
             Toast.makeText(JourneyManage.this, "无内容", Toast.LENGTH_SHORT).show();
-            strs.add("木有内容");
         }
         else {
             String tempStr = "";
@@ -233,17 +239,14 @@ public class JourneyManage extends AppCompatActivity {
             Schedule tempSch = null;
             for (int i = 0; i < list.size(); ++ i) {
                 tempSch = list.get(i);
-                tempStr = "Date: " + tempSch.getDate() + " " +
-                          "Time: " + tempSch.getTime() + "\n";
+                tempStr =  tempSch.getDate() + " " +
+                           tempSch.getTime() + "\n";
 
                 tempContent = tempSch.getContent();
 
                 int maxLen = 20;
                 if (tempContent.length() > maxLen) {
-                    tempContent = "Content :" + tempContent.substring(0, maxLen - 1);
-                }
-                else {
-                    tempContent = "Content :" + tempContent;
+                    tempContent = tempContent.substring(0, maxLen - 1);
                 }
                 mHash.add(tempSch.getScheduleId());
                 strs.add(tempStr + tempContent);

@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity
     //public static final String MESSAGE_BILL = "pa.billId";
     private static final long A_MINUTE = 1000 * 60;
     public static final long[] INTERVAL_MILLS = {
+            -1,
             A_MINUTE, A_MINUTE * 2, A_MINUTE * 3, A_MINUTE * 10,
             AlarmManager.INTERVAL_HALF_HOUR,
             AlarmManager.INTERVAL_FIFTEEN_MINUTES,
