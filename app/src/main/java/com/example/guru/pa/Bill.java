@@ -123,9 +123,7 @@ public class Bill extends AppCompatActivity {
                         sendId(position);
                         break;
                     case 1:
-                        //strs.remove(position);
                         deleteContent(position);
-                        //arrayAdapter.notifyDataSetChanged();
                         // delete
                         break;
                 }
@@ -154,12 +152,6 @@ public class Bill extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_bill,menu);
 
-       /* SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        ComponentName cn = new ComponentName(this, SearchableActivity.class);
-        SearchableInfo info = searchManager.getSearchableInfo(cn);
-
-        searchView.setSearchableInfo(info);*/
 
         /* 设置菜单项的搜索项 */
         MenuItem searchItem = menu.findItem(R.id.bill_search);
@@ -176,9 +168,32 @@ public class Bill extends AppCompatActivity {
             }
         });
 
+        SearchView sv = (SearchView) searchItem.getActionView();
+        sv.setQueryHint(getString(R.string.searchInfo));
+        sv.setIconifiedByDefault(true);
+        sv.setOnQueryTextListener(oQueryTextListener);
+
         return super.onCreateOptionsMenu(menu);
 
     }
+
+    SearchView.OnQueryTextListener oQueryTextListener = new SearchView.OnQueryTextListener() {
+
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            //action when press button search
+            arrayAdapter.clear();
+            mBillList = mDBOperator.getBillByContent(query);
+            arrayAdapter.addAll(mBillList);
+            arrayAdapter.notifyDataSetChanged();
+            return true;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            return false;
+        }
+    };
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

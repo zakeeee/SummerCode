@@ -174,7 +174,8 @@ public class MainActivity extends AppCompatActivity
         mJourneyList = mJourneyDB.getScheduleBydate(date);
         TextView card1 = (TextView)findViewById(R.id.card2);
         TextView card2 = (TextView)findViewById(R.id.card3);
-
+        card1.setText("");
+        card2.setText("");
         if (mJourneyList != null) {
             card1.setText(mJourneyList.get(0).toString());
         }

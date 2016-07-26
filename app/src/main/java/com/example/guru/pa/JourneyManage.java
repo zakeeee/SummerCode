@@ -221,7 +221,7 @@ public class JourneyManage extends AppCompatActivity {
 
 
     public void sendId(int position) {
-        int sendId = mHash.get(position);
+        int sendId = mScheduleArrayList.get(position).getScheduleId();
         Intent  intent = new Intent(this, JourneyDetail.class);
         intent.putExtra("pa.journey.manage.detail", sendId);
 
