@@ -96,4 +96,7 @@
     <string name="bill">账单</string>
     <string name="edit">编辑</string>
     <string name="searchInfo">输入备注内容以检索</string>
+    <string name="dialog_alarm_clock">闹钟提醒</string>
+    <string name="alarm">确定</string>
+    <string name="cancel">取消</string>
 </resources>
