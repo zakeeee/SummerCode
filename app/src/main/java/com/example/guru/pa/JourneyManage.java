@@ -238,7 +238,7 @@ public class JourneyManage extends AppCompatActivity {
 
     public void openJourneySort(){
         strs.clear();
-        arrayAdapter.notifyDataSetChanged();
+        journeyAdapter.notifyDataSetChanged();
         Collections.sort(mScheduleArrayList);
         displayContent(mScheduleArrayList);
     }
