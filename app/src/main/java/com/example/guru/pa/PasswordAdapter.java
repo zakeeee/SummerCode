@@ -68,6 +68,7 @@ public class PasswordAdapter extends BaseAdapter{
     }
 
 
+
     class CompleteListViewHolder {
         public TextView tv1;
         public TextView tv2;

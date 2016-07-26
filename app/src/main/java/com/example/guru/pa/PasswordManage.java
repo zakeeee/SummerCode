@@ -180,14 +180,19 @@ public class PasswordManage extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+
     SearchView.OnQueryTextListener oQueryTextListener = new SearchView.OnQueryTextListener() {
 
         @Override
         public boolean onQueryTextSubmit(String query) {
             //action when press button search
-            arrayAdapter.clear();
-            mPMArrayList = mPasswordOperate.getAccountByPurpose(query);
-            arrayAdapter.addAll(mPMArrayList);
+            //arrayAdapter.clear();
+            mPMArrayList.clear();
+            ArrayList<PasswordMessage> temp = mPasswordOperate.getAccountByPurpose(query);
+            if(temp != null){
+                mPMArrayList.addAll(temp);
+            }
+            //arrayAdapter.addAll(mPMArrayList);
             arrayAdapter.notifyDataSetChanged();
             return true;
         }

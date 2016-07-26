@@ -79,7 +79,7 @@ public class JourneyManage extends AppCompatActivity {
                 SwipeMenuItem openItem = new SwipeMenuItem(getApplicationContext());
                 openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9, 0xCE)));
                 openItem.setWidth(180);
-                openItem.setTitle("Open");
+                openItem.setTitle("详情");
                 openItem.setTitleSize(18);
                 openItem.setTitleColor(Color.rgb(0x00, 0x00, 0x00));
                 // 添加到SwipeMenu
@@ -89,7 +89,7 @@ public class JourneyManage extends AppCompatActivity {
                 SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
                 deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
                 deleteItem.setWidth(180);
-                deleteItem.setTitle("X"); /* 未来会换成icon */
+                deleteItem.setTitle("删除"); /* 未来会换成icon */
                 deleteItem.setTitleSize(18);
                 deleteItem.setTitleColor(Color.WHITE);
                 // 添加到SwipeMenu
@@ -182,15 +182,23 @@ public class JourneyManage extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+
     SearchView.OnQueryTextListener oQueryTextListener = new SearchView.OnQueryTextListener() {
 
         @Override
         public boolean onQueryTextSubmit(String query) {
             //action when press button search
-            mScheduleArrayList = mDBOperator.getScheduleByContent(query);
-            strs.clear();
-            arrayAdapter.notifyDataSetChanged();
-            displayContent(mScheduleArrayList);
+            //mScheduleArrayList = mDBOperator.getScheduleByContent(query);
+            mScheduleArrayList.clear();
+            ArrayList<Schedule> temp = mDBOperator.getScheduleByContent(query);
+            if(temp != null){
+                mScheduleArrayList.addAll(temp);
+            }
+            //arrayAdapter.addAll(mPMArrayList);
+            journeyAdapter.notifyDataSetChanged();
+            //strs.clear();
+            //journeyAdapter.notifyDataSetChanged();
+            //displayContent(mScheduleArrayList);
             return true;
         }
 

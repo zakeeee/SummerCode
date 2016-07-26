@@ -142,8 +142,9 @@ public class Bill extends AppCompatActivity {
         super.onResume();
 
         mBillList.clear();
-        if(mDBOperator.getAllBill() != null) {
-            mBillList.addAll(mDBOperator.getAllBill());
+        ArrayList<BillVO> temp = mDBOperator.getAllBill();
+        if(temp != null) {
+            mBillList.addAll(temp);
         }
         getFromCloud(User.userDownloadBill());
         arrayAdapter.notifyDataSetChanged();
