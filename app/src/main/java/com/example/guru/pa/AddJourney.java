@@ -156,7 +156,15 @@ public class AddJourney extends AppCompatActivity {
         mTime.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute){
-                mGottenTime = String.valueOf(hourOfDay) + ":" + String.valueOf(minute);
+                String h = String.valueOf(hourOfDay);
+                String m = String.valueOf(minute);
+                if (hourOfDay < 10) {
+                    h = "0" + h;
+                }
+                if (minute < 10) {
+                    m = "0" + m;
+                }
+                mGottenTime = h + ":" + m;
             }
         });
         /**

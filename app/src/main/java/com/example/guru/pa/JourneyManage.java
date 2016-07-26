@@ -1,5 +1,6 @@
 package com.example.guru.pa;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -45,7 +46,6 @@ public class JourneyManage extends AppCompatActivity {
     private JourneyAdapter journeyAdapter;
     private SwipeMenuListView mListView;
     private ArrayList<Schedule> mScheduleArrayList;
-    private List<Schedule> mNewList;
     //private ArrayList<TagSchedule> mTagScheduleArrayList;
     private DataBaseOperator mDBOperator;
     private SearchView mSearchView;
@@ -173,9 +173,32 @@ public class JourneyManage extends AppCompatActivity {
                 return true;
             }
         });
+        SearchView sv = (SearchView) searchItem.getActionView();
+        sv.setQueryHint(getString(R.string.searchInfo));
+        sv.setIconifiedByDefault(true);
+        sv.setOnQueryTextListener(oQueryTextListener);
+
 
         return super.onCreateOptionsMenu(menu);
     }
+
+    SearchView.OnQueryTextListener oQueryTextListener = new SearchView.OnQueryTextListener() {
+
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            //action when press button search
+            mScheduleArrayList = mDBOperator.getScheduleByContent(query);
+            strs.clear();
+            arrayAdapter.notifyDataSetChanged();
+            displayContent(mScheduleArrayList);
+            return true;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            return false;
+        }
+    };
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -263,7 +286,7 @@ public class JourneyManage extends AppCompatActivity {
                 if (tempContent.length() > maxLen) {
                     tempContent = tempContent.substring(0, maxLen - 1);
                 }
-                mHash.add(tempSch.getScheduleId());
+                //mHash.add(tempSch.getScheduleId());
                 strs.add(tempStr + tempContent);
             }
         }

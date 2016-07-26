@@ -65,7 +65,7 @@ public class AlarmService extends Service {
         intent.putExtra("pa.setAlarm.alarmClock.message", alarmContent);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         if (interval < 0) {
-            alarmManager.set(AlarmManager. ELAPSED_REALTIME_WAKEUP, trigger, pendingIntent);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
         }
         else {
             alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, trigger, interval, pendingIntent);
