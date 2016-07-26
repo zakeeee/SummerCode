@@ -245,10 +245,15 @@ public class AddJourney extends AppCompatActivity {
             mDBOperator.updateSchedule(schedule);
             if (mSelectedWayPosition != 0) {
                 updateTagSchedule(gottenId);
+                mService.cancelAlarm(this, gottenId);
+                setAlarmClock(schedule, gottenId);
             }
             else {
+                mService.cancelAlarm(this, gottenId);
                 mDBOperator.deleteTagScheduleById(gottenId);
+                Toast.makeText(AddJourney.this, "提醒已删除", Toast.LENGTH_SHORT).show();
             }
+            Toast.makeText(AddJourney.this, "行程修改成功", Toast.LENGTH_SHORT).show();
         }
         else{
             int scheduleId =  mDBOperator.saveSchedule(schedule);
@@ -256,9 +261,8 @@ public class AddJourney extends AppCompatActivity {
                 saveTagSchedule(scheduleId);
                 setAlarmClock(schedule, scheduleId);
             }
+            Toast.makeText(AddJourney.this, "行程添加成功", Toast.LENGTH_SHORT).show();
         }
-
-        Toast.makeText(AddJourney.this, "行程添加成功", Toast.LENGTH_SHORT).show();
 
         //销毁当前activity
         this.finish();

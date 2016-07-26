@@ -51,6 +51,43 @@ public class BillDBOperator {
         return billId;
     }
 
+    /**
+     *
+     * @param content
+     * @return
+     */
+    public ArrayList<BillVO> getBillByContent(String content){
+        ArrayList<BillVO> arrayList= new ArrayList<BillVO>();
+        SQLiteDatabase db = mDBOpenHelper.getWritableDatabase();
+        String[] columns = {"billId", "income", "expend", "incomeSource", "expendDes",
+                "backup", "year", "month", "day"
+        };
+        String sql = "select * from" + " " + BillDBHelper.TABLE_BILL +
+                " where incomeSource like '%" + content + "%'" + " or expendDes like '%" +
+                 content + "%' or backup like '%" + content + "%'";
+        Cursor cursor = db.rawQuery(sql, null);
+        while (cursor.moveToNext()){
+            int gottenBId = cursor.getInt(cursor.getColumnIndex("billId"));
+            int gottenIncome = cursor.getInt(cursor.getColumnIndex("income"));
+            int gottenExpend = cursor.getInt(cursor.getColumnIndex("expend"));
+            String gottenIS = cursor.getString(cursor.getColumnIndex("incomeSource"));
+            String gottenED = cursor.getString(cursor.getColumnIndex("expendDes"));
+            String gottenBackup = cursor.getString(cursor.getColumnIndex("backup"));
+            int gYear = cursor.getInt(cursor.getColumnIndex("year"));
+            int gMonth = cursor.getInt(cursor.getColumnIndex("month"));
+            int gDay = cursor.getInt(cursor.getColumnIndex("day"));
+            arrayList.add(
+                    new BillVO(gottenBId, gottenIncome, gottenExpend, gYear, gMonth, gDay,
+                            gottenIS, gottenED, gottenBackup)
+            );
+        }
+        cursor.close();
+        if (arrayList != null && arrayList.size() > 0){
+            return arrayList;
+        }
+        return null;
+    }
+
 
 
     /**

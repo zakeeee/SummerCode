@@ -29,7 +29,7 @@ public class JourneyDetail extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             scheduleId = intent.getIntExtra("pa.journey.manage.detail", 0);
-//Log.e("JourneyDetail", scheduleId + "  ");
+
             mDBOperator = new DataBaseOperator(this);
             Schedule schedule = mDBOperator.getScheduleById(scheduleId);
             TextView date = (TextView)findViewById(R.id.journey_detail_date);

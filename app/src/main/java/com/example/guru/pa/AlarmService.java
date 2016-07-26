@@ -57,9 +57,7 @@ public class AlarmService extends Service {
         this.alarmContent = content;
     }
 
-    public void setAlarm(Context context)
-    {
-
+    public void setAlarm(Context context) {
         AlarmManager alarmManager =( AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, AlarmClock.class);
         intent.putExtra("pa.setAlarm.alarmClock.message", alarmContent);
@@ -70,14 +68,11 @@ public class AlarmService extends Service {
         else {
             alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, trigger, interval, pendingIntent);
         }
-
-
     }
 
-    public void cancelAlarm(Context context)
-    {
+    public void cancelAlarm(Context context, int cancelId) {
         Intent intent = new Intent(context, AlarmClock.class);
-        PendingIntent sender = PendingIntent.getBroadcast(context, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent sender = PendingIntent.getBroadcast(context, cancelId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(sender);
     }

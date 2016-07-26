@@ -42,7 +42,7 @@ public class MoneyDetail extends AppCompatActivity {
             mIncome = intent.getIntExtra("income",0);
             mExpend = intent.getIntExtra("expend",0);
             mIncomeSource = intent.getStringExtra("incomeSource");
-            mExpendDes = intent.getStringExtra("expengDes");
+            mExpendDes = intent.getStringExtra("expendDes");
             mBackup = intent.getStringExtra("backup");
 
             setData();
@@ -82,12 +82,10 @@ public class MoneyDetail extends AppCompatActivity {
             billId = data.getIntExtra("billId",-1);
             mLocal = data.getBooleanExtra("local", true);
             mDate = data.getStringExtra("date");
-            Log.e("hh",mDate);
             mIncome = data.getIntExtra("income",0);
-            Log.e("hh2",String.valueOf(mIncome));
             mExpend = data.getIntExtra("expend",0);
             mIncomeSource = data.getStringExtra("incomeSource");
-            mExpendDes = data.getStringExtra("expengDes");
+            mExpendDes = data.getStringExtra("expendDes");
             mBackup = data.getStringExtra("backup");
 
             setData();
